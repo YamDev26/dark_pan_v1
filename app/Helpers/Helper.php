@@ -40,3 +40,18 @@
       return $data;
     }
   }
+
+
+  // Calcul General Moyenne Matiere, Bilan, Trimestre
+  if(!function_exists('moyenneCalcul')) {
+    function moyenneCalcul($total = null, $coeff = null) {
+      if(blank($total) || blank($coeff)) {
+        return 'nc';
+      }
+      if(!($total > 0 || $coeff > 0)) {
+        return '00';
+      }
+      $result = (string) number_format(($total / $coeff), 2, '.', '');
+      return $result < 10 ? '0' . $result : $result;
+    }
+  }

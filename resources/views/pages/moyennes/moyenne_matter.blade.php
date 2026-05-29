@@ -36,12 +36,14 @@
       </Div>
     </div>
     <div class="table-responsive">
-      <table class="table text-start align-middle table-bordered table-hover mb-0">
+      <table class="table text-start align-middle table-bordered table-hover mb-0" id="myTable">
         <thead>
           <tr class="text-white">
             <th scope="col" class="text-center">N°</th>
             <th scope="col" class="text-center">Matricule</th>
-            <th scope="col" class="text-center">Nom & Prenoms</th>
+            <th scope="col" class="text-center">Nom</th>
+            <th scope="col" class="text-center">Prenoms</th>
+            <th scope="col" class="text-center">Genre</th>
             <th scope="col" class="text-center">Moyenne</th>
             <th scope="col" class="text-center">Rang</th>
           </tr>
@@ -62,13 +64,15 @@
       processing: true,
       serverSide: true,
       ordering: false,
-      ajax: '{{ route('moyenne.yajra_1') }}',
+      ajax: '{{ route('moyenne.yajra_2',($matter->id.'_'.$cutting->id.'_'.$classe->id)) }}',
       columns: [
         {data: 'compte',  className: 'text-center fw-bold', orderable: false, searchable: false },
-        {data: 'libelle', className: 'text-left'},
-        {data: 'effectif', className: 'text-left'},
-        {data: 'prof', className: 'text-left'},
-        {data: 'action', className: 'text-center dropdown', orderable: false, searchable: false},
+        {data: 'matricule', className: 'text-left'},
+        {data: 'first', className: 'text-left'},
+        {data: 'last', className: 'text-left'},
+        {data: 'genre', className: 'text-center'},
+        {data: 'moyenne', className: 'text-center'},
+        {data: 'rang', className: 'text-center'},
       ],
       // responsive: true,
       autoWidth: false,

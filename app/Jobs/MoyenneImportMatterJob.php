@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Services\MoyenneService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,12 +13,13 @@ class MoyenneImportMatterJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
-    private $data, $matter, $cutting;
-    public function __construct($data, $matter, $cutting)
+    private $data, $matter, $cutting, $classe;
+    public function __construct($data, $matter, $cutting, $classe)
     {
         $this->data = $data;
         $this->matter = $matter;
         $this->cutting = $cutting;
+        $this->classe = $classe;
     }
 
     /**
@@ -26,7 +28,15 @@ class MoyenneImportMatterJob implements ShouldQueue
     public function handle(): void
     {
         $dts = ClassementStudent($this->data);
+        $service = app(MoyenneService::class);
+        
+        foreach($dts as $item) {
+            $service->saveMoyenneMatter(
+                $item['id'], $item['moyen'], $item['rang'], $this->matter, $this->cutting
+            );
+        }
 
-        dd($dts);
+        // Déclenchement de job pour le calcul de moyenne
+        MoyenneBilanMatterJob::dispatch($this->data, $this->matter, $this->cutting);
     }
 }

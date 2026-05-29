@@ -108,10 +108,12 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::group(['prefix' => 'moyenne'], function() {
             Route::get('/index', [App\Http\Controllers\MoyenneController::class, 'index'])->name('moyenne.index');
-            Route::get('/yajra_1', [App\Http\Controllers\MoyenneController::class, 'yajra_1'])->name('moyenne.yajra_1');
+            Route::get('/yjr1', [App\Http\Controllers\MoyenneController::class, 'yajra_1'])->name('moyenne.yajra_1');
             Route::get('/detail/{id}', [App\Http\Controllers\MoyenneController::class, 'show'])->name('moyenne.show');
             Route::get('/list/{id}', [App\Http\Controllers\MoyenneController::class, 'moyenne'])->name('moyenne.list');
+            Route::get('/yjr2/{id}', [App\Http\Controllers\MoyenneController::class, 'yajra_2'])->name('moyenne.yajra_2');
             Route::get('/create/{id}', [App\Http\Controllers\MoyenneController::class, 'create'])->name('moyenne.create');
+            Route::get('/yjr3/{id}', [App\Http\Controllers\MoyenneController::class, 'yajra_3'])->name('moyenne.yajra_3');
             Route::post('/store/{id}', [App\Http\Controllers\MoyenneController::class, 'store'])->name('moyenne.store');
             Route::get('/export/{id}', [App\Http\Controllers\MoyenneController::class, 'export'])->name('moyenne.export');
             Route::post('/import/{id}', [App\Http\Controllers\MoyenneController::class, 'import'])->name('moyenne.import');

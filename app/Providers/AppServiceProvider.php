@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,5 +22,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap();
+        Event::listen(
+            App\Events\MoyenneMatterStoreEvent::class,
+            App\Listeners\MoyenneMatterStoreListener::class,
+
+            App\Events\MoyenneBilanMatterEvent::class,
+            App\Listeners\MoyenneBilanMatterListener::class,
+
+            App\Events\MoyenneTrimestreEvent::class,
+            App\Listeners\MoyenneTrimestreListener::class,
+        );
     }
 }

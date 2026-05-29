@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\File2Export;
 use App\Imports\File3Import;
 use App\Services\MoyenneService;
+use App\Events\MoyenneMatterStoreEvent;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
@@ -50,9 +51,27 @@ class MoyenneController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, string $str)
     {
-        //
+        try { // dd($request);
+            $validate = $request->validate([
+                'str' => 'required|array',
+                'str.*' => 'required|string',
+                'moyen' => 'required|array',
+                'moyen.*' => 'nullable|numeric'
+            ]);
+            MoyenneMatterStoreEvent::dispatch($validate['str'], $validate['moyen'], $str);
+            return to_route('moyenne.list', $str)->with([
+                'str' => 'success',
+                'msg' => 'Validation réussie. En attente des traitement !'
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
     /**
@@ -94,6 +113,19 @@ class MoyenneController extends Controller
         }
     }
 
+    public function yajra_2(string $str) 
+    {
+        try {
+            list($matter, $cutting, $classe) = explode('_', $str);
+            return $this->service->getYajra_2($classe, $cutting, $matter);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
 
     public function create(string $str)
     {
@@ -113,6 +145,20 @@ class MoyenneController extends Controller
         }
     }
 
+    public function yajra_3(string $str)
+    {
+        try {
+            list($matter, $cutting, $classe) = explode('_', $str);
+            return $this->service->getYajra_3($classe, $cutting, $matter);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
     public function export(string $str)
     {
         try {
@@ -122,7 +168,10 @@ class MoyenneController extends Controller
             $matter = $this->service->getMatter($matter)['matter']['symbol'];
             $value = mt_rand(100, 1000);
             $name = $libelle.'_'.str_replace(' ', '_', ucwords($cutting)).'_'.$matter;
-            return Excel::download(new File2Export($classe, $libelle, $matter, $cutting), 'Add_Moyen_'.$name.'_'.$value.'_'.$str.'.xlsx');
+            return Excel::download(
+                new File2Export($classe, $libelle, $matter, $cutting), 
+                'Add_Moyen_'.$name.'_'.$value.'_'.$str.'.xlsx'
+            );
         }
         catch (\Exception $e) {
             return back()->with([

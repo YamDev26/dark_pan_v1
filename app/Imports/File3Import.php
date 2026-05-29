@@ -24,7 +24,7 @@ class File3Import implements ToCollection, WithHeadingRow, WithValidation, Skips
     
     public function collection(Collection $data)
     {
-        list($matter, $cutting, $classe) =explode('_', $this->str);
+        list($matter, $cutting, $classe) = explode('_', $this->str);
         $service = app(MoyenneService::class);
         $table = [];
 
@@ -40,7 +40,7 @@ class File3Import implements ToCollection, WithHeadingRow, WithValidation, Skips
         }
 
         // Déclenchement de job pour le calcul de moyenne
-        MoyenneImportMatterJob::dispatch($table, $matter, $cutting);
+        MoyenneImportMatterJob::dispatch($table, $matter, $cutting, $classe);
     }
 
     public function rules(): array

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('libelle')->unique();
             $table->string('symbol')->nullable();
-            $table->integer('order')->nullable();
+            $table->integer('position')->nullable();
             $table->enum('officiel',[0,1])->default(1);
             $table->unsignedBigInteger('bilan_matter_id')->nullable();
             $table->enum('status', [0,1])->default(1);
