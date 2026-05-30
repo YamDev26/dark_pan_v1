@@ -126,9 +126,9 @@ class SettingController extends Controller
                 'name' => 'required|string',
                 'dren' => 'required|integer',
                 'ville' => 'required|string',
-                'address' => 'required|string|unique:schools,addres_postal',
-                'email' => 'required|email|unique:schools,email_school',
-                'phon' => 'required|numeric|min:10|unique:schools,phon_school',
+                'address' => 'required|string|unique:schools,addres',
+                'email' => 'required|email|unique:schools,email',
+                'phon' => 'required|numeric|min:10|unique:schools,phon',
                 'created' => 'required|date',
                 'opening' => 'required|date',
             ]);

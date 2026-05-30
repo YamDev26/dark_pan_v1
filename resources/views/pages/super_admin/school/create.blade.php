@@ -33,7 +33,7 @@
             <div class="row mb-3">
               <label for="name" class="col-sm-3 col-form-label">Nom Etablissement<span class="text-danger">*</span> :</label>
               <div class="col-sm-9">
-                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" value="{{ old('name', $data ? $data->name_school:null) }}" placeholder="Nom Etablissement ici ...">
+                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" value="{{ old('name', $data ? $data->name:null) }}" placeholder="Nom Etablissement ici ...">
               </div>
             </div>
             <div class="row mb-3" title="{{ $data ? ($data->status ? 'Actif':'Inactif'):null }}" style="display: {{ $data ? null:'none' }}">

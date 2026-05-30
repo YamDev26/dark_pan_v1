@@ -16,14 +16,14 @@
           @forelse ($data as $item)
             <tr>
               <td class="text-center">{{ $i < 10 ? '0'.$i++:$i++ }}</td>
-              <td class="text-left pl-3">{{ ucwords($item->matter->libelle) }}</td>
-              <td class="text-center">{{ ucwords($item->matter->symbol) }}</td>
-              <td scope="col" class="text-center w-25">{{ ucwords($item->matter->bilanMatter->libelle) }}</td>
-              <td class="text-center">{{ $item->value }}</td>
+              <td class="text-left pl-3">{{ ucwords($item['matter']) }}</td>
+              <td class="text-center">{{ ucwords($item['symbol']) }}</td>
+              <td scope="col" class="text-center w-25">{{ ucwords($item['bilan']) }}</td>
+              <td class="text-center">{{ $item['value'] }}</td>
             </tr>
           @empty
             <tr>
-              <td colspan="4" class="text-center py-2">Data Not Found</td>
+              <td colspan="5" class="text-center py-2">Data Not Found</td>
             </tr>
           @endforelse
         </tbody>

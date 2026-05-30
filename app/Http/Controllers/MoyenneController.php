@@ -81,11 +81,29 @@ class MoyenneController extends Controller
     {
         try {
             list($classe, $cutting) = explode('_', $id);
+
+            // dd($this->service->getResultat($classe, $cutting));
+
             return view('pages.moyennes.detail',[
                 'classe' => $this->service->getClasse($classe),
                 'cutting' => $this->service->getCutting($cutting),
                 'matters' => $this->service->getMatters($classe),
+                'matieres' => $this->service->matieres($classe),
             ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+            ]);
+        }
+    }
+
+    public function resultatTble(string $str)
+    {
+        try {
+            list($classe, $cutting) = explode('_', $str);
+            return $this->service->getResultat($classe, $cutting);
         }
         catch (\Exception $e) {
             return back()->with([

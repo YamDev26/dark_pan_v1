@@ -243,7 +243,7 @@ class SuperAdminController extends Controller
                 'phon' => 'required|numeric|unique:users,telephon',
                 'code' => 'required|string|unique:schools,code',
                 'num' => 'required|string|unique:schools,autorisation',
-                'name' => 'required|string|unique:schools,name_school',
+                'name' => 'required|string|unique:schools,name',
             ]);
             $this->service->stored($data);
             return to_route('school.index')->with([

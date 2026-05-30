@@ -21,9 +21,9 @@ class MatterSeeder extends Seeder
         Matter::create(['libelle' => 'Education physique et sportive', 'symbol' => 'EPS', 'bilan_matter_id' => 3, 'position' => 1]);
         Matter::create(['libelle' => 'All/Esp', 'symbol' => 'LV2', 'bilan_matter_id' => 1, 'position' => 4]); // id = 8
         Matter::create(['libelle' => 'EDHC', 'symbol' => 'EDHC', 'bilan_matter_id' => 3, 'position' => 2]);
-        Matter::create(['libelle' => 'Mus/Arts Pl', 'symbol' => 'Mus/AP', 'bilan_matter_id' => 3, 'position' => 3]);
+        Matter::create(['libelle' => 'Mus/Arts Pl', 'symbol' => 'Mus/AP', 'bilan_matter_id' => 3, 'position' => 3]); // 10
         Matter::create(['libelle' => 'Philosophie', 'symbol' => 'Philo', 'bilan_matter_id' => 1, 'position' => 1]);
-        Matter::create(['libelle' => 'Informatique', 'symbol' => 'Tic', 'bilan_matter_id' => 3, 'position' => 4]);
+        Matter::create(['libelle' => 'Informatique', 'symbol' => 'Tic', 'bilan_matter_id' => 3, 'position' => 4]); // 12
         Matter::create(['libelle' => 'Conduite', 'symbol' => 'Cdte', 'bilan_matter_id' => 3, 'position' => 5]); // id = 13
     }
 }

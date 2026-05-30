@@ -122,12 +122,12 @@
 
 
     public function index() {
-      $dts = School::select('id', 'name_school', 'autorisation', 'code', 'status')->orderBy('name_school')->get();
+      $dts = School::select('id', 'name', 'autorisation', 'code', 'status')->orderBy('name')->get();
       return $dts;
     }
 
     public function update($id) {
-      $dts = School::select('id', 'name_school', 'autorisation', 'code', 'status')->where('id', $id)->first();
+      $dts = School::select('id', 'name', 'autorisation', 'code', 'status')->where('id', $id)->first();
       return $dts;
     }
 
@@ -152,7 +152,7 @@
       School::where('id', $str)->update([
         'code' => $data['code'],
         'autorisation' => $data['num'],
-        'name_school' => strtolower($data['name']),
+        'name' => strtolower($data['name']),
         'status' => $data['status'] ? '1':'0'
       ]);
     }
@@ -193,7 +193,7 @@
       $dt = School::create([
         'code' => $code,
         'autorisation' => $num,
-        'name_school' => strtolower($name)
+        'name' => strtolower($name)
       ]);
       return $dt ? $dt->id:null;
     }

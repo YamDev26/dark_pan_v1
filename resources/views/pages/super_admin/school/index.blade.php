@@ -28,7 +28,7 @@
                 @forelse ($data as $item)
                 <tr>
                   <td class="text-center">{{ $i< 10 ? '0'.$i++:$i++ }}</td>
-                  <td>{{ ucwords($item['name_school']) }}</td>
+                  <td>{{ ucwords($item['name']) }}</td>
                   <td>{{ $item['code'] }}</td>
                   <td>{{ $item['autorisation'] }}</td>
                   <td class="text-center">

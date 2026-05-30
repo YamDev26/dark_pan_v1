@@ -22,7 +22,6 @@ return new class extends Migration
             $table->foreign('matter_id')->references('id')->on('matters')->onDelete('cascade');
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
             $table->foreign('serie_id')->references('id')->on('series')->onDelete('cascade');
-            $table->unique(['level_id', 'matter_id', 'school_id']); // Contrainte unique sur les deux colonnes
             $table->timestamps();
         });
     }

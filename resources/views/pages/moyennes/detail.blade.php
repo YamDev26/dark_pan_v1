@@ -44,15 +44,15 @@
       </Div>
     </div>
     <div class="table-responsive">
-      <table class="table text-start align-middle table-bordered table-hover mb-0">
+      <table class="table text-start align-middle table-bordered table-hover mb-0" id="myTable">
         <thead>
           <tr class="text-white">
             <th scope="col" class="text-center">N°</th>
             <th scope="col" class="text-center">Matricule</th>
             <th scope="col" class="text-center">Nom & Prenoms</th>
-            @foreach ($matters as $item)
+            {{-- @foreach ($matters as $item)
               <th scope="col" class="text-center">{{ ucwords($item->symbol) }}</th>
-            @endforeach
+            @endforeach --}}
             <th scope="col" class="text-center">Moy</th>
             <th scope="col" class="text-center">Rang</th>
           </tr>
@@ -73,13 +73,13 @@
       processing: true,
       serverSide: true,
       ordering: false,
-      ajax: '{{ route('moyenne.yajra_1') }}',
+      ajax: '{{ route('moyenne.result', ($classe->id.'_'.$cutting->id)) }}',
       columns: [
         {data: 'compte',  className: 'text-center fw-bold', orderable: false, searchable: false },
-        {data: 'libelle', className: 'text-left'},
-        {data: 'effectif', className: 'text-left'},
-        {data: 'prof', className: 'text-left'},
-        {data: 'action', className: 'text-center dropdown', orderable: false, searchable: false},
+        {data: 'matricule', name: 's.matricul', className: 'text-left'},
+        {data: 'name', name: 's.first', className: 'text-left'},
+        {data: 'moyenne', name: 'mt.moyenne', className: 'text-center', orderable: false, searchable: false},
+        {data: 'rang', name: 'mt.rang', className: 'text-center', orderable: false, searchable: false},
       ],
       // responsive: true,
       autoWidth: false,

@@ -32,12 +32,14 @@ class LevelController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(string $id)
+    public function create(Request $val, string $id)
     {
         try {
             return view('pages.levels.create',[
                 'level' => $this->service->level($id),
-                'data' => $this->service->getMatters()
+                'data' => $this->service->getMatters(),
+                'serie' => $val['serie'] ? 
+                $this->service->serie($val['serie']):false
             ]);
         }
         catch (\Exception $e) {
@@ -51,7 +53,7 @@ class LevelController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, string $id)
+    public function store(Request $request, string $str)
     {
         try {
             $valid = $request->validate([
@@ -68,8 +70,10 @@ class LevelController extends Controller
                 ]);
             }
             $valid['matter'][] = '13'; $valid['nbres'][] = '1';
-            $this->service->getStore($id, $valid['matter'], $valid['nbres']);
-            return to_route('level.show', $id)->with([
+            $this->service->getStore($str, $valid['matter'], $valid['nbres']);
+            $str = explode('_', $str);
+            return to_route('level.show', $str[0])->with([
+                'serie' => sizeof($str) > 1 ? $str[1]:null,
                 'str' => 'success',
                 'msg' => 'Coefficient ajouté !'
             ]);
@@ -88,9 +92,13 @@ class LevelController extends Controller
     public function show(string $id)
     {
         try {
-            return view('pages.levels.detail',[
-                'level' => $this->service->level($id),
-                'data' => $this->service->getData($id)
+            $level = $this->service->level($id);
+            $data = $level->cycle2 ? 
+            $this->service->getDataCycle2($level['id'], $level['symbol']):
+            $this->service->getDataCycle1($id);
+            return view($level->cycle2 ? 'pages.levels.detail_2':'pages.levels.detail',[
+                'level' => $level,
+                'data' => $data
             ]);
         }
         catch (\Exception $e) {

@@ -38,7 +38,7 @@
                     </tr>
                   @empty
                     <tr>
-                      <td colspan="4" class="text-center py-2">Data Not Found</td>
+                      <td colspan="5" class="text-center py-2">Data Not Found</td>
                     </tr>
                   @endforelse
                 </tbody>

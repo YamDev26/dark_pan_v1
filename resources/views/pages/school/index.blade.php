@@ -24,7 +24,7 @@
                       <tbody>
                         <tr>
                           <th style="width: 40%">Identification</th>
-                          <td style="font-size: 18px">{{ $school->code }}</td>
+                          <td style="font-size: 18px">{{ $school->code.' ~ '.ucwords($school->etat) }}</td>
                         </tr>
                         <tr>
                           <th style="width: 40%">N° Autorisation</th>
@@ -32,7 +32,7 @@
                         </tr>
                         <tr>
                           <th style="width: 40%">Nom Etablissement</th>
-                          <td style="font-size: 18px">{{ ucwords($school->name_school).($school->slug_school ? ' ~ '.strtoupper($school->slug_school):null) }}</td>
+                          <td style="font-size: 18px">{{ ucwords($school->name).($school->slug ? ' ~ '.strtoupper($school->slug):null) }}</td>
                         </tr>
                         <tr>
                           <th style="width: 40%">Dren</th>
@@ -40,19 +40,19 @@
                         </tr>
                         <tr>
                           <th style="width: 40%">Ville</th>
-                          <td style="font-size: 18px">{{ ucwords($school->ville_school) }}</td>
+                          <td style="font-size: 18px">{{ ucwords($school->city) }}</td>
                         </tr>
                         <tr>
                           <th style="width: 40%">Adresse Postale</th>
-                          <td style="font-size: 18px">{{ $school->addres_postal }}</td>
+                          <td style="font-size: 18px">{{ $school->addres }}</td>
                         </tr>
                         <tr>
                           <th style="width: 40%">Adresse Email</th>
-                          <td style="font-size: 18px">{{ $school->email_school }}</td>
+                          <td style="font-size: 18px">{{ $school->email }}</td>
                         </tr>
                         <tr>
                           <th style="width: 40%">N° Téléphonique</th>
-                          <td style="font-size: 18px">{{ $school->phon_school }}</td>
+                          <td style="font-size: 18px">{{ $school->phon }}</td>
                         </tr>
                         <tr>
                           <th style="width: 40%">Cycle</th>
