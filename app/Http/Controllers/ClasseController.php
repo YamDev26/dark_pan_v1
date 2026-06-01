@@ -57,7 +57,8 @@ class ClasseController extends Controller
             $nbre = $classe['lv2'] != 'mix' ? 1:2;
             $str = mt_rand(100, 999);
             $path = storage_path('app/download/Excel/register_'.$nbre.'.xlsx');
-            $name = 'inscription_list_'.$str.'_'.$classe['libelle'].'_'.$id;
+            $str = $str.'_'.$classe['school_id'].$classe['school_year_id'];
+            $name = 'Fiche_Inscription_'.$classe['libelle'].'_'.$str.'_'.$id;
             return response()->download($path, $name.'.xlsx');
         }
         catch (\Exception $e) {
@@ -68,30 +69,30 @@ class ClasseController extends Controller
         }
     }
 
-    public function import(Request $request, string $str) {
+    public function import(Request $request) {
         try {
             $request->validate([
                 'file' => 'required|file|mimes:xlsx,xls|max:5120'
             ]);
             $file = $request->file('file');
             $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            list($l1, $l2, $l3, $l4, $id) = explode('_', $name);
-            if(!($str == $id)) {
+            $explod = explode('_', $name);
+            $classe = $this->service->classe($explod[5]);
+            if($classe && !($classe['school_id'].$classe['school_year_id'] == $explod[4])) {
                 return back()->with([
                     'str' => 'danger',
-                    'msg' => 'Une erreur, vous vous êtes trompé de fichier !'
+                    'msg' => 'Erreur, Incompactibilité lié à cet fichier !'
                 ]);
             }
-            $classe = $this->service->classe($str);
             if(!($classe['invalid'] || $classe['status'])) {
                 return back()->with([
                     'str' => 'danger',
-                    'msg' => 'Une erreur, problème lié à cette classe !'
+                    'msg' => 'Erreur, problème lié à cette classe !'
                 ]);
             }
             $lv2 = $classe['lv2'] == 'mix' ? true:false;
-            Excel::import(new File2Import($str, $lv2), $file);
-            return to_route('classe.list', $str)->with([
+            Excel::import(new File2Import($explod[5], $lv2), $file);
+            return back()->with([
                 'str' => 'success',
                 'msg' => 'Importation réussie.'
             ]);
@@ -99,7 +100,7 @@ class ClasseController extends Controller
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'
+                'msg' => 'Erreur, Mauvais fichier !'
             ]);
         }
     }

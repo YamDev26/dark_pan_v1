@@ -19,5 +19,6 @@ class RoleSeeder extends Seeder
         Role::create(['libelle' => 'educateur']);
         Role::create(['libelle' => 'comptable']);
         Role::create(['libelle' => 'secretaire']);
+        Role::create(['libelle' => 'enseignant']); // id = 8
     }
 }

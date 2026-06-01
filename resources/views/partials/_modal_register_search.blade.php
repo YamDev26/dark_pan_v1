@@ -1,9 +1,9 @@
-<div class="modal" id="AddModal" tabindex="-1" aria-labelledby="AddModalLabel" aria-hidden="true">
+<div class="modal" id="SearchModal" tabindex="-1" aria-labelledby="SearchModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content pb-0" style="background: #191C24">
       <form action="#" method="post">
         <div class="modal-header py-2">
-          <h5 class="modal-title" id="myModalLabel">Matricule</h5>
+          <h5 class="modal-title" id="SearchModalLabel">Matricule</h5>
           <h3><i class="fa fa-user-edit text-primary"></i></h3>
         </div>
         <div class="modal-body py-4">

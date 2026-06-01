@@ -30,15 +30,14 @@
     <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
       <h4 class="mb-0">Inscription</h4>
       <div class="d-flex">
-        <div class="mr-3">
-          <select class="form-select form-select w-auto border-0 text-color-3" onchange="window.location.href=this.value;">
-            <option value="">Search ...</option>
-            @foreach ($levels as $item)
-              <option value="{{ route('register.show', $item['id']) }}">{{ ucwords($item['symbol']) }}</option>
-            @endforeach
-          </select>
-        </div>
-        <button type="button" class="btn btn-outline-danger py-1 mx-2" data-bs-toggle="modal" data-bs-target="#AddModal">Nouvelle</button>
+        <button type="button" class="btn btn-outline-danger py-1" data-bs-toggle="modal" data-bs-target="#SearchModal">Nouvelle</button>
+        <button type="button" class="btn btn-outline-warning py-1 mx-2" data-bs-toggle="modal" data-bs-target="#AddModal">Import</button>
+        <select class="form-select form-select w-auto border-0 text-color-3" onchange="window.location.href=this.value;">
+          <option value="">Search ...</option>
+          @foreach ($levels as $item)
+            <option value="{{ route('register.show', $item['id']) }}">{{ ucwords($item['symbol']) }}</option>
+          @endforeach
+        </select>
       </div>
     </div>
     <div class="table-responsive">
@@ -69,6 +68,11 @@
 @include('partials._modal_register_detail')
 <!-- Modal Delete Register -->
 @include('partials._modal_register_delete')
+<!-- Modal -->
+@include('partials._modal_import',[
+  'url' => route('classe.import'),
+  'export' => null
+])
 @endsection
 @section('script')
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
@@ -104,11 +108,11 @@
               $('#addGenre').text('Genre : '+(data['genre'] == 'F' ? 'Feminin':'Masculin'));
               $('#addNaiss').text('Né'+(data['genre'] == 'F' ? 'é le ':' le ')+data['date']+' à '+data['lieu']);
               $('#addMtcl').text('Matricule : '+data['matricul']);
+              
+              $('#SearchModal').modal('hide');
+              $('#matricul').val('');
             }
-
             $("#myModal").modal("show");
-            $('#AddModal').modal('hide');
-            $('#matricul').val('');
           }
         })
       }

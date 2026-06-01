@@ -31,8 +31,16 @@
       <div class="h-100 bg-secondary rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-2">
           <h4 class="mb-0">Classe {{ $classe['libelle'] }}</h4>
-          <div>
-            <button type="button" class="btn btn-outline-primary py-1 mx-2" data-bs-toggle="modal" data-bs-target="#AddModal">Import</button>
+          <div class="d-flex">
+            <select class="form-select form-select w-auto border-0 text-color-3 mx-2" onchange="window.location.href=this.value;">
+              <option value="">Search ...</option>
+              <option value="#">Emploi du temps</option>
+              <option value="#">Liste Enseignant</option>
+              <option value="#">Danwload pfd</option>
+              @if (!($classe['inscrit'] >= $classe['effectif']))
+                <option value="{{ route('classe.export',$classe['id']) }}">Fiche Inscription</option>
+              @endif
+            </select>
             <a href="{{ route('classe.show',$classe['level_id']) }}" class="btn btn-outline-light py-1">Return</a>
           </div>
         </div>
@@ -62,11 +70,6 @@
     </div>
   </div>
 </div>
-<!-- Modal -->
-@include('partials._modal_import',[
-  'url' => route('classe.import',$classe['id']),
-  'export' => route('classe.export',$classe['id'])
-])
 @endsection
 @section('script')
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>

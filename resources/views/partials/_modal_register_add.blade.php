@@ -1,5 +1,5 @@
 <div class="modal" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document" style="min-width: 600px">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 600px">
     <div class="modal-content" style="background: #191C24">
       <div class="modal-header pb-1">
         <h4 class="modal-title" id="myModalLabel">Inscription</h4>

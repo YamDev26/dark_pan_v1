@@ -16,21 +16,23 @@ return new class extends Migration
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->enum('civility', ['mr','mme'])->nullable();
-            $table->enum('piece', ['cni', 'permis', 'passport'])->nullable();
-            $table->string('num_piece')->nullable()->unique();
-            $table->string('telephon')->nullable()->unique();
-            $table->enum('matrimonial', ['marié','célibataire'])->nullable();
-            $table->unsignedBigInteger('role_id');
-            $table->string('photo')->nullable();
             $table->string('email')->unique();
+            $table->string('telephon')->nullable();
             $table->enum('status', ['0','1'])->default('1');
             $table->timestamp('email_verified_at')->nullable();
+            $table->unsignedBigInteger('role_id');
             $table->unsignedBigInteger('school_id')->nullable();
+            $table->unsignedBigInteger('teacher_id')->nullable();
+            $table->unsignedBigInteger('personnel_id')->nullable();
+            $table->unsignedBigInteger('school_year_id')->nullable();
             $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
+            $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade');
+            $table->foreign('personnel_id')->references('id')->on('personnels')->onDelete('cascade');
+            $table->foreign('school_year_id')->references('id')->on('school_years')->onDelete('cascade');
+            $table->rememberToken();
+            $table->timestamps();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

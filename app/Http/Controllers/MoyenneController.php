@@ -188,7 +188,7 @@ class MoyenneController extends Controller
             $name = $libelle.'_'.str_replace(' ', '_', ucwords($cutting)).'_'.$matter;
             return Excel::download(
                 new File2Export($classe, $libelle, $matter, $cutting), 
-                'Add_Moyen_'.$name.'_'.$value.'_'.$str.'.xlsx'
+                'Fiche_Moyenne_'.$name.'_'.$value.'_'.$str.'.xlsx'
             );
         }
         catch (\Exception $e) {

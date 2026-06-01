@@ -165,7 +165,7 @@ class StudentController extends Controller
     {
         try {
             $str = mt_rand(100, 1000);
-            $name = 'New_Student_'.$str.'_'.$this->school;
+            $name = 'Fiche_Enregistrement_'.$str.'_'.$this->school;
             return Excel::download(new File1Export, $name.'.xlsx');
         }
         catch (\Exception $e) {
@@ -188,7 +188,7 @@ class StudentController extends Controller
             if(!($id == $this->school)) {
                 return back()->with([
                     'str' => 'danger',
-                    'msg' => 'Une erreur, fichier incompactible !'
+                    'msg' => 'Erreur, fichier incompactible !'
                 ]);
             }
             Excel::import(new File1Import, $file);

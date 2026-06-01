@@ -78,11 +78,21 @@
         <span class="d-none d-lg-inline-flex">John Doe</span>
       </a>
       <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-        <a href="#" class="dropdown-item">My Profile</a>
-        <a href="#" class="dropdown-item">Settings</a>
+        <a href="#" class="dropdown-item">
+          <i class="fas fa-user"></i>
+          My Profile
+        </a>
+        <a href="#" class="dropdown-item">
+          <i class="fas fa-lock"></i>
+          Settings
+        </a>
+        <hr class="my-1">
         <form action="{{ route('logout') }}" method="post">
           @csrf
-          <button type="submit" class="dropdown-item text-danger">Log Out</button>
+          <button type="submit" class="dropdown-item text-danger text-center">
+            <i class="fas fa-sign-in-alt"></i>
+            Log Out
+          </button>
         </form>
       </div>
     </div>

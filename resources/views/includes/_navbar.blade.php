@@ -36,8 +36,12 @@
         <a class="nav-item nav-link {{ request()->is('student/*') ? 'active' : '' }}" href="{{ route('student.index') }}">
           <i class="fa fa-graduation-cap me-2"></i>Elèves
         </a>
-        <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
-        <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
+        <a class="nav-item nav-link {{ request()->is('teacher/*') ? 'active' : '' }}" href="{{ route('teacher.index') }}">
+          <i class="fa fa-user me-2"></i>Enseignants
+        </a>
+        <a href="chart.html" class="nav-item nav-link">
+          <i class="fa fa-users me-2"></i>Personnels
+        </a>
         <div class="nav-item dropdown" title="Configurations">
           <a href="#" class="nav-link dropdown-toggle {{ request()->is(['setting/*', 'slot/*', 'level/*']) ? 'active' : '' }}" data-bs-toggle="dropdown">
             <i class="fa fa-cogs me-2"></i>Configs

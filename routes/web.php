@@ -78,7 +78,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/edit/{id}', [App\Http\Controllers\ClasseController::class, 'update'])->name('classe.update');
             Route::post('/delete/{id}', [App\Http\Controllers\ClasseController::class, 'destroy'])->name('classe.delete');
             Route::get('/export/{id}', [App\Http\Controllers\ClasseController::class, 'export'])->name('classe.export');
-            Route::post('/import/{id}', [App\Http\Controllers\ClasseController::class, 'import'])->name('classe.import');
+            Route::post('/import', [App\Http\Controllers\ClasseController::class, 'import'])->name('classe.import');
         });
 
         Route::group(['prefix' => 'student'], function() {
@@ -118,6 +118,13 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store/{id}', [App\Http\Controllers\MoyenneController::class, 'store'])->name('moyenne.store');
             Route::get('/export/{id}', [App\Http\Controllers\MoyenneController::class, 'export'])->name('moyenne.export');
             Route::post('/import/{id}', [App\Http\Controllers\MoyenneController::class, 'import'])->name('moyenne.import');
+        });
+
+        Route::group(['prefix' => 'teacher'], function() {
+            Route::get('/index', [App\Http\Controllers\TeacherController::class, 'index'])->name('teacher.index');
+            Route::get('/yajra', [App\Http\Controllers\TeacherController::class, 'yajra'])->name('teacher.yajra');
+            Route::get('/create', [App\Http\Controllers\TeacherController::class, 'create'])->name('teacher.create');
+            Route::post('/store', [App\Http\Controllers\TeacherController::class, 'store'])->name('teacher.store');
         });
     });
 });
