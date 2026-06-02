@@ -9,7 +9,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
-use Maatwebsite\Excel\Concerns\Failure;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use Carbon\Carbon;
 use DateTime;
@@ -21,6 +20,7 @@ class File1Import implements ToCollection, WithHeadingRow, WithValidation, Skips
     public function collection(Collection $data)
     {
         $service = app(StudentService::class);
+
         foreach($data as $item) {
             $date = $this->dates($item['date_naissance']);
             $data = [
@@ -62,6 +62,7 @@ class File1Import implements ToCollection, WithHeadingRow, WithValidation, Skips
             '*.residence' => 'required|string',
         ];
     }
+    
 
     private function getGenre($valuer) {
         $str = strtolower($valuer);
@@ -70,6 +71,7 @@ class File1Import implements ToCollection, WithHeadingRow, WithValidation, Skips
         }
         return 'M';
     }
+
 
     private function dates($value, string $format = 'Y-m-d'): ?Carbon {
         if (empty($value)) {
@@ -95,10 +97,12 @@ class File1Import implements ToCollection, WithHeadingRow, WithValidation, Skips
         }
     }
 
+
     private function getPhon($phon) {
         $count = strlen((string) abs($phon));
         return $count == 10 ? $phon:'0'.$phon;
     }
+
 
     private function getSexe($sexe) {
         $str = strtolower($sexe);
@@ -107,6 +111,7 @@ class File1Import implements ToCollection, WithHeadingRow, WithValidation, Skips
         }
         return 'Mr';
     }
+
 
     private function getType($libelle) {
         $str = strtolower($libelle);

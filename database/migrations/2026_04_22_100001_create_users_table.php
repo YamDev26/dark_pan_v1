@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->enum('civility', ['mr','mme'])->nullable();
+            $table->enum('civility', ['mr','mde'])->default('mr');
             $table->string('email')->unique();
             $table->string('telephon')->nullable();
             $table->enum('status', ['0','1'])->default('1');

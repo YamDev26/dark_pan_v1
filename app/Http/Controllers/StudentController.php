@@ -164,8 +164,8 @@ class StudentController extends Controller
     public function export()
     {
         try {
-            $str = mt_rand(100, 1000);
-            $name = 'Fiche_Enregistrement_'.$str.'_'.$this->school;
+            $str = mt_rand(100, 1000).'_'.$this->service->export(); 
+            $name = 'Fiche_Enregistrement_'.$str;
             return Excel::download(new File1Export, $name.'.xlsx');
         }
         catch (\Exception $e) {
@@ -184,8 +184,8 @@ class StudentController extends Controller
             ]);
             $file = $request->file('file');
             $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            list($lib1, $lib2, $str, $id) = explode('_', $name);
-            if(!($id == $this->school)) {
+            $str = explode('_', $name);
+            if(!($str[3] == $this->service->export())) {
                 return back()->with([
                     'str' => 'danger',
                     'msg' => 'Erreur, fichier incompactible !'

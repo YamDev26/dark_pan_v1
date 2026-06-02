@@ -134,6 +134,9 @@
       }
     }
 
+    public function export() {
+      return $this->schl.$this->year();
+    }
 
     private function nation($libelle) {
       $libelle = strtolower($libelle);

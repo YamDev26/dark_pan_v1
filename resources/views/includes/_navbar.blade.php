@@ -24,6 +24,9 @@
           <i class="fa fa-list-alt me-2" style="font-size: 21px;"></i>Dren
         </a>
       @else
+        <a class="nav-item nav-link {{ request()->is('evaluated/*') ? 'active' : '' }}" href="{{ route('evaluated.index') }}">
+          <i class="fa fa-laptop me-2"></i>Evaluations
+        </a>
         <a class="nav-item nav-link {{ request()->is('moyenne/*') ? 'active' : '' }}" href="{{ route('moyenne.index') }}">
           <i class="fa fa-chart-bar me-2"></i>Moyennes
         </a>

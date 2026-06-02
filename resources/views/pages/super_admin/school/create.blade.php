@@ -8,7 +8,7 @@
         <div class="mb-4 d-flex justify-content-between">
           <h5 class="m-2">{{ $data ? 'Edit':'Create' }} School</h5>
           <p style="text-align:left">Les champs avec astérisque (<span class="text-danger" style="font-size: 17px">*</span>) sont obligatoires.</p>
-          <a href="{{ route('school.index') }}" class="btn btn-outline-light m-2 py-0">Return</a>
+          <a href="{{ route('school.index') }}" class="btn btn-outline-light m-2 py-1">Return</a>
         </div>
         <form action="{{ route($data ? 'school.update':'school.store', $data ? $data->id:'') }}" method="POST">
           @method($data ? 'put':'post')
@@ -66,11 +66,11 @@
               <label class="col-sm-3 col-form-label">Sexe Admin<span class="text-danger">*</span> :</label>
               <div class="col-sm-9">
                 <div class="form-check form-check-inline">
-                  <input type="radio" class="form-check-input" name="gender" id="mme" value="mme" @checked(old('gender', 'mr') == 'mme')>
+                  <input type="radio" class="form-check-input" name="genre" id="mme" value="mde" @checked(old('gender', 'md') == 'mde')>
                   <label class="form-check-label" for="mme">Femme</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input type="radio" class="form-check-input" name="gender" id="mr" value="mr" @checked(old('gender', 'mr') == 'mr')>
+                  <input type="radio" class="form-check-input" name="genre" id="mr" value="mr" @checked(old('gender', 'mr') == 'mr')>
                   <label class="form-check-label" for="mr">Homme</label>
                 </div>
               </div>

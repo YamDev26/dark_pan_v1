@@ -124,7 +124,32 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/index', [App\Http\Controllers\TeacherController::class, 'index'])->name('teacher.index');
             Route::get('/yajra', [App\Http\Controllers\TeacherController::class, 'yajra'])->name('teacher.yajra');
             Route::get('/create', [App\Http\Controllers\TeacherController::class, 'create'])->name('teacher.create');
+            Route::get('/disabled', [App\Http\Controllers\TeacherController::class, 'show'])->name('teacher.show');
+            Route::get('/', [App\Http\Controllers\TeacherController::class, 'disabled'])->name('teacher.disabled');
             Route::post('/store', [App\Http\Controllers\TeacherController::class, 'store'])->name('teacher.store');
+            Route::get('/edit/{id}', [App\Http\Controllers\TeacherController::class, 'edit'])->name('teacher.edit');
+            Route::put('/edit/{id}', [App\Http\Controllers\TeacherController::class, 'update'])->name('teacher.update');
+            Route::put('/delete/{id}', [App\Http\Controllers\TeacherController::class, 'destroy'])->name('teacher.delete');
+            Route::get('/export', [App\Http\Controllers\TeacherController::class, 'export'])->name('teacher.export');
+            Route::post('/import', [App\Http\Controllers\TeacherController::class, 'import'])->name('teacher.import');
+        });
+
+        Route::group(['prefix' => 'evaluated'], function() {
+            Route::get('/index', [App\Http\Controllers\EvaluatedController::class, 'index'])->name('evaluated.index');
+            Route::get('/yajra', [App\Http\Controllers\EvaluatedController::class, 'yajra'])->name('evaluated.yajra');
+            Route::get('/matter', [App\Http\Controllers\EvaluatedController::class, 'matter'])->name('evaluated.matter');
+            Route::get('/detail', [App\Http\Controllers\EvaluatedController::class, 'show'])->name('evaluated.show');
+            Route::post('/store', [App\Http\Controllers\EvaluatedController::class, 'store'])->name('evaluated.store');
+
+            Route::group(['prefix' => 'note'], function() {
+                Route::get('/index', [App\Http\Controllers\GestionNoteController::class, 'index'])->name('note.index');
+                Route::get('/list/{id}', [App\Http\Controllers\GestionNoteController::class, 'show'])->name('note.show');
+                Route::get('/not/{id}', [App\Http\Controllers\GestionNoteController::class, 'listNot'])->name('note.yajra');
+                Route::get('/create/{id}', [App\Http\Controllers\GestionNoteController::class, 'create'])->name('note.create');
+                Route::post('/store/{id}', [App\Http\Controllers\GestionNoteController::class, 'store'])->name('note.store');
+                Route::get('/export/{id}', [App\Http\Controllers\GestionNoteController::class, 'export'])->name('note.export');
+                Route::post('/import/{id}', [App\Http\Controllers\GestionNoteController::class, 'import'])->name('cc.import');
+            });
         });
     });
 });

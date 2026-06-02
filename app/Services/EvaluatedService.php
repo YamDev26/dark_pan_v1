@@ -1,0 +1,133 @@
+<?php
+  namespace App\Services;
+
+  use App\Models\School;
+  use App\Models\Evaluated;
+  use App\Models\GetClasse;
+  use App\Models\SchoolYear;
+  use App\Models\LevelMatter;
+  use App\Models\EvaluatedType;
+  use Illuminate\Support\Facades\DB;
+  use Illuminate\Support\Facades\Auth;
+  use Yajra\DataTables\Facades\DataTables;
+
+  class EvaluatedService
+  {
+    private $schl;
+    public function __construct() {
+      $this->schl = Auth::user()->school_id ?? 1;
+    }
+
+
+    public function getClasse() {
+      $query = GetClasse::where('school_id', $this->schl)
+      ->where('school_year_id', $this->year())->where('status', '1')
+      ->orderBy('id')->orderBy('level_id')->get();
+
+      $compte = 0;
+      return DataTables::of($query)
+      ->addColumn('compte', function() use (&$compte) {
+        return ($compte < 9 ? '0'.++$compte : ++$compte);
+      })
+      ->addColumn('libelle', function ($row) {
+        return ($row->libelle);
+      })
+      ->addColumn('effectif', function ($row) {
+        return (($row->inscrit < 10 ? '0'.$row->inscrit:$row->inscrit).' / '.$row->effectif);
+      })
+      ->addColumn('action', function ($row) {
+        return ('<span class="card-block remove-label m-0 pb-0 text-center">
+          <button type="button" class="btn btn-sm btn-warning text-white py-1 me-2" data-id="'.$row->id.'">
+          <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </span>');
+      })
+      ->rawColumns(['compte', 'libelle', 'effectif', 'action'])
+      ->make(true);
+    }
+    
+
+    public function classe($str) {
+      return GetClasse::find($str);
+    }
+
+
+    public function matter($str) {
+      return LevelMatter::find($str);
+    }
+
+    public function getType() {
+      return EvaluatedType::orderBy('id')->get();
+    }
+
+    public function getMatters($level, $serie = null) {
+      $data = DB::table('level_matters as lm')
+      ->join('matters as m', 'm.id', '=', 'lm.matter_id')
+      ->select( 'lm.id', 'm.libelle', 'm.symbol', 'lm.value')
+      ->where(['lm.level_id' => $level, 'lm.serie_id' => $serie])
+      ->where('m.libelle', '!=', 'conduite')
+      ->where('lm.school_id', $this->schl)
+      ->orderByRaw(' m.bilan_matter_id, m.position')
+      ->get();
+      return $data ?? [];
+    }
+
+
+    public function getEvaluated($matter, $classe) {
+      $datas = DB::table('cutting_school_years as cs')
+      ->leftJoin('evaluateds as e', function ($join) use ($classe, $matter) {
+        $join->on('e.cutting_school_year_id', '=', 'cs.id')
+        ->where(['e.get_classe_id' => $classe, 'e.level_matter_id' => $matter]);
+      })
+      ->leftJoin('cuttings as c', 'c.id', '=', 'cs.cutting_id')
+      ->leftJoin('evaluated_types as et', 'et.id', '=', 'e.evaluated_type_id')
+      ->select(
+        'cs.id', 'cs.status as actif', 'c.libelle as cutting', 'e.actif as status',
+        'e.id as id2', 'et.libelle as libelle', 'e.value as value', 'e.created as date'
+      )
+      ->orderByRaw('cs.id, e.id, e.created')
+      ->get()
+      ->groupBy('id')
+      ->map(function ($items) {
+        return [
+          'id' => $items->first()->id,
+          'cutting' => $items->first()->cutting,
+          'actif' => $items->first()->actif,
+          'evaluated' => $items
+          ->whereNotNull('libelle')
+          ->map(fn ($item) => [
+            'libelle' => $item->libelle,
+            'status'  => $item->status,
+            'value'  => $item->value,
+            'date'  => $item->date,
+            'id'  => $item->id2
+          ])->values(),
+        ];
+      })
+      ->values();
+      return $datas ?? [];
+    }
+
+
+    public function getStore($data) {
+      Evaluated::create([
+        'value' => $data['value'],
+        'created' => $data['date'],
+        'sub_matter_id' => null,
+        'get_classe_id' => $data['classe'],
+        'level_matter_id' => $data['matter'],
+        'evaluated_type_id' => $data['type'],
+        'cutting_school_year_id' => $data['cutting'],
+      ]);
+    }
+
+
+    private function year() {
+      $year = SchoolYear::where('status', '1')->first();
+      return $year ? $year->id:null;
+    }
+
+    private function school() {
+      return School::find($this->schl) ?? null;
+    }
+  }

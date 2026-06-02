@@ -131,13 +131,14 @@
       return $dts;
     }
 
-    public function stored($dts) {
+    public function stored($dts) { dd($dts);
       $id = $this->school($dts['code'], $dts['num'], $dts['name']);
       if($id) {
         User::create([
           'first_name' => strtolower($dts['first']),
           'last_name' => strtolower($dts['last']),
           'email' => strtolower($dts['email']),
+          'civility' => strtolower($dts['genre']),
           'telephon' => $dts['phon'],
           'school_id' => $id,
           'role_id' => self::EN_COURS,

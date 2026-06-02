@@ -28,9 +28,9 @@
                 </button>
               @endforeach
             </div>
-            <div class="tab-content pt-3" id="nav-tabContent">
+            <div class="tab-content pt-1" id="nav-tabContent">
               @foreach ($data as $i => $item)
-                <div class="tab-pane fade {{ session('serie') ? (session('serie') == $item['id'] ? 'active' : ''):($loop->first ? 'active' : '') }}" id="content-{{ $i }}" role="tabpanel" aria-labelledby="tab-{{ $i }}">
+                <div class="tab-pane fade {{ session('serie') ? (session('serie') == $item['id'] ? 'show active' : ''):($loop->first ? 'show active' : '') }}" id="content-{{ $i }}" role="tabpanel" aria-labelledby="tab-{{ $i }}">
                   @include('partials._table_level', ['data' => $item['matters']])
                 </div>
               @endforeach

@@ -6,8 +6,8 @@
         <div class="modal-header py-2">
           <h5 class="modal-title" id="myModalLabel">Import File</h5>
           @if ($export)
-            <a href="{{ $export }}" class="btn btn-square btn-outline-warning my-0 p-0" title="New File" style="font-size: 15px">
-              <i class="fa fa-download"></i>
+            <a href="{{ $export }}" class="btn btn-outline-light my-0 py-0 px-1" title="New File" style="font-size: 15px">
+              Exemplaire
             </a>
           @else
             <h3><i class="fa fa-user-edit text-primary"></i></h3>

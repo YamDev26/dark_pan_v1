@@ -238,7 +238,7 @@ class SuperAdminController extends Controller
             $data = $request->validate([
                 'first' => 'required|string',
                 'last' => 'required|string',
-                'gender' => 'required|string',
+                'genre' => 'required|string',
                 'email' => 'required|email|unique:users,email',
                 'phon' => 'required|numeric|unique:users,telephon',
                 'code' => 'required|string|unique:schools,code',
