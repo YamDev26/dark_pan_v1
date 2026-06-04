@@ -19,4 +19,9 @@ class Evaluated extends Model
     public function evaluated_type() {
         return $this->belongsTo(EvaluatedType::class);
     }
+
+
+    public function cutting_school_year() {
+        return $this->belongsTo(CuttingSchoolYear::class);
+    }
 }

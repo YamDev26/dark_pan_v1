@@ -2,6 +2,7 @@
   namespace App\Services;
 
   use App\Models\School;
+  use App\Models\Evaluat;
   use App\Models\Evaluated;
   use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Facades\Auth;
@@ -16,18 +17,8 @@
 
     
     public function getNote($evaluat) {
-      $query = DB::table('registers as r')
-      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
-      ->join('students as s', 's.id', '=', 'ss.student_id')
-      ->leftJoin('evaluats as e', function ($join) use ($evaluat) {
-        $join->on('e.register_id', '=', 'r.id')
-        ->join('evaluateds as ev', 'ev.id', '=', 'e.evaluated_id')
-        ->where('ev.id', $evaluat);
-      })
-      ->select(['ev.id', 'e.note', 'ev.value', 's.matricul', 's.first', 's.last', 's.genre'])
-      ->orderByRaw('s.first, s.last')
-      ->get();
-
+      
+      $query = $this->studentGet($evaluat);
       $compte = 0;
       return DataTables::of($query)
       ->addColumn('compte', function() use (&$compte) {
@@ -46,12 +37,19 @@
         return ($row->genre == 'F' ? 'Feminin':'Masculin');
       })
       ->addColumn('note', function ($row) {
-        return (($row->note ? $row->note:'--').' / '.($row->value ?? '--'));
+        return (
+          $row->note == 'nc' ? $row->note:
+          ($row->note ? $row->note:'--').' / '.($row->value ?? '--')
+        );
       })
       ->rawColumns(['compte', 'matricule', 'first', 'last', 'genre', 'note'])
       ->make(true);
     }
 
+    public function existNote($evaluat) {
+      $exists = Evaluat::where('evaluated_id', $evaluat)->exists();
+      return $exists;
+    }
 
     public function getStudent($classe) {
       $query = DB::table('registers as r')
@@ -63,10 +61,53 @@
       ->get();
       return $query;
     }
+
+
+    public function getNotStudent($evaluat) {
+      return $this->studentGet($evaluat);
+    }
+
+
+    public function studentId($matricul, $classe) {
+      $dt = DB::table('registers as r')
+      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
+      ->join('students as s', 's.id', '=', 'ss.student_id')
+      ->select(['r.id', 's.matricul','s.genre'])
+      ->where('r.get_classe_id', $classe)->where('s.matricul', $matricul)
+      ->first();
+      return $dt ?? null;
+    }
     
+
+    public function noteEvaluat($register, $evaluat, $note = null): void {
+      Evaluat::updateOrCreate(
+        [
+          'register_id' => $register,
+          'evaluated_id' => $evaluat,
+        ],
+        [
+          'note' => $note,
+        ]
+      );
+    }
 
     public function evaluated($str) {
       return Evaluated::find($str);
+    }
+
+
+    private function studentGet($evaluat) {
+      return DB::table('registers as r')
+      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
+      ->join('students as s', 's.id', '=', 'ss.student_id')
+      ->leftJoin('evaluats as e', function ($join) use ($evaluat) {
+        $join->on('e.register_id', '=', 'r.id')
+        ->join('evaluateds as ev', 'ev.id', '=', 'e.evaluated_id')
+        ->where('ev.id', $evaluat);
+      })
+      ->select(['ev.id', 'e.note', 'ev.value', 's.matricul', 's.first', 's.last', 's.genre'])
+      ->orderByRaw('s.first, s.last')
+      ->get();
     }
 
     private function school() {

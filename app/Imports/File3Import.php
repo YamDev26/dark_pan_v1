@@ -50,7 +50,7 @@ class File3Import implements ToCollection, WithHeadingRow, WithValidation, Skips
             '*.nom' => 'required|string',
             '*.prenoms' => 'required|string',
             '*.genre' => 'required|string',
-            '*.n' => 'required|string',
+            '*.n' => 'required|numeric',
             '*.moyenne' => 'nullable|numeric',
         ];
     }

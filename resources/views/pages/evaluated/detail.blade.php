@@ -6,19 +6,27 @@
     <div class="col-sm-12">
       <div class="h-100 bg-secondary rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-2">
-          <h4 class="mb-0">{{ $classe['libelle'] }}</h4>
-          <h4 class="mb-0">{{ $matter['matter']['symbol'] }}</h4>
+          <h4 class="mb-0">Classe {{ $classe['libelle'] }}</h4>
+          <div class="my-0 text-center">
+            <h4 class='my-0'>{{ $matter['matter']['symbol'] }}</h4>
+            <span class="my-0">Gestion des évaluations</span>
+          </div>
           <div class="d-flex">
-            <button type="button" id="btnAdd" class="btn btn-outline-primary py-1 mx-2">Nouvelle</button>
+            <select id="selected" class="form-select form-select w-auto border-0 text-color-3 mx-2">
+              <option value="">Choise ...</option>
+              <option value="modal">Nouvelle</option>
+              <option value="url">Moyenne</option>
+              <option value="#">Get Pdf</option>
+            </select>
             <a href="{{ route('evaluated.index') }}" class="btn btn-outline-light py-1">Return</a>
           </div>
         </div>
-        <hr>
+        <hr class="mt-0">
         <div class="my-2">
           <div class="bg-secondary rounded h-100">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               @foreach ($data as $i => $item)
-                <button class="nav-link {{ ($item['actif'] == 2) ? 'active':($loop->first ? 'active' : '') }}" data-id="{{ $item['id'] }}" id="tab-{{ $i }}" data-bs-toggle="tab" data-bs-target="#content-{{ $i }}" type="button" role="tab" aria-controls="content-{{ $i }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                <button class="nav-link {{ ($item['actif'] == 2) ? 'active':($loop->first ? 'active' : '') }}" id="{{ $item['actif'] == 2 ? 'actif':'tab-'.$i  }}" data-atf="{{ $item['actif'] }}" data-id="{{ $item['id'] }}" data-bs-toggle="tab" data-bs-target="#content-{{ $i }}" type="button" role="tab" aria-controls="content-{{ $i }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
                   {{ ucwords($item['cutting']) }}
                 </button>
               @endforeach
@@ -50,7 +58,7 @@
           <div class="mb-2">
             <input type="hidden" name="matter" value="{{ $matter['id'] }}">
             <input type="hidden" name="classe" value="{{ $classe['id'] }}">
-            <input type="hidden" name="cutting" value="{{ $classe['id'] }}">
+            <input type="hidden" name="cutting" id="cutting">
             <label for="type" class="col-form-label">Type Evaluation<span class="text-danger">*</span> :</label>
             <select name="type" id="type" class="form-select mb-2">
               <option value="">Select ...</option>
@@ -68,7 +76,7 @@
               <option value="40">40</option>
             </select>
           </div>
-          <div class="mb-2">
+          <div class="mb-0">
             <label for="date" class="col-form-label">Date Evaluation<span class="text-danger">*</span> :</label>
             <input type="date" name="date" class="form-control" id="date">
           </div>
@@ -86,9 +94,48 @@
 <script>
   $(document).ready(function() {
 
-    $('#btnAdd').on('click', function() {
-      $("#myModal").modal("show");
-    })
+    // Initialisation
+    updateSelected('#actif');
+
+    $('.nav-link').on('click', function(){
+      updateSelected(this);
+    });
+
+
+    $('#selected').on('change', function() {
+      switch (this.value) {
+        case 'modal':
+          $("#myModal").modal("show");
+          break;
+        case 'url':
+          window.location.href='{{ route('evaluated.index') }}';
+          break;
+      }
+    });
+    
+
+    $(document).on('click', '.edit', function() {
+      $value = $(this).data('id');
+      if($value) {
+        $.ajax({
+          url: '{{ route('evaluated.edit') }}',
+          type: 'get',
+          data: { id: $value },
+          success: function (response) {
+            console.log(response);
+          },
+        });
+      }
+    });
+
+
+    function updateSelected(element) {
+      const atf = $(element).data('atf');
+      const id = $(element).data('id');
+
+      $('#selected option[value="modal"]').toggle(atf <= 2);
+      $('#cutting').val(atf <= 2 ? id : '');
+    }
 
   })
 </script>

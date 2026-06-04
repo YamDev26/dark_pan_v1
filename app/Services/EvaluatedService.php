@@ -37,7 +37,7 @@
       })
       ->addColumn('action', function ($row) {
         return ('<span class="card-block remove-label m-0 pb-0 text-center">
-          <button type="button" class="btn btn-sm btn-warning text-white py-1 me-2" data-id="'.$row->id.'">
+          <button type="button" class="btn btn-sm btn-warning text-white py-0 me-2 px-2" data-id="'.$row->id.'">
           <i class="fas fa-ellipsis-h"></i>
           </button>
         </span>');
@@ -108,6 +108,9 @@
       return $datas ?? [];
     }
 
+    public function evaluated($str) {
+      return Evaluated::find($str);
+    }
 
     public function getStore($data) {
       Evaluated::create([

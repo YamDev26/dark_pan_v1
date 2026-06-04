@@ -31,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
 
             App\Events\MoyenneTrimestreEvent::class,
             App\Listeners\MoyenneTrimestreListener::class,
+
+            App\Events\EvaluatNotEvant::class,
+            App\Listeners\EvaluatNotListener::class,
         );
     }
 }

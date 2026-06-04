@@ -138,8 +138,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/index', [App\Http\Controllers\EvaluatedController::class, 'index'])->name('evaluated.index');
             Route::get('/yajra', [App\Http\Controllers\EvaluatedController::class, 'yajra'])->name('evaluated.yajra');
             Route::get('/matter', [App\Http\Controllers\EvaluatedController::class, 'matter'])->name('evaluated.matter');
-            Route::get('/detail', [App\Http\Controllers\EvaluatedController::class, 'show'])->name('evaluated.show');
+            Route::get('/detail/{id}', [App\Http\Controllers\EvaluatedController::class, 'show'])->name('evaluated.show');
             Route::post('/store', [App\Http\Controllers\EvaluatedController::class, 'store'])->name('evaluated.store');
+            Route::get('/edit', [App\Http\Controllers\EvaluatedController::class, 'edit'])->name('evaluated.edit');
 
             Route::group(['prefix' => 'note'], function() {
                 Route::get('/index', [App\Http\Controllers\GestionNoteController::class, 'index'])->name('note.index');
@@ -147,8 +148,9 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('/not/{id}', [App\Http\Controllers\GestionNoteController::class, 'listNot'])->name('note.yajra');
                 Route::get('/create/{id}', [App\Http\Controllers\GestionNoteController::class, 'create'])->name('note.create');
                 Route::post('/store/{id}', [App\Http\Controllers\GestionNoteController::class, 'store'])->name('note.store');
+                Route::get('/edit/{id}', [App\Http\Controllers\GestionNoteController::class, 'edit'])->name('note.edit');
                 Route::get('/export/{id}', [App\Http\Controllers\GestionNoteController::class, 'export'])->name('note.export');
-                Route::post('/import/{id}', [App\Http\Controllers\GestionNoteController::class, 'import'])->name('cc.import');
+                Route::post('/import/{id}', [App\Http\Controllers\GestionNoteController::class, 'import'])->name('note.import');
             });
         });
     });

@@ -85,18 +85,15 @@ class EvaluatedController extends Controller
     }
 
     
-    public function show(Request $request)
+    public function show(string $str)
     {
         try {
-            $valid = $request->validate([
-                'class' => 'required|integer',
-                'select' => 'required|integer',
-            ]);
+            list($class, $matter) = explode('_', $str);
             return view('pages.evaluated.detail',[
                 'getType' => $this->service->getType(),
-                'classe' => $this->service->classe($valid['class']),
-                'matter' => $this->service->matter($valid['select']),
-                'data' => $this->service->getEvaluated($valid['select'], $valid['class']),
+                'classe' => $this->service->classe($class),
+                'matter' => $this->service->matter($matter),
+                'data' => $this->service->getEvaluated($matter, $class),
             ]);
         }
         catch (\Exception $e) {
@@ -108,9 +105,18 @@ class EvaluatedController extends Controller
     }
 
     
-    public function edit(string $id)
+    public function edit(Request $request)
     {
-        // Cuttings, cutting_school_years, matters, level_matters, evuluateds
+        try {
+            $data = $this->service->evaluated($request['id']);
+            return $data;
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
     

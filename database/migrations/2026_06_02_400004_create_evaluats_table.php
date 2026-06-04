@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('evaluats', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('note');
+            $table->string('note')->default('nc');
             $table->unsignedBigInteger('register_id');
             $table->unsignedBigInteger('evaluated_id');
             $table->foreign('register_id')->references('id')->on('registers')->onDelete('cascade');

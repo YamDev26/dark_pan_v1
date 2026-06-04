@@ -53,7 +53,7 @@ class MoyenneController extends Controller
      */
     public function store(Request $request, string $str)
     {
-        try { // dd($request);
+        try {
             $validate = $request->validate([
                 'str' => 'required|array',
                 'str.*' => 'required|string',

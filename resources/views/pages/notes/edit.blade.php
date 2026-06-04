@@ -1,5 +1,5 @@
 @extends('app')
-@section('title', 'Add Not')
+@section('title', 'Edit Not')
 @section('link')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <style>
@@ -28,7 +28,7 @@
 <div class="container-fluid pt-4 px-4">
   <div class="bg-secondary text-center rounded p-4">
     <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
-      <h4 class="mb-0">Ajout note</h4>
+      <h4 class="mb-0">Edit note</h4>
       <div class="my-0">
         <h4 class='my-0'>{{ $evaluat['get_classe']['libelle'].' ~ '.$evaluat['level_matter']['matter']['symbol'] }}</h4>
         <span class="my-0">
@@ -36,7 +36,6 @@
         </span>
       </div>
       <div class="my-0">
-        <button type="button" class="btn btn-outline-warning py-1 mx-2" data-bs-toggle="modal" data-bs-target="#AddModal">Import</button>
         <a href="{{ route('note.show', $evaluat['id']) }}" class="btn btn-outline-light m-2 py-1">Return</a>
       </div>
     </div>
@@ -64,9 +63,9 @@
                 <td class="text-left">{{ $item->genre == 'F' ? 'Feminin':'Masculin' }}</td>
                 <td class="d-flex py-0 text-center">
                   <input type="hidden" name="str[]" value="{{$item->id}}">
-                  <input type="text" name="note[]" class="form-control mx-0 input" data-not="{{ $evaluat['value'] }}" placeholder="---" style="width: 90px; background: none; font-size: 19px">
+                  <input type="text" name="note[]" class="form-control mx-0 input" data-not="{{ $item->value }}" value="{{ $item->note }}" style="width: 90px; background: none; font-size: 19px">
                   <span class="mt-2 px-1 d-flex" style="font-size: 19px">
-                    {{'/ '.$evaluat['value'] }}
+                    {{'/ '.$item->value }}
                   </span>
                 </td>
               </tr>
@@ -82,11 +81,6 @@
     </form>
   </div>
 </div>
-<!-- Modal Import File -->
-@include('partials._modal_import',[
-  'url' => route('note.import', $evaluat['id']),
-  'export' => route('note.export', $evaluat['id'])
-])
 <!-- Modal Validate -->
 @include('partials._modal_validate')
 @endsection

@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\NoteExport;
+use App\Imports\NoteImport;
+use App\Events\EvaluatNotEvant;
 use App\Services\GestionNoteService;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
 class GestionNoteController extends Controller
@@ -37,7 +41,7 @@ class GestionNoteController extends Controller
     }
 
     
-    public function store(Request $request, string $id)
+    public function store(Request $request, string $str)
     {
         try {
             $valid = $request->validate([
@@ -48,7 +52,18 @@ class GestionNoteController extends Controller
                 'evaluat' => 'required|exists:evaluateds,id',
             ]);
 
-            dd($valid);
+            if(!($valid['evaluat'] == $str)) {
+                return back()->with([
+                    'str' => 'danger',
+                    'msg' => 'Une erreur est survenue !'
+                ]);
+            }
+
+            EvaluatNotEvant::dispatch($valid['str'], $valid['note'], $str);
+            return to_route('note.show', $str)->with([
+                'str' => 'success',
+                'msg' => 'Validation réussie. En attente de traitement !'
+            ]);
         }
         catch (\Exception $e) {
             return back()->with([
@@ -63,7 +78,8 @@ class GestionNoteController extends Controller
     {
         try {
             return view('pages.notes.detail',[
-                'evaluat' => $this->service->evaluated($id)
+                'evaluat' => $this->service->evaluated($id),
+                'existe' => $this->service->existNote($id)
             ]);
         }
         catch (\Exception $e) {
@@ -91,7 +107,11 @@ class GestionNoteController extends Controller
     public function export(string $id) {
         try {
             $evaluat = $this->service->evaluated($id);
-            dd($evaluat);
+            $matter = $evaluat['level_matter']['matter']['symbol'];
+            $cutting = $evaluat['cutting_school_year']['cutting']['symbol'];
+            $str = mt_rand(100, 1000).'_'.$id;
+            $name = 'Fiche_Note_'.$evaluat['get_classe']['libelle'].'_'. $matter.'_'.$cutting.'_'.$str;
+            return Excel::download(new NoteExport($evaluat['get_classe_id'], $id), $name.'.xlsx');
         }
         catch (\Exception $e) {
             return back()->with([
@@ -100,10 +120,54 @@ class GestionNoteController extends Controller
             ]);
         }
     }
+
+    public function import(Request $request, string $str)
+    {
+        try {
+            $request->validate([
+                'file' => 'required|file|mimes:xlsx,xls|max:5120'
+            ]);
+            $file = $request->file('file');
+            $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $explod = explode('_', $name);
+            $evaluat = $this->service->evaluated($str);
+
+            if(!(($explod[6] == $str) && ($explod[2] == $evaluat['get_classe']['libelle']))) {
+                return back()->with([
+                    'str' => 'danger',
+                    'msg' => 'Erreur, Fichier Incompactible !'
+                ]);
+            }
+
+            Excel::import(new NoteImport($str), $file);
+            return to_route('note.show', $str)->with([
+                'str' => 'success',
+                'msg' => 'Importation réussie. En attente des traitement !'
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
     
     public function edit(string $id)
     {
-        //
+        try {
+            return view('pages.notes.edit',[
+                'evaluat' => $this->service->evaluated($id),
+                'datas' => $this->service->getNotStudent($id)
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
     

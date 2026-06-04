@@ -24,19 +24,19 @@
                 <span style="border-bottom: 2px solid {{ $item['status'] ? 'green':'red' }}">{{ $item['status'] ? 'Actif':'Inactif' }}</span>
               </td>
               <td class="text-center">
-                <button class="btn btn-sm btn-primary dropdown-toggle py-1" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-sm btn-outline-light dropdown-toggle py-0" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fas fa-ellipsis-h"></i>
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="min-width: 8rem;">
-                  <li><a class="dropdown-item" href="{{ route('note.show', $item['id']) }}">Note</a></li>
-                  <li><a class="dropdown-item" href="#">Edit</a></li>
-                  <li><a class="dropdown-item" href="#">Delete</a></li>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="min-width: 6rem;">
+                  <li><a href="{{ route('note.show', $item['id']) }}" class="dropdown-item">Note</a></li>
+                  <li><a href="#" data-id="{{ $item['id'] }}" class="dropdown-item edit">Edit</a></li>
+                  <li><a href="#" class="dropdown-item">Delete</a></li>
                 </ul>
               </td>
             </tr>
           @empty
             <tr>
-              <td colspan="5" class="text-center py-2">Data Not Found</td>
+              <td colspan="6" class="text-center py-2">Data Not Found</td>
             </tr>
           @endforelse
         </tbody>
