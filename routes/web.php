@@ -141,9 +141,11 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/detail/{id}', [App\Http\Controllers\EvaluatedController::class, 'show'])->name('evaluated.show');
             Route::post('/store', [App\Http\Controllers\EvaluatedController::class, 'store'])->name('evaluated.store');
             Route::get('/edit', [App\Http\Controllers\EvaluatedController::class, 'edit'])->name('evaluated.edit');
+            Route::put('/edit/{id}', [App\Http\Controllers\EvaluatedController::class, 'update'])->name('evaluated.update');
+            Route::get('/detele/{id}', [App\Http\Controllers\EvaluatedController::class, 'destroy'])->name('evaluated.detele');
 
             Route::group(['prefix' => 'note'], function() {
-                Route::get('/index', [App\Http\Controllers\GestionNoteController::class, 'index'])->name('note.index');
+                Route::get('/moyenne/{id}', [App\Http\Controllers\GestionNoteController::class, 'index'])->name('note.index');
                 Route::get('/list/{id}', [App\Http\Controllers\GestionNoteController::class, 'show'])->name('note.show');
                 Route::get('/not/{id}', [App\Http\Controllers\GestionNoteController::class, 'listNot'])->name('note.yajra');
                 Route::get('/create/{id}', [App\Http\Controllers\GestionNoteController::class, 'create'])->name('note.create');

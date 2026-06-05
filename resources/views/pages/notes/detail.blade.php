@@ -30,14 +30,16 @@
     <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
       <h4 class="mb-0">Liste note</h4>
       <div class="my-0">
-        <h4 class='my-0'>{{ $evaluat['get_classe']['libelle'].' ~ '.$evaluat['level_matter']['matter']['symbol'] }}</h4>
+        <h4 class='my-0'>
+          {{ $evaluat['get_classe']['libelle'].' ~ '.$evaluat['level_matter']['matter']['symbol'].($evaluat['sub_matter_id'] ? ' - '.$evaluat['sub_matter']['symbol']:'') }}
+        </h4>
         <span class="my-0">
-          {{ ucwords($evaluat['evaluated_type']['libelle']). ' du '.date('m/d/Y', strtotime($evaluat['created'])) }}
+          {{ ucwords($evaluat['evaluated_type']['libelle']). ' du '.date('d/m/Y', strtotime($evaluat['created'])) }}
         </span>
       </div>
       <div class="d-flex">
         <div class="mx-3">
-          <select class="form-select form-select w-auto border-0 text-color-3" onchange="window.location.href=this.value;">
+          <select class="form-select form-select w-auto border-0 text-color-3" onchange="window.location.href=this.value;" {{ $evaluat['actif'] != 1 ? 'disabled':'' }}>
             <option value="">Choise ...</option>
             @if (!$existe)
               <option value="{{ route('note.create', $evaluat['id']) }}">Add Note</option>

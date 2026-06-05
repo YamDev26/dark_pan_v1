@@ -1,8 +1,8 @@
 <?php
   namespace App\Services;
 
-  use App\Models\School;
   use App\Models\Evaluated;
+  use App\Models\SubMatter;
   use App\Models\GetClasse;
   use App\Models\SchoolYear;
   use App\Models\LevelMatter;
@@ -13,6 +13,7 @@
 
   class EvaluatedService
   {
+    private const NOTE  = 20;
     private $schl;
     public function __construct() {
       $this->schl = Auth::user()->school_id ?? 1;
@@ -73,19 +74,25 @@
     }
 
 
+    public function subMatters() {
+      return SubMatter::orderBy('id')->get();
+    }
+
+
     public function getEvaluated($matter, $classe) {
       $datas = DB::table('cutting_school_years as cs')
-      ->leftJoin('evaluateds as e', function ($join) use ($classe, $matter) {
+        ->leftJoin('evaluateds as e', function ($join) use ($classe, $matter) {
         $join->on('e.cutting_school_year_id', '=', 'cs.id')
+        ->leftJoin('sub_matters as sm', 'sm.id', '=', 'e.sub_matter_id')
         ->where(['e.get_classe_id' => $classe, 'e.level_matter_id' => $matter]);
       })
       ->leftJoin('cuttings as c', 'c.id', '=', 'cs.cutting_id')
       ->leftJoin('evaluated_types as et', 'et.id', '=', 'e.evaluated_type_id')
       ->select(
-        'cs.id', 'cs.status as actif', 'c.libelle as cutting', 'e.actif as status',
-        'e.id as id2', 'et.libelle as libelle', 'e.value as value', 'e.created as date'
+        'cs.id', 'cs.status as actif', 'c.libelle as cutting', 'e.actif as status', 'e.id as id2',
+        'et.libelle as libelle', 'sm.symbol as sub', 'e.value as value', 'e.created as date'
       )
-      ->orderByRaw('cs.id, e.id, e.created')
+      ->orderByRaw('cs.id, e.created')
       ->get()
       ->groupBy('id')
       ->map(function ($items) {
@@ -100,6 +107,7 @@
             'status'  => $item->status,
             'value'  => $item->value,
             'date'  => $item->date,
+            'sub'  => $item->sub,
             'id'  => $item->id2
           ])->values(),
         ];
@@ -113,24 +121,47 @@
     }
 
     public function getStore($data) {
-      Evaluated::create([
-        'value' => $data['value'],
+      $note = $data['value'] / self::NOTE;
+      $dta = Evaluated::create([
+        'value' => (string)$note,
         'created' => $data['date'],
-        'sub_matter_id' => null,
+        'sub_matter_id' => $data['sub'],
         'get_classe_id' => $data['classe'],
         'level_matter_id' => $data['matter'],
         'evaluated_type_id' => $data['type'],
-        'cutting_school_year_id' => $data['cutting'],
+        'cutting_school_year_id' => $data['cutting']
       ]);
+      return $dta ? $dta->id:null;
     }
 
+
+    public function update($data) {
+      $evaluat = $this->Evaluated($data['evaluat']);
+      if(!($evaluat['cutting_school_year']['status'] == 3)) {
+        $note = $data['note'] / self::NOTE; 
+        $evaluat->update([
+          'value' => (string)$note,
+          'created' => $data['date'],
+          'sub_matter_id' => $data['subE'],
+          'evaluated_type_id' => $data['type'],
+          'actif' => $data['status'] ? '1':'0'
+        ]);
+        return true;
+      }
+      return false;
+    }
+
+    public function destroy($evaluated) {
+      $data = $this->Evaluated($evaluated);
+      if(!($data['cutting_school_year']['status'] == 3)) {
+        $data->delete();
+        return true;
+      }
+      return false;
+    }
 
     private function year() {
       $year = SchoolYear::where('status', '1')->first();
       return $year ? $year->id:null;
-    }
-
-    private function school() {
-      return School::find($this->schl) ?? null;
     }
   }

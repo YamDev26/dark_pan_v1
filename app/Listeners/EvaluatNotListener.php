@@ -2,8 +2,9 @@
 
 namespace App\Listeners;
 
-use App\Services\GestionNoteService;
 use App\Events\EvaluatNotEvant;
+use App\Services\GestionNoteService;
+use App\Jobs\Matters\CalculMoyenneJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class EvaluatNotListener implements ShouldQueue
@@ -16,9 +17,16 @@ class EvaluatNotListener implements ShouldQueue
 
         $note = $event->note;
         foreach($event->data as $i => $item) {
-            $not = $this->valNote($note[$i], $evaluat['value']);
+            $not = $this->valNote($note[$i], ($evaluat['value'] * 20));
             $service->noteEvaluat($item, $event->str, $not);
         }
+
+        // Déclenchement de job pour le calcul de moyenne
+        CalculMoyenneJob::dispatch(
+            $evaluat['get_classe_id'], 
+            $evaluat['level_matter_id'], 
+            $evaluat['cutting_school_year_id']
+        );
     }
 
 

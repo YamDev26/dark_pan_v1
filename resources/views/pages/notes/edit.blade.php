@@ -30,9 +30,11 @@
     <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
       <h4 class="mb-0">Edit note</h4>
       <div class="my-0">
-        <h4 class='my-0'>{{ $evaluat['get_classe']['libelle'].' ~ '.$evaluat['level_matter']['matter']['symbol'] }}</h4>
+        <h4 class='my-0'>
+          {{ $evaluat['get_classe']['libelle'].' ~ '.$evaluat['level_matter']['matter']['symbol'].($evaluat['sub_matter_id'] ? ' - '.$evaluat['sub_matter']['symbol']:'') }}
+        </h4>
         <span class="my-0">
-          {{ ucwords($evaluat['evaluated_type']['libelle']). ' du '.date('m/d/Y', strtotime($evaluat['created'])) }}
+          {{ ucwords($evaluat['evaluated_type']['libelle']). ' du '.date('d/m/Y', strtotime($evaluat['created'])) }}
         </span>
       </div>
       <div class="my-0">
@@ -63,9 +65,9 @@
                 <td class="text-left">{{ $item->genre == 'F' ? 'Feminin':'Masculin' }}</td>
                 <td class="d-flex py-0 text-center">
                   <input type="hidden" name="str[]" value="{{$item->id}}">
-                  <input type="text" name="note[]" class="form-control mx-0 input" data-not="{{ $item->value }}" value="{{ $item->note }}" style="width: 90px; background: none; font-size: 19px">
+                  <input type="text" name="note[]" class="form-control mx-0 input" data-not="{{ $item->value * 20 }}" value="{{ $item->note }}" style="width: 90px; background: none; font-size: 19px">
                   <span class="mt-2 px-1 d-flex" style="font-size: 19px">
-                    {{'/ '.$item->value }}
+                    {{'/ '.$item->value * 20 }}
                   </span>
                 </td>
               </tr>

@@ -24,6 +24,7 @@ class EvaluatedController extends Controller
             ]);
         }
     }
+    
 
     public function yajra() {
         try {
@@ -36,6 +37,7 @@ class EvaluatedController extends Controller
             ]);
         }
     }
+
 
     public function matter(Request $query) {
         try {
@@ -52,28 +54,23 @@ class EvaluatedController extends Controller
     }
 
     
-    public function create()
-    {
-        //
-    }
-
-    
     public function store(Request $request)
     {
         try {
-            $valid = $request->validate([
+            $add = $request->validate([
                 'cutting' => 'required|exists:cutting_school_years,id',
                 'matter' => 'required|exists:level_matters,id',
                 'classe' => 'required|exists:get_classes,id',
                 'type' => 'required|exists:evaluated_types,id',
                 'value' => 'required|integer',
                 'date' => 'required|date|before_or_equal:today',
+                'sub' => 'nullable|integer',
             ]);
 
-            $this->service->getStore($valid);
-            return back()->with([
+            $evaluat = $this->service->getStore($request);
+            return to_route('note.create', $evaluat)->with([
                 'str' => 'success',
-                'msg' => 'Evaluation crée !'
+                'msg' => 'Evaluation crée, Ajouter les notes !'
             ]);
         }
         catch (\Exception $e) {
@@ -89,10 +86,15 @@ class EvaluatedController extends Controller
     {
         try {
             list($class, $matter) = explode('_', $str);
+            $mat = $this->service->matter($matter);
+            $subMatter = ($mat->matter->id == 2 && $mat->level_idl < 5) ? 
+            $this->service->subMatters():null;
             return view('pages.evaluated.detail',[
+                'matter' => $mat,
+                'value' => [10, 20, 40],
+                'matters' => $subMatter,
                 'getType' => $this->service->getType(),
                 'classe' => $this->service->classe($class),
-                'matter' => $this->service->matter($matter),
                 'data' => $this->service->getEvaluated($matter, $class),
             ]);
         }
@@ -122,12 +124,61 @@ class EvaluatedController extends Controller
     
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $request->validate([
+                'evaluat' => 'required|exists:evaluateds,id',
+                'type' => 'required|exists:evaluated_types,id',
+                'note' => 'required|integer',
+                'date' => 'required|date|before_or_equal:today',
+                'subE' => 'nullable|integer',
+                'status' => 'nullable|string',
+            ]);
+            list($id, $str) = explode('-',$id);
+            if(!($request['evaluat'] == $id)) {
+                return to_route('evaluated.show', $str)->with([
+                    'str' => 'danger',
+                    'msg' => 'Une erreur est survenue !'
+                ]);
+            }
+            $result = $this->service->update($request);
+            return to_route('evaluated.show', $str)->with([
+                'str' => $result ? 'success':'danger',
+                'msg' => $result ? 'Mise à jour éffectuée !':'Impossible de supprimer !'
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+            ]);
+        }
     }
 
     
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        //
+        try {
+            $val = $request->validate([
+                'id' => 'required|exists:evaluateds,id'
+            ]);
+            list($id, $str) = explode('-',$id);
+            if(!($val['id'] == $id)) {
+                return to_route('evaluated.show', $str)->with([
+                    'str' => 'danger',
+                    'msg' => 'Une erreur est survenue !'
+                ]);
+            }
+            $result = $this->service->destroy($val['id']);
+            return to_route('evaluated.show', $str)->with([
+                'str' => $result ? 'success':'danger',
+                'msg' => $result ? 'Evaluation supprimée':'Impossible de supprimer !'
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 }

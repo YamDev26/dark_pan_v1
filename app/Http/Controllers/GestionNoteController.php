@@ -16,9 +16,24 @@ class GestionNoteController extends Controller
         $this->service = $service;
     }
     
-    public function index()
+    public function index(string $str)
     {
-        //
+        try {
+            $explod = explode('-', $str);
+            list($classe, $matter) = explode('_', $explod[1]);
+            $nbre = $this->service->EvaluatedNbreMatter($explod[1], $explod[0]);
+            return view('pages.notes.index',[
+                'matter' => $this->service->matter($matter),
+                'classe' => $this->service->classe($classe),
+                'cutting' => $this->service->cutting($explod[0]),
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
     
@@ -107,7 +122,8 @@ class GestionNoteController extends Controller
     public function export(string $id) {
         try {
             $evaluat = $this->service->evaluated($id);
-            $matter = $evaluat['level_matter']['matter']['symbol'];
+            $sub = $evaluat['sub_matter_id'] ? '-'.$evaluat['sub_matter']['symbol']:'';
+            $matter = $evaluat['level_matter']['matter']['symbol'].$sub;
             $cutting = $evaluat['cutting_school_year']['cutting']['symbol'];
             $str = mt_rand(100, 1000).'_'.$id;
             $name = 'Fiche_Note_'.$evaluat['get_classe']['libelle'].'_'. $matter.'_'.$cutting.'_'.$str;

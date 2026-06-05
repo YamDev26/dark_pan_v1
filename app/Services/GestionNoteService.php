@@ -1,13 +1,14 @@
 <?php
   namespace App\Services;
 
-  use App\Models\School;
   use App\Models\Evaluat;
+  use App\Models\GetClasse;
   use App\Models\Evaluated;
+  use App\Models\LevelMatter;
+  use App\Models\CuttingSchoolYear;
   use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Facades\Auth;
   use Yajra\DataTables\Facades\DataTables;
-
   class GestionNoteService
   {
     private $schl;
@@ -39,7 +40,7 @@
       ->addColumn('note', function ($row) {
         return (
           $row->note == 'nc' ? $row->note:
-          ($row->note ? $row->note:'--').' / '.($row->value ?? '--')
+          ($row->note ? $row->note:'--').' / '.(($row->value * 20) != 0 ? ($row->value * 20):'--')
         );
       })
       ->rawColumns(['compte', 'matricule', 'first', 'last', 'genre', 'note'])
@@ -95,6 +96,39 @@
       return Evaluated::find($str);
     }
 
+    public function classe($classe) {
+      return GetClasse::find($classe);
+    }
+
+    public function matter($matter) {
+      return LevelMatter::find($matter);
+    }
+
+    public function cutting($cutting) {
+      return CuttingSchoolYear::find($cutting);
+    }
+
+    public function EvaluatedNbreMatter($str, $cutting) {
+      list($classe, $matter) = explode('_', $str);
+      return Evaluated::where('actif', '1')->where('get_classe_id', $classe)
+      ->where('cutting_school_year_id', $cutting)->where('level_matter_id', $matter)
+      ->count();
+    }
+
+    public function getNotEvaluat($student, $matter, $cutting){
+      $data = DB::table('evaluats as e')
+      ->join('evaluateds as ev', 'ev.id', '=', 'e.evaluated_id')
+      ->where([
+        'e.register_id' => $student, 
+        'ev.level_matter_id' => $matter, 
+        'cutting_school_year_id' => $cutting, 
+        'ev.actif' => '1'
+      ])
+      ->select('ev.value', 'e.note')
+      ->orderBy('ev.created')->get();
+      return $data ?? [];
+    }
+
 
     private function studentGet($evaluat) {
       return DB::table('registers as r')
@@ -110,7 +144,8 @@
       ->get();
     }
 
-    private function school() {
-      return School::find($this->schl) ?? null;
+
+    private function getMoyenne($classe, $cutting, $matter) {
+      
     }
   }

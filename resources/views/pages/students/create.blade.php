@@ -147,33 +147,10 @@
   </div>
 </div>
 <!-- Modal -->
-<div class="modal" id="AddModal" tabindex="-1" aria-labelledby="AddModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document" >
-    <div class="modal-content pb-0" style="background: #191C24">
-      <form action="{{ route('student.import') }}" method="post" enctype="multipart/form-data">
-        @csrf
-        <div class="modal-header py-2">
-          <h5 class="modal-title" id="myModalLabel">Export File</h5>
-          <a href="{{ route('student.export') }}" class="btn btn-square btn-outline-warning my-0" title="New File" style="font-size: 19px">
-            <i class="fa fa-download"></i>
-          </a>
-        </div>
-        <div class="modal-body py-4">
-          <div class="mb-2">
-            <span class="d-flex justify-content-between">
-              <label for="file" class="col-form-label">Fichier Excel<span class="text-danger">*</span> :</label>
-            </span>
-            <input type="file" name="file" class="form-control bg-dark" id="file">
-          </div>
-        </div>
-        <div class="modal-footer mb-0">
-          <button type="button" class="btn btn-outline-primary py-1" data-bs-dismiss="modal" style="font-size: 14px">Fermer</button>
-          <button type="submit" class="btn btn-outline-success py-1" style="font-size: 14px">Valider</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+@include('partials._modal_import',[
+  'url' => route('student.import'),
+  'export' => route('student.export')
+])
 @endsection
 @section('script')
 <script>

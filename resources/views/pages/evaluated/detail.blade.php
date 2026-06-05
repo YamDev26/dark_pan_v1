@@ -8,7 +8,9 @@
         <div class="d-flex align-items-center justify-content-between mb-2">
           <h4 class="mb-0">Classe {{ $classe['libelle'] }}</h4>
           <div class="my-0 text-center">
-            <h4 class='my-0'>{{ $matter['matter']['symbol'] }}</h4>
+            <h4 class='my-0' id="str" data-str="{{ $classe['id'].'_'.$matter['id'] }}">
+              {{ $matter['matter']['symbol'] }}
+            </h4>
             <span class="my-0">Gestion des évaluations</span>
           </div>
           <div class="d-flex">
@@ -16,7 +18,7 @@
               <option value="">Choise ...</option>
               <option value="modal">Nouvelle</option>
               <option value="url">Moyenne</option>
-              <option value="#">Get Pdf</option>
+              <option value="pdf">Get Pdf</option>
             </select>
             <a href="{{ route('evaluated.index') }}" class="btn btn-outline-light py-1">Return</a>
           </div>
@@ -44,48 +46,36 @@
     </div>
   </div>
 </div>
-<!-- Modal Evaluated -->
-<div class="modal" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- Modal Add Evaluated -->
+@include('partials._modal_new_evaluated')
+
+<!-- Modal Add Evaluated -->
+@include('partials._modal_edit_evaluated')
+
+<!-- Modal Delete Evaluated -->
+<div class="modal" id="dlteModal" tabindex="-1" aria-labelledby="dlteModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document" >
     <div class="modal-content pb-0" style="background: #191C24">
-      <form action="{{ route('evaluated.store') }}" method="post">
-        @csrf
-        <div class="modal-header py-2">
-          <h5 class="modal-title" id="myModalLabel">New Evaluated</h5>
-          <h3><i class="fa fa-user-edit text-primary"></i></h3>
+      <div class="modal-header pt-2 pb-0 mb-0">
+        <h5 class="modal-title" id="myModalLabel">Delete</h5>
+        <h3><i class="fa fa-user-edit text-primary"></i></h3>
+      </div>
+      <div class="modal-body py-4">
+        <div class="text-center">
+          <p style="font-size: 23px">Suppression</p>
+          <h4 id="libs"></h4>
+          <p>Cliquez sur 'Valider' pour continuer.</p>
+          <i class="fa fa-trash" style="font-size: 30px"></i>
         </div>
-        <div class="modal-body py-4">
-          <div class="mb-2">
-            <input type="hidden" name="matter" value="{{ $matter['id'] }}">
-            <input type="hidden" name="classe" value="{{ $classe['id'] }}">
-            <input type="hidden" name="cutting" id="cutting">
-            <label for="type" class="col-form-label">Type Evaluation<span class="text-danger">*</span> :</label>
-            <select name="type" id="type" class="form-select mb-2">
-              <option value="">Select ...</option>
-              @foreach ($getType as $item)
-                <option value="{{ $item['id'] }}">{{ ucwords($item['libelle']) }}</option>
-              @endforeach
-            </select>
-          </div>
-          <div class="mb-2">
-            <label for="value" class="col-form-label">Value Evaluation<span class="text-danger">*</span> :</label>
-            <select name="value" id="value" class="form-select mb-2">
-              <option value="">Select ...</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="40">40</option>
-            </select>
-          </div>
-          <div class="mb-0">
-            <label for="date" class="col-form-label">Date Evaluation<span class="text-danger">*</span> :</label>
-            <input type="date" name="date" class="form-control" id="date">
-          </div>
-        </div>
-        <div class="modal-footer mb-0">
+      </div>
+      <div class="modal-footer mb-0">
+        <form action="#" method="get" id="formDlte">
+          @csrf
+          <input type="hidden" name="id" id="inputDlte">
           <button type="button" class="btn btn-outline-primary py-1" data-bs-dismiss="modal" style="font-size: 14px">Fermer</button>
           <button type="submit" class="btn btn-outline-light py-1" style="font-size: 14px">Valider</button>
+        </form>
         </div>
-      </form>
     </div>
   </div>
 </div>
@@ -108,33 +98,68 @@
           $("#myModal").modal("show");
           break;
         case 'url':
-          window.location.href='{{ route('evaluated.index') }}';
+          let id = $('#selected option:selected').data('id');
+          window.location.href = "{{ route('note.index', ':id') }}"
+          .replace(':id', id);
           break;
       }
     });
-    
+
 
     $(document).on('click', '.edit', function() {
-      $value = $(this).data('id');
-      if($value) {
+      const id = $(this).data('id');
+      const str = $('#str').data('str');
+      if(id) {
         $.ajax({
           url: '{{ route('evaluated.edit') }}',
           type: 'get',
-          data: { id: $value },
+          data: { id: id },
           success: function (response) {
-            console.log(response);
+            const type = response['evaluated_type_id'];
+            const note = response['value']*20; const sub = response['sub_matter_id'];
+            $('#typeEdit').find(`option[value="${type}"]`).prop('selected', true);
+            $(`input[name="note"][value="${note}"]`).prop('checked', true);
+            sub ? $(`input[name="subE"][value="${sub}"]`).prop('checked', true):null;
+            $('#dateEdit').val(response['created']);
+            $('#status').prop('checked', (response['actif'] == 1 ? true:false));
+            $('#libEdit').text((response['actif'] == 1 ? 'Actif':'Inactif'));
+            $('#evaluated').val(response['id']);
+
+            $('#formEdit').prop(
+              'action', 
+              "{{ route('evaluated.update', ':id') }}".replace(':id', (id+'-'+str))
+            )
+            $("#editModal").modal("show");
           },
         });
       }
     });
 
 
+    $(document).on('click', '.delete', function() {
+      $id = $(this).data('id');
+      $str = $('#str').data('str');
+      $libelle = $(this).data('lib');
+      if($id) {
+        $('#inputDlte').val($id);
+        $('#libs').text($libelle);
+        $('#formDlte').prop(
+          'action', "{{ route('evaluated.detele', ':id') }}".replace(':id', ($id+'-'+$str))
+        )
+        $("#dlteModal").modal("show");
+      }
+    });
+
+
     function updateSelected(element) {
+      const str = $('#str').data('str');
       const atf = $(element).data('atf');
       const id = $(element).data('id');
 
       $('#selected option[value="modal"]').toggle(atf <= 2);
       $('#cutting').val(atf <= 2 ? id : '');
+      $('#selected option[value="url"]').attr('data-id', id+'-'+str);
+      $('#selected option[value="pdf"]').attr('data-id', id+'-'+str);
     }
 
   })

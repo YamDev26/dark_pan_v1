@@ -29,8 +29,9 @@ class NoteImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
         foreach($data as $item) {
 
             $id = $service->studentId($item['matricule'], $evaluat['get_classe_id']);
+            
             if($id) {
-                $note = $this->valNote($item['note'], $evaluat['value']);
+                $note = $this->valNote($item['note'], ($evaluat['value'] * 20));
                 $service->noteEvaluat($id->id, $this->str, $note);
             }
         }

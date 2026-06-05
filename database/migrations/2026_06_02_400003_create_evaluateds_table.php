@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('evaluateds', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->enum('value',[10, 20, 40]);
             $table->string('created');
+            $table->enum('value',[0.5, 1, 2])->default(1);
             $table->enum('actif', [0,1])->default(1);
             $table->unsignedBigInteger('sub_matter_id')->nullable();
             $table->unsignedBigInteger('get_classe_id');

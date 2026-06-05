@@ -1,7 +1,7 @@
 <div class="modal" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 600px">
     <div class="modal-content" style="background: #191C24">
-      <div class="modal-header pb-1">
+      <div class="modal-header pt-2 pb-0 mb-0">
         <h4 class="modal-title" id="myModalLabel">Inscription</h4>
         <h3><i class="fa fa-user-edit text-primary"></i></h3>
       </div>

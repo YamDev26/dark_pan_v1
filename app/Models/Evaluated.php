@@ -16,6 +16,10 @@ class Evaluated extends Model
         return $this->belongsTo(LevelMatter::class);
     }
 
+    public function sub_matter() {
+        return $this->belongsTo(SubMatter::class);
+    }
+
     public function evaluated_type() {
         return $this->belongsTo(EvaluatedType::class);
     }

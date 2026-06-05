@@ -17,7 +17,7 @@
               <tbody>
                 <tr>
                   <td class="text-center" style="width: 25%">
-                    <img class="img-fluid" src="{{ asset('assets/img/testimonial-1.jpg') }}" alt="Logo School" style="width: 60%; height: 60%; border-radius: 5px">
+                    <img class="img-fluid" src="{{ asset('storage/' . $school->logo)  }}" alt="Logo School" style="width: 60%; height: 60%; border-radius: 5px">
                   </td>
                   <td style="width: 75%">
                     <table class="table text-start align-middle table-bordered mb-0">

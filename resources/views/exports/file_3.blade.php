@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Fiche Note {{ $evaluat['level_matter']['matter']['symbol'] }}</title>
+  <title>
+    Fiche Note {{ $evaluat['level_matter']['matter']['symbol'].($evaluat['sub_matter_id'] ? '-'.$evaluat['sub_matter']['symbol']:'') }}
+  </title>
 </head>
 <body>
   <table class="table">

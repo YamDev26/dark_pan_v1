@@ -1,7 +1,7 @@
 <div class="modal" id="DlteModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document" >
     <div class="modal-content pb-0" style="background: #191C24">
-      <div class="modal-header py-2">
+      <div class="modal-header pt-2 pb-0 mb-0">
         <h5 class="modal-title" id="myModalLabel">Suppression</h5>
         <h3><i class="fa fa-user-edit text-primary"></i></h3>
       </div>
@@ -11,7 +11,7 @@
           <p style="font-size: 18px"><span id="dtleGenre"></span>  ~ <span id="dtleMatricul"></span></p>
           <h4 class="mt-0" id="dtleClass"></h4>
           Cette action peut avoir des modifictions majeurs !
-          <p>Cliquez sur 'Oui' pour continuez.</p>
+          <p>Cliquez sur 'Valider' pour continuer.</p>
           <i class="fa fa-trash" style="font-size: 30px"></i>
         </div>
       </div>

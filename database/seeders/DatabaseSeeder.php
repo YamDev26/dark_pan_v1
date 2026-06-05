@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             LevelSeeder::class,
             SerieSeeder::class,
             DaysWeekSeeder::class,
+            EvaluatedTypeSeeder::class,
         ]);
 
         // User::factory(1)->create();
