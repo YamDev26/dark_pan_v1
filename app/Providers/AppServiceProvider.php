@@ -34,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
 
             App\Events\EvaluatNotEvant::class,
             App\Listeners\EvaluatNotListener::class,
+
+            App\Events\FrenshMoyenneEvent::class,
+            App\Listeners\FrenshMoyenneListener::class,
         );
     }
 }

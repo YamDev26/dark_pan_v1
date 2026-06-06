@@ -6,9 +6,9 @@
     <div class="col-12">
       <div class="container-fluid pt-4">
         <div class="bg-secondary text-center rounded p-4">
-          <div class="d-flex align-items-center justify-content-between mb-0">
+          <div class="d-flex align-items-center justify-content-between pb-0">
             <h4 class="mb-0">List School</h4>
-            <a href="{{ route('school.create') }}" title="New school" style="font-size: 19px">Add</a>
+            <a href="{{ route('school.create') }}" class="btn btn-outline-primary py-1" title="New school">Add New</a>
           </div>
           <hr class="mb-4" style="border: 1px solid">
           <div class="table-responsive mt-2">

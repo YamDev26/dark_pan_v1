@@ -18,7 +18,6 @@
 
     
     public function getNote($evaluat) {
-      
       $query = $this->studentGet($evaluat);
       $compte = 0;
       return DataTables::of($query)
@@ -44,6 +43,58 @@
         );
       })
       ->rawColumns(['compte', 'matricule', 'first', 'last', 'genre', 'note'])
+      ->make(true);
+    }
+
+
+    public function moyenneFrensh($classe, $matter, $cutting) {
+      $query = $this->getMoyennefresh($classe, $matter, $cutting);
+      $compte = 0;
+      return DataTables::of($query)
+      ->addColumn('compte', function() use (&$compte) {
+        return ($compte < 9 ? '0'.++$compte : ++$compte);
+      })
+      ->addColumn('matricule', function ($row) {
+        return ($row->matricul);
+      })
+      ->addColumn('first', function ($row) {
+        return (strtoupper($row->first));
+      })
+      ->addColumn('last', function ($row) {
+        return (ucwords($row->last));
+      })
+      ->addColumn('genre', function ($row) {
+        return ($row->genre == 'F' ? 'Feminin':'Masculin');
+      })
+      ->addColumn('cf', function ($row) {
+        return ($row->cf ? $row->cf:'--');
+      })
+      ->addColumn('og', function ($row) {
+        return ($row->og ? $row->og:'--');
+      })
+      ->addColumn('eo', function ($row) {
+        return ($row->eo ? $row->eo:'--');
+      })
+      ->addColumn('moyenne', function ($row) {
+        return ($row->moyenne ? $row->moyenne:'--');
+      })
+      ->addColumn('rang', function ($row) {
+        return ($row->rang ? $row->rang:'--');
+      })
+      ->rawColumns([
+        'compte', 'matricule', 'first', 'last', 'genre', 'cf', 'og', 'eo', 'moyenne', 'rang'
+      ])
+      ->make(true);
+    }
+
+
+    public function getMoyenneMatterClasse($classe, $matter, $cutting) {
+      $query = $this->getMoyenneMatter($classe, $matter, $cutting);
+      $compte = 0;
+      return DataTables::of($query)
+      ->addColumn('compte', function() use (&$compte) {
+        return ($compte < 9 ? '0'.++$compte : ++$compte);
+      })
       ->make(true);
     }
 
@@ -108,18 +159,18 @@
       return CuttingSchoolYear::find($cutting);
     }
 
-    public function EvaluatedNbreMatter($str, $cutting) {
-      list($classe, $matter) = explode('_', $str);
+    public function EvaluatedMatter($classe, $matter, $cutting) {
       return Evaluated::where('actif', '1')->where('get_classe_id', $classe)
       ->where('cutting_school_year_id', $cutting)->where('level_matter_id', $matter)
-      ->count();
+      ->get();
     }
 
-    public function getNotEvaluat($student, $matter, $cutting){
+    public function getNotEvaluat($student, $matter, $cutting, $sub = null) {
       $data = DB::table('evaluats as e')
       ->join('evaluateds as ev', 'ev.id', '=', 'e.evaluated_id')
       ->where([
-        'e.register_id' => $student, 
+        'e.register_id' => $student,
+        'ev.sub_matter_id' => $sub, 
         'ev.level_matter_id' => $matter, 
         'cutting_school_year_id' => $cutting, 
         'ev.actif' => '1'
@@ -139,13 +190,85 @@
         ->join('evaluateds as ev', 'ev.id', '=', 'e.evaluated_id')
         ->where('ev.id', $evaluat);
       })
-      ->select(['ev.id', 'e.note', 'ev.value', 's.matricul', 's.first', 's.last', 's.genre'])
+      ->select(['r.id', 'e.note', 'ev.value', 's.matricul', 's.first', 's.last', 's.genre'])
       ->orderByRaw('s.first, s.last')
       ->get();
     }
 
 
-    private function getMoyenne($classe, $cutting, $matter) {
+    private function getMoyennefresh($classe, $matter, $cutting) {
+      return DB::table('registers as r')
+      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
+      ->join('students as s', 's.id', '=', 'ss.student_id')
+      ->leftJoin('moyenne_matters as mm', function ($join) use ($cutting, $matter) {
+        $join->on('mm.register_id', '=', 'r.id')
+        ->where('mm.cutting_school_year_id', $cutting)
+        ->where('mm.level_matter_id', $matter);
+      })
+      ->leftJoin('moyenne_sub_matters as msm', function ($join) use ($cutting, $matter) {
+        $join->on('msm.register_id', '=', 'r.id')
+        ->where('msm.cutting_school_year_id', $cutting);
+      })
+      ->where('r.get_classe_id', $classe)
+      ->groupBy('r.id', 's.matricul', 's.first', 's.last', 's.genre', 'mm.moyenne', 'mm.rang')
+      ->select('r.id', 's.matricul', 's.first', 's.last', 's.genre', 'mm.moyenne', 'mm.rang',
+        DB::raw('MAX(CASE WHEN msm.sub_matter_id = 1 THEN msm.moyenne END) as cf'),
+        DB::raw('MAX(CASE WHEN msm.sub_matter_id = 2 THEN msm.moyenne END) as og'),
+        DB::raw('MAX(CASE WHEN msm.sub_matter_id = 3 THEN msm.moyenne END) as eo')
+      )->get();
+    }
+
+    private function getEvaluadtedMatters($classe, $matter, $cutting) {
+      return DB::table('evaluats as e')
+      ->join('registers as r', 'r.id', '=', 'e.register_id')
+      ->leftJoin('evaluateds as es', 'es.id', '=', 'e.evaluated_id' )
+      ->where([
+        'es.cutting_school_year_id' => $cutting,
+        'es.level_matter_id' => $matter,
+        'r.get_classe_id' => $classe,
+        'actif' => '1'
+      ])
+      ->select(
+        'e.register_id',
+        'e.note'
+      )
+      ->orderBy('es.created', 'ASC')
+      ->get()
+      ->groupBy('register_id');
+    }
+
+
+    private function getMoyenneMatter($classe, $matter, $cutting) {
+      $students = DB::table('registers as r')
+      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
+      ->join('students as s', 's.id', '=', 'ss.student_id')
+      ->leftJoin('moyenne_matters as mm', function ($join) use ($cutting, $matter) {
+        $join->on('mm.register_id', '=', 'r.id')
+        ->where([
+          'mm.cutting_school_year_id' => $cutting,
+          'mm.level_matter_id' => $matter
+        ]);
+      })
+      ->where('r.get_classe_id', $classe)
+      ->select('r.id as register_id', 's.matricul', 's.first', 's.last', 's.genre', 'mm.moyenne', 'mm.rang')
+      ->get();
+
+      $notes = $this->getEvaluadtedMatters($classe, $matter, $cutting);
+      return $students->map(function ($item) use ($notes) {
+        $row = [
+          'register_id' => $item->register_id,
+          'matricul'    => $item->matricul,
+          'first'       => strtoupper($item->first),
+          'last'        => ucwords($item->last),
+          'genre'       => $item->genre == 'F' ? 'Feminin':'Masculin',
+          'moyenne'     => $item->moyenne,
+          'rang'        => $item->rang
+        ];
+        foreach ($notes[$item->register_id] ?? [] as $i => $sub) {
+          $row['N_'.$i+1] = $sub->note;
+        }
+        return $row;
+      });
       
     }
   }

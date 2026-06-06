@@ -1,5 +1,5 @@
 @extends('app')
-@section('title', 'List Moyenne')
+@section('title', 'Moyenne')
 @section('link')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <style>
@@ -52,7 +52,11 @@
             <th scope="col">Nom</th>
             <th scope="col">Prénoms</th>
             <th scope="col">Genre</th>
-            <th scope="col">Value</th>
+            @foreach($evaluateds as $i => $item)
+              <th scope="col" title="{{ 'Note '.$i+1 }}">{{ 'N_'.$i+1 }}</th>
+            @endforeach
+            <th scope="col">Moyenne</th>
+            <th scope="col">Rang</th>
           </tr>
         </thead>
         <tbody>
@@ -68,19 +72,33 @@
 <script>
   $(document).ready(function() {
 
+    let columns = [
+      {data: 'compte',  className: 'text-center fw-bold', orderable: false, searchable: false },
+      { data: 'matricul', className: 'text-left' },
+      { data: 'first', className: 'text-left' },
+      { data: 'last', className: 'text-left' },
+      { data: 'genre', className: 'text-left' },
+    ];
+
+    @foreach($evaluateds as $i => $item)
+      columns.push({
+        data: 'N_{{ $i+1 }}',
+        className: 'text-center',
+        defaultContent: '--'
+      });
+    @endforeach
+
+    columns.push(
+      { data: 'moyenne', className: 'text-center' },
+      { data: 'rang', className: 'text-center' },
+    );
+
     $('#myTable').DataTable({
       processing: true,
       serverSide: true,
       ordering: false,
-      ajax: '#',
-      columns: [
-        {data: 'compte',  className: 'text-center fw-bold', orderable: false, searchable: false },
-        {data: 'matricule', className: 'text-left'},
-        {data: 'first', className: 'text-left'},
-        {data: 'last', className: 'text-left'},
-        {data: 'genre', className: 'text-left'},
-        {data: 'note', className: 'text-center'},
-      ],
+      ajax: '{{ route('note.matter', ($classe['id'].'_'.$matter['id'].'_'.$cutting['id'])) }}',
+      columns: columns,
       autoWidth: false,
       language: {
         url: '//cdn.datatables.net/plug-ins/1.13.8/i18n/fr-FR.json'

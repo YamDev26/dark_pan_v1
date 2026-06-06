@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\EvaluatNotEvant;
 use App\Services\GestionNoteService;
 use App\Jobs\Matters\CalculMoyenneJob;
+use App\Jobs\Matters\CalculSubMoyenneJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class EvaluatNotListener implements ShouldQueue
@@ -22,29 +23,41 @@ class EvaluatNotListener implements ShouldQueue
         }
 
         // Déclenchement de job pour le calcul de moyenne
-        CalculMoyenneJob::dispatch(
-            $evaluat['get_classe_id'], 
-            $evaluat['level_matter_id'], 
-            $evaluat['cutting_school_year_id']
-        );
+        if(! $evaluat['sub_matter_id']) {
+            CalculMoyenneJob::dispatch(
+                $evaluat['get_classe_id'], 
+                $evaluat['level_matter_id'], 
+                $evaluat['cutting_school_year_id']
+            );
+        }
+        else {
+            CalculSubMoyenneJob::dispatch(
+                $evaluat['get_classe_id'], 
+                $evaluat['level_matter_id'], 
+                $evaluat['cutting_school_year_id'],
+                $evaluat['sub_matter_id']
+            );
+        }
     }
 
 
     private function valNote($note, $valeur): string
     {
-        $nots = 'nc';
-        if(!blank($note)){
-            if(is_int($note)){
-                $nots = ($note <= $valeur) ? ($note < 10 ? '0'.$note:$note):'nc';
-            }
-            else{
-                $not = str_replace([' ', ','], ['', '.'], $note);
-                $nots = floatval($not) ? 
-                (($note <= $valeur) ? 
-                ($note < 10 ? '0'.$note:$note):'nc'):
-                'nc';
-            }
+        if (blank($note)) {
+            return 'nc';
         }
-        return $nots;
+
+        $note = str_replace([' ', ','], ['', '.'], trim($note));
+
+        if (!is_numeric($note)) {
+            return 'nc';
+        }
+
+        $note = (float) $note;
+
+        if ($note < 0 || $note > (20 * $valeur)) {
+            return 'nc';
+        }
+        return $note < 10 ? '0' . $note : (string) $note;
     }
 }

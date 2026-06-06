@@ -21,9 +21,14 @@ class GestionNoteController extends Controller
         try {
             $explod = explode('-', $str);
             list($classe, $matter) = explode('_', $explod[1]);
-            $nbre = $this->service->EvaluatedNbreMatter($explod[1], $explod[0]);
-            return view('pages.notes.index',[
-                'matter' => $this->service->matter($matter),
+            $matters = $this->service->matter($matter);
+
+            $data = ($matters['matter']['id'] === 2 && $matters['level_id'] < 5) ? null:
+            $this->service->EvaluatedMatter($classe, $matter, $explod[0]);
+
+            return view('pages.notes.index_'.($data ? 1:2),[
+                'matter' => $matters,
+                'evaluateds' => $data,
                 'classe' => $this->service->classe($classe),
                 'cutting' => $this->service->cutting($explod[0]),
             ]);
@@ -31,7 +36,7 @@ class GestionNoteController extends Controller
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'
+                'msg' => 'Une erreur est survenue !'.$e->getMessage()
             ]);
         }
     }
@@ -63,7 +68,7 @@ class GestionNoteController extends Controller
                 'str' => 'required|array',
                 'str.*' => 'required|integer',
                 'note' => 'required|array',
-                'note.*' => 'nullable|integer',
+                'note.*' => 'nullable|string',
                 'evaluat' => 'required|exists:evaluateds,id',
             ]);
 
@@ -73,7 +78,7 @@ class GestionNoteController extends Controller
                     'msg' => 'Une erreur est survenue !'
                 ]);
             }
-
+            
             EvaluatNotEvant::dispatch($valid['str'], $valid['note'], $str);
             return to_route('note.show', $str)->with([
                 'str' => 'success',
@@ -187,14 +192,32 @@ class GestionNoteController extends Controller
     }
 
     
-    public function update(Request $request, string $id)
+    public function frensh(string $str)
     {
-        //
+        try {
+            list($classe, $matter, $cutting) = explode('_', $str);
+            return $this->service->moyenneFrensh($classe, $matter, $cutting);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
     
-    public function destroy(string $id)
+    public function matter(string $str)
     {
-        //
+        try {
+            list($classe, $matter, $cutting) = explode('_', $str);
+            return $this->service->getMoyenneMatterClasse($classe, $matter, $cutting);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 }

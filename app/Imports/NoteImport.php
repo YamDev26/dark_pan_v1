@@ -2,8 +2,10 @@
 
 namespace App\Imports;
 
-use App\Services\GestionNoteService;
 use Illuminate\Support\Collection;
+use App\Services\GestionNoteService;
+use App\Jobs\Matters\CalculMoyenneJob;
+use App\Jobs\Matters\CalculSubMoyenneJob;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -35,6 +37,23 @@ class NoteImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                 $service->noteEvaluat($id->id, $this->str, $note);
             }
         }
+
+        // Déclenchement de job pour le calcul de moyenne
+        if(! $evaluat['sub_matter_id']) {
+            CalculMoyenneJob::dispatch(
+                $evaluat['get_classe_id'], 
+                $evaluat['level_matter_id'], 
+                $evaluat['cutting_school_year_id']
+            );
+        }
+        else {
+            CalculSubMoyenneJob::dispatch(
+                $evaluat['get_classe_id'], 
+                $evaluat['level_matter_id'], 
+                $evaluat['cutting_school_year_id'],
+                $evaluat['sub_matter_id']
+            );
+        }
     }
 
 
@@ -53,19 +72,21 @@ class NoteImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
 
     private function valNote($note, $valeur): string
     {
-        $nots = 'nc';
-        if(!blank($note)){
-            if(is_int($note)){
-                $nots = ($note <= $valeur) ? ($note < 10 ? '0'.$note:$note):'nc';
-            }
-            else{
-                $not = str_replace([' ', ','], ['', '.'], $note);
-                $nots = floatval($not) ? 
-                (($note <= $valeur) ? 
-                ($note < 10 ? '0'.$note:$note):'nc'):
-                'nc';
-            }
+        if (blank($note)) {
+            return 'nc';
         }
-        return $nots;
+
+        $note = str_replace([' ', ','], ['', '.'], trim($note));
+
+        if (!is_numeric($note)) {
+            return 'nc';
+        }
+
+        $note = (float) $note;
+
+        if ($note < 0 || $note > (20 * $valeur)) {
+            return 'nc';
+        }
+        return $note < 10 ? '0' . $note : (string) $note;
     }
 }

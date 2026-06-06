@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('moyenne_matters', function (Blueprint $table) {
+        Schema::create('moyenne_bilans', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('moyenne');
             $table->string('rang');
+            $table->string('values');
             $table->unsignedBigInteger('register_id');
-            $table->unsignedBigInteger('level_matter_id');
+            $table->unsignedBigInteger('bilan_matter_id');
             $table->unsignedBigInteger('cutting_school_year_id');
             $table->foreign('register_id')->references('id')->on('registers')->onDelete('cascade');
-            $table->foreign('level_matter_id')->references('id')->on('level_matters')->onDelete('cascade');
+            $table->foreign('bilan_matter_id')->references('id')->on('bilan_matters')->onDelete('cascade');
             $table->foreign('cutting_school_year_id')->references('id')->on('cutting_school_years')->onDelete('cascade');
-            $table->unique(['register_id', 'level_matter_id', 'cutting_school_year_id'], 'mm_unique'); // Contrainte unique sur les deux colonnes
+            $table->unique(['register_id', 'bilan_matter_id', 'cutting_school_year_id'], 'mbm_unique'); // Contrainte unique sur les deux colonnes
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('moyenne_matters');
+        Schema::dropIfExists('moyenne_bilans');
     }
 };

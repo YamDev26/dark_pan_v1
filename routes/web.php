@@ -146,6 +146,8 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::group(['prefix' => 'note'], function() {
                 Route::get('/moyenne/{id}', [App\Http\Controllers\GestionNoteController::class, 'index'])->name('note.index');
+                Route::get('/frensh/{id}', [App\Http\Controllers\GestionNoteController::class, 'frensh'])->name('note.frensh');
+                Route::get('/matter/{id}', [App\Http\Controllers\GestionNoteController::class, 'matter'])->name('note.matter');
                 Route::get('/list/{id}', [App\Http\Controllers\GestionNoteController::class, 'show'])->name('note.show');
                 Route::get('/not/{id}', [App\Http\Controllers\GestionNoteController::class, 'listNot'])->name('note.yajra');
                 Route::get('/create/{id}', [App\Http\Controllers\GestionNoteController::class, 'create'])->name('note.create');

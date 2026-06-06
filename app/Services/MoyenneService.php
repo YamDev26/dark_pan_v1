@@ -6,6 +6,7 @@
   use App\Models\LevelMatter;
   use App\Models\MoyenneBilan;
   use App\Models\MoyenneMatter;
+  use App\Models\MoyenneSubMatter;
   use App\Models\MoyenneTrimestre;
   use App\Models\CuttingSchoolYear;
   use Illuminate\Support\Facades\DB;
@@ -35,9 +36,9 @@
       })
       ->addColumn('action', function ($row) {
         return (
-          '<a class="btn btn-sm btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+          '<button class="btn btn-sm btn-outline-light dropdown-toggle py-0" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fas fa-ellipsis-h"></i>
-          </a>
+          </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="min-width: 8rem;">'
             .$this->cutting($row->id).
           '</ul>'
@@ -147,6 +148,25 @@
           'rang' => $rang
         ]
       );
+    }
+
+    public function moyenneSubMatter($student, $moyenne, $rang, $matter, $cutting, $value) {
+      MoyenneSubMatter::updateOrCreate([
+          'register_id' => $student,
+          'sub_matter_id' => $matter,
+          'cutting_school_year_id' => $cutting,
+        ], [
+          'moyenne' => $moyenne,
+          'values' => $value,
+          'rang' => $rang
+        ]
+      );
+    }
+
+    public function getMoyenneSubMatter($student, $cutting) {
+      $dts = MoyenneSubMatter::where('register_id', $student)
+      ->where('cutting_school_year_id', $cutting)->get();
+      return $dts ?? [];
     }
 
     public function saveMoyenneBilanMatter($student, $moyenne, $rang, $value, $bilan, $cutting) {
@@ -346,5 +366,4 @@
       ->orderByRaw('s.first, s.last')
       ->get();
     }
-
   }

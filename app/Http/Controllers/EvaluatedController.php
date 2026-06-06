@@ -87,7 +87,7 @@ class EvaluatedController extends Controller
         try {
             list($class, $matter) = explode('_', $str);
             $mat = $this->service->matter($matter);
-            $subMatter = ($mat->matter->id == 2 && $mat->level_idl < 5) ? 
+            $subMatter = ($mat->matter->id == 2 && $mat->level_id < 5) ? 
             $this->service->subMatters():null;
             return view('pages.evaluated.detail',[
                 'matter' => $mat,
