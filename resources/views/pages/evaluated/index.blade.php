@@ -78,7 +78,7 @@
 <script>
   $(document).ready(function() {
 
-    $(document).on('click', '.btn-warning', function() {
+    $(document).on('click', '.btnView', function() {
       $id = $(this).data('id');
       $('.option').remove();
       $.ajax({

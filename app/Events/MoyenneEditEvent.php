@@ -3,7 +3,8 @@
 namespace App\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
-class MoyenneMatterStoreEvent
+
+class MoyenneEditEvent
 {
     use Dispatchable;
 
@@ -15,5 +16,4 @@ class MoyenneMatterStoreEvent
         $this->moyens = $moyens;
         $this->str = $str;
     }
-
 }

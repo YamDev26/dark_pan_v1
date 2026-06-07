@@ -23,9 +23,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
         Event::listen(
-            App\Events\MoyenneMatterStoreEvent::class,
-            App\Listeners\MoyenneMatterStoreListener::class,
-
             App\Events\MoyenneBilanMatterEvent::class,
             App\Listeners\MoyenneBilanMatterListener::class,
 
@@ -37,6 +34,12 @@ class AppServiceProvider extends ServiceProvider
 
             App\Events\FrenshMoyenneEvent::class,
             App\Listeners\FrenshMoyenneListener::class,
+
+            App\Events\MoyenneEditEvent::class,
+            App\Listeners\MoyenneEditListener::class,
+
+            App\Events\MoyenneEditFrenshEvent::class,
+            App\Listeners\MoyenneEditFrenshListener::class,
         );
     }
 }

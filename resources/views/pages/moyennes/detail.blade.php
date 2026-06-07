@@ -28,20 +28,26 @@
 <div class="container-fluid pt-4 px-4">
   <div class="bg-secondary text-center rounded p-4">
     <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
-      <h4 class="mb-0">Moyennes {{ ucwords($cutting->cutting->libelle).' '.$classe['libelle'] }}</h4>
-      <Div class="d-flex">
+      <h4 class="mb-0">Liste moyenne</h4>
+      <div class="my-0">
+        <h4 class='my-0'>{{ $classe['libelle'] }}</h4>
+        <span class="my-0">
+          {{ ucwords($cutting['cutting']['libelle']) }}
+        </span>
+      </div>
+      <div class="d-flex">
         <div class="mx-3">
           <select class="form-select form-select w-auto border-0 text-color-3" onchange="window.location.href=this.value;">
             <option value="">Search ...</option>
             @foreach ($matters as $item)
-              <option value="{{ route('moyenne.list', ($item->id.'_'.$cutting->id.'_'.$classe->id)) }}">
+              <option value="{{ route('moyenne.list', ($classe->id.'_'.$item->id.'_'.$cutting->id)) }}">
                 {{ ucwords($item->symbol) }}
               </option>
             @endforeach
           </select>
         </div>
         <a href="{{ route('moyenne.index') }}" class="btn btn-outline-light py-1">Return</a>
-      </Div>
+      </div>
     </div>
     <div class="table-responsive">
       <table class="table text-start align-middle table-bordered table-hover mb-0" id="myTable">
@@ -50,9 +56,9 @@
             <th scope="col" class="text-center">N°</th>
             <th scope="col" class="text-center">Matricule</th>
             <th scope="col" class="text-center">Nom & Prenoms</th>
-            {{-- @foreach ($matters as $item)
-              <th scope="col" class="text-center">{{ ucwords($item->symbol) }}</th>
-            @endforeach --}}
+            @foreach ($matieres as $item)
+              <th scope="col" class="text-center">{{ ucwords($item['symbol']) }}</th>
+            @endforeach
             <th scope="col" class="text-center">Moy</th>
             <th scope="col" class="text-center">Rang</th>
           </tr>

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Exports\File2Export;
 use App\Imports\File3Import;
+use App\Imports\FileFrenshImport;
 use App\Services\MoyenneService;
-use App\Events\MoyenneMatterStoreEvent;
+use App\Events\MoyenneEditEvent;
+use App\Events\MoyenneEditFrenshEvent;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
@@ -16,9 +18,7 @@ class MoyenneController extends Controller
         $this->service = $service;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
         try {
@@ -32,10 +32,8 @@ class MoyenneController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function yajra_1()
+
+    public function dataTable()
     {
         try {
             return $this->service->getYajra();
@@ -48,19 +46,55 @@ class MoyenneController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function create(string $str)
+    {
+        try {
+            list($classe, $matter, $cutting) = explode('_', $str);
+            $matters = $this->service->getMatter($matter);
+            $verif = ($matters['matter']['id'] === 2 && $matters['level_id'] < 5) ? true:false;
+            $data = $verif ?  $this->service->getStudentMoyenneFrensh($classe, $matter, $cutting):
+            $this->service->getStudentMoyenne($classe, $matter, $cutting);
+            return view('pages.moyennes.create_'.($verif ? 2:1),[
+                'datas' => $data,
+                'matter' => $matters,
+                'classe' => $this->service->getClasse($classe),
+                'cutting' => $this->service->getCutting($cutting),
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
+    
     public function store(Request $request, string $str)
     {
         try {
-            $validate = $request->validate([
-                'str' => 'required|array',
-                'str.*' => 'required|string',
-                'moyen' => 'required|array',
-                'moyen.*' => 'nullable|numeric'
+            $valide = $request->validate([
+                'students' => 'required|array',
+                'students.*' => 'required|string',
+                'moyen1' => 'required|array',
+                'moyen1.*' => 'nullable|numeric',
+                'moyen2' => 'nullable|array',
+                'moyen2.*' => 'nullable|numeric',
+                'moyen3' => 'nullable|array',
+                'moyen3.*' => 'nullable|numeric',
+                'string'  => 'required|string',
+                'frensh'  => 'required|string',
             ]);
-            MoyenneMatterStoreEvent::dispatch($validate['str'], $validate['moyen'], $str);
+
+            if((!$valide['string'] == $str)) {
+                return back()->with([
+                    'str' => 'danger',
+                    'msg' => 'Erreur, Incompactibilité entres les informations !'
+                ]);
+            }
+            $valide['frensh'] == 'oui' ?
+            MoyenneEditFrenshEvent::dispatch($valide['students'], $valide['moyen1'], $valide['moyen2'], $valide['moyen3'], $str):
+            MoyenneEditEvent::dispatch($valide['students'], $valide['moyen1'], $str);
             return to_route('moyenne.list', $str)->with([
                 'str' => 'success',
                 'msg' => 'Validation réussie. En attente des traitement !'
@@ -74,21 +108,24 @@ class MoyenneController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+    
     public function show(string $id)
     {
         try {
-            list($classe, $cutting) = explode('_', $id);
+            list($class, $cutting) = explode('_', $id);
+            $classe = $this->service->getClasse($class);
+            $matters = $this->service->getMatters($class);
+            $matieres = $classe['level_id'] < 5
+            ? array_merge($this->service->getSubMatter(), json_decode($matters, true))
+            : json_decode($matters, true);
 
-            // dd($this->service->getResultat($classe, $cutting));
+            // dd($matieres[0]['symbol']);
 
             return view('pages.moyennes.detail',[
-                'classe' => $this->service->getClasse($classe),
+                'classe' => $classe,
+                'matters' => $matters,
+                'matieres' => $matieres,
                 'cutting' => $this->service->getCutting($cutting),
-                'matters' => $this->service->getMatters($classe),
-                'matieres' => $this->service->matieres($classe),
             ]);
         }
         catch (\Exception $e) {
@@ -116,11 +153,13 @@ class MoyenneController extends Controller
     public function moyenne(string $str)
     {
         try {
-            list($matter, $cutting, $classe) = explode('_', $str);
-            return view('pages.moyennes.moyenne_matter',[
+            list($classe, $matter, $cutting) = explode('_', $str);
+            $matters = $this->service->getMatter($matter);
+            $verif = ($matters['matter']['id'] === 2 && $matters['level_id'] < 5) ? true:false;
+            return view('pages.moyennes.show_'.($verif ? 2:1),[
+                'matter' => $matters,
                 'classe' => $this->service->getClasse($classe),
                 'cutting' => $this->service->getCutting($cutting),
-                'matter' => $this->service->getMatter($matter),
             ]);
         }
         catch (\Exception $e) {
@@ -131,11 +170,11 @@ class MoyenneController extends Controller
         }
     }
 
-    public function yajra_2(string $str) 
+    public function autres(string $str) 
     {
         try {
-            list($matter, $cutting, $classe) = explode('_', $str);
-            return $this->service->getYajra_2($classe, $cutting, $matter);
+            list($classe, $matter, $cutting) = explode('_', $str);
+            return $this->service->getListMoyenneMatter($classe, $matter, $cutting);
         }
         catch (\Exception $e) {
             return back()->with([
@@ -145,15 +184,11 @@ class MoyenneController extends Controller
         }
     }
 
-    public function create(string $str)
+    public function frensh(string $str)
     {
         try {
-            list($matter, $cutting, $classe) = explode('_', $str);
-            return view('pages.moyennes.create',[
-                'classe' => $this->service->getClasse($classe),
-                'cutting' => $this->service->getCutting($cutting),
-                'matter' => $this->service->getMatter($matter),
-            ]);
+            list($classe, $matter, $cutting) = explode('_', $str);
+            return $this->service->moyenneFrensh($classe, $matter, $cutting);
         }
         catch (\Exception $e) {
             return back()->with([
@@ -163,31 +198,19 @@ class MoyenneController extends Controller
         }
     }
 
-    public function yajra_3(string $str)
-    {
-        try {
-            list($matter, $cutting, $classe) = explode('_', $str);
-            return $this->service->getYajra_3($classe, $cutting, $matter);
-        }
-        catch (\Exception $e) {
-            return back()->with([
-                'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'
-            ]);
-        }
-    }
 
     public function export(string $str)
     {
         try {
-            list($matter, $cutting, $classe) = explode('_', $str);
+            list($classe, $matter, $cutting,) = explode('_', $str);
             $libelle = $this->service->getClasse($classe)['libelle'];
             $cutting = $this->service->getCutting($cutting)['cutting']['libelle'];
-            $matter = $this->service->getMatter($matter)['matter']['symbol'];
+            $matters = $this->service->getMatter($matter);
+            $verif = ($matters['matter']['id'] === 2 && $matters['level_id'] < 5) ? true:false;
             $value = mt_rand(100, 1000);
-            $name = $libelle.'_'.str_replace(' ', '_', ucwords($cutting)).'_'.$matter;
+            $name = $libelle.'_'.str_replace(' ', '_', ucwords($cutting)).'_'.$matters['matter']['symbol'];
             return Excel::download(
-                new File2Export($classe, $libelle, $matter, $cutting), 
+                new File2Export($classe, $libelle, $matters['matter']['symbol'], $cutting, $verif), 
                 'Fiche_Moyenne_'.$name.'_'.$value.'_'.$str.'.xlsx'
             );
         }
@@ -211,9 +234,12 @@ class MoyenneController extends Controller
             if(!(($explod[7].'_'.$explod[8].'_'.$explod[9]) == $str)) {
                 return back()->with([
                     'str' => 'danger',
-                    'msg' => 'Une erreur, vous vous êtes trompé de fichier !'
+                    'msg' => 'Une erreur, fichier incompactible !'
                 ]);
             }
+            $matter = $this->service->getMatter($explod[8]);
+            ($matter['matter']['id'] === 2 && $matter['level_id'] < 5) ? 
+            Excel::import(new FileFrenshImport($str), $file):
             Excel::import(new File3Import($str), $file);
             return to_route('moyenne.list', $str)->with([
                 'str' => 'success',

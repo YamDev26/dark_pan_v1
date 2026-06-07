@@ -218,6 +218,7 @@
       )->get();
     }
 
+
     private function getEvaluadtedMatters($classe, $matter, $cutting) {
       return DB::table('evaluats as e')
       ->join('registers as r', 'r.id', '=', 'e.register_id')
@@ -226,7 +227,7 @@
         'es.cutting_school_year_id' => $cutting,
         'es.level_matter_id' => $matter,
         'r.get_classe_id' => $classe,
-        'actif' => '1'
+        'es.actif' => '1'
       ])
       ->select(
         'e.register_id',
@@ -261,8 +262,8 @@
           'first'       => strtoupper($item->first),
           'last'        => ucwords($item->last),
           'genre'       => $item->genre == 'F' ? 'Feminin':'Masculin',
-          'moyenne'     => $item->moyenne,
-          'rang'        => $item->rang
+          'moyenne'     => $item->moyenne ?? '--',
+          'rang'        => $item->rang ?? '--'
         ];
         foreach ($notes[$item->register_id] ?? [] as $i => $sub) {
           $row['N_'.$i+1] = $sub->note;

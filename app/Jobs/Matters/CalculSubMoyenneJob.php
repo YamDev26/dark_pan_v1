@@ -3,7 +3,7 @@
 namespace App\Jobs\Matters;
 
 use App\Services\GestionNoteService;
-use App\Jobs\MoyenneSubMatter;
+use App\Jobs\MoyenneSubMatterJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -40,7 +40,7 @@ class CalculSubMoyenneJob implements ShouldQueue
         }
 
         // Déclenchement de job pour le calcul de moyenne
-        MoyenneSubMatter::dispatch(
+        MoyenneSubMatterJob::dispatch(
             $table,
             $this->matter,
             $this->cutting,

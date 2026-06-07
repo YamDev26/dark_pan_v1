@@ -158,8 +158,8 @@
 
       $('#selected option[value="modal"]').toggle(atf <= 2);
       $('#cutting').val(atf <= 2 ? id : '');
-      $('#selected option[value="url"]').attr('data-id', id+'-'+str);
-      $('#selected option[value="pdf"]').attr('data-id', id+'-'+str);
+      $('#selected option[value="url"]').attr('data-id', str+'_'+id);
+      $('#selected option[value="pdf"]').attr('data-id', str+'_'+id);
     }
 
   })

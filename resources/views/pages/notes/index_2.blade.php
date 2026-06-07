@@ -36,8 +36,11 @@
       </div>
       <div class="d-flex">
         <div class="mx-3">
-          <select class="form-select form-select w-auto border-0 text-color-3" onchange="window.location.href=this.value;">
+          <select id="select" data-id="{{ $classe['id'].'_'.$matter['id'].'_'.$cutting['id'] }}" class="form-select form-select w-auto border-0 text-color-3">
             <option value="">Choise ...</option>
+            <option value="edit">Editer</option>
+            <option value="valid">Valider</option>
+            <option value="pdf">Genere PFD</option>
           </select>
         </div>
         <a href="{{ route('evaluated.show', ($classe['id'].'_'.$matter['id'])) }}" class="btn btn-outline-light ml-2 py-1">Return</a>
@@ -92,6 +95,24 @@
       autoWidth: false,
       language: {
         url: '//cdn.datatables.net/plug-ins/1.13.8/i18n/fr-FR.json'
+      }
+    });
+
+
+    $('#select').on('change', function() {
+      let id = $(this).data('id');
+      switch (this.value) {
+        case 'edit':
+          window.location.href = "{{ route('evaluated.moyenne', ':id') }}"
+          .replace(':id', id);
+          break;
+        case 'modal':
+          $("#myModal").modal("show");
+          break;
+        case 'url':
+          window.location.href = "{{ route('note.index', ':id') }}"
+          .replace(':id', id);
+          break;
       }
     });
   })

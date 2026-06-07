@@ -108,13 +108,13 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::group(['prefix' => 'moyenne'], function() {
             Route::get('/index', [App\Http\Controllers\MoyenneController::class, 'index'])->name('moyenne.index');
-            Route::get('/yjr1', [App\Http\Controllers\MoyenneController::class, 'yajra_1'])->name('moyenne.yajra_1');
+            Route::get('/data', [App\Http\Controllers\MoyenneController::class, 'dataTable'])->name('moyenne.data');
             Route::get('/detail/{id}', [App\Http\Controllers\MoyenneController::class, 'show'])->name('moyenne.show');
             Route::get('/show/{id}', [App\Http\Controllers\MoyenneController::class, 'resultatTble'])->name('moyenne.result');
             Route::get('/list/{id}', [App\Http\Controllers\MoyenneController::class, 'moyenne'])->name('moyenne.list');
-            Route::get('/yjr2/{id}', [App\Http\Controllers\MoyenneController::class, 'yajra_2'])->name('moyenne.yajra_2');
+            Route::get('/autre/{id}', [App\Http\Controllers\MoyenneController::class, 'autres'])->name('moyenne.autre');
+            Route::get('/frensh/{id}', [App\Http\Controllers\MoyenneController::class, 'frensh'])->name('moyenne.frensh');
             Route::get('/create/{id}', [App\Http\Controllers\MoyenneController::class, 'create'])->name('moyenne.create');
-            Route::get('/yjr3/{id}', [App\Http\Controllers\MoyenneController::class, 'yajra_3'])->name('moyenne.yajra_3');
             Route::post('/store/{id}', [App\Http\Controllers\MoyenneController::class, 'store'])->name('moyenne.store');
             Route::get('/export/{id}', [App\Http\Controllers\MoyenneController::class, 'export'])->name('moyenne.export');
             Route::post('/import/{id}', [App\Http\Controllers\MoyenneController::class, 'import'])->name('moyenne.import');
@@ -143,6 +143,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/edit', [App\Http\Controllers\EvaluatedController::class, 'edit'])->name('evaluated.edit');
             Route::put('/edit/{id}', [App\Http\Controllers\EvaluatedController::class, 'update'])->name('evaluated.update');
             Route::get('/detele/{id}', [App\Http\Controllers\EvaluatedController::class, 'destroy'])->name('evaluated.detele');
+            Route::get('/edit/moyenne/{id}', [App\Http\Controllers\EvaluatedController::class, 'moyenne'])->name('evaluated.moyenne');
+            Route::post('/edit/{id}', [App\Http\Controllers\EvaluatedController::class, 'moyenne_edit'])->name('evaluated.moyenne_edit');
 
             Route::group(['prefix' => 'note'], function() {
                 Route::get('/moyenne/{id}', [App\Http\Controllers\GestionNoteController::class, 'index'])->name('note.index');

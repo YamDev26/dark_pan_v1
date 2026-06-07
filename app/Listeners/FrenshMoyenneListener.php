@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use App\Services\MoyenneService;
 use App\Events\FrenshMoyenneEvent;
-use App\Jobs\MoyenneImportMatterJob;
+use App\Jobs\MoyenneEditJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class FrenshMoyenneListener implements ShouldQueue
@@ -26,8 +26,8 @@ class FrenshMoyenneListener implements ShouldQueue
             ];
         }
 
-        // Déclenchement de job pour le calcul de moyenne
-        MoyenneImportMatterJob::dispatch(
+        // Déclenchement de job
+        MoyenneEditJob::dispatch(
             $table, $event->matter, $event->cutting, $event->classe
         );
         

@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Jobs;
+
+use App\Services\MoyenneService;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+
+class MoyenneEditJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    
+    private $data, $matter, $cutting, $classe;
+    public function __construct($data, $matter, $cutting, $classe)
+    {
+        $this->data = $data;
+        $this->matter = $matter;
+        $this->cutting = $cutting;
+        $this->classe = $classe;
+    }
+
+    
+    public function handle(): void
+    {
+        $dts = ClassementStudent($this->data);
+        $service = app(MoyenneService::class);
+        
+        foreach($dts as $item) {
+            $service->saveMoyenneMatter(
+                $item['id'], $item['moyen'], $item['rang'], $this->matter, $this->cutting
+            );
+        }
+
+        // Déclenchement de job pour le calcul de moyenne
+        MoyenneBilanMatterJob::dispatch($this->data, $this->matter, $this->cutting);
+    }
+}

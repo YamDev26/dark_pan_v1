@@ -7,6 +7,7 @@
   use App\Models\SchoolYear;
   use App\Models\LevelMatter;
   use App\Models\EvaluatedType;
+  use App\Models\CuttingSchoolYear;
   use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Facades\Auth;
   use Yajra\DataTables\Facades\DataTables;
@@ -38,7 +39,7 @@
       })
       ->addColumn('action', function ($row) {
         return ('<span class="card-block remove-label m-0 pb-0 text-center">
-          <button type="button" class="btn btn-sm btn-warning text-white py-0 me-2 px-2" data-id="'.$row->id.'">
+          <button type="button" class="btn btn-sm btn-light btnView py-0 me-2 px-2" data-id="'.$row->id.'">
           <i class="fas fa-ellipsis-h"></i>
           </button>
         </span>');
@@ -52,9 +53,12 @@
       return GetClasse::find($str);
     }
 
-
     public function matter($str) {
       return LevelMatter::find($str);
+    }
+
+    public function cutting($str) {
+      return CuttingSchoolYear::find($str);
     }
 
     public function getType() {
@@ -158,6 +162,46 @@
         return true;
       }
       return false;
+    }
+
+    public function getStudentMoyenneMatter($classe, $matter, $cutting) {
+      return DB::table('registers as r')
+      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
+      ->join('students as s', 's.id', '=', 'ss.student_id')
+      ->leftJoin('moyenne_matters as mm', function ($join) use ($matter, $cutting) {
+        $join->on('mm.register_id', '=', 'r.id')
+        ->where('mm.level_matter_id', $matter)
+        ->where('mm.cutting_school_year_id', $cutting);
+      }) 
+      ->select([ 
+        'r.id', 's.matricul', 's.first', 's.last', 's.genre','mm.moyenne',
+      ])
+      ->where('r.get_classe_id', $classe)
+      ->orderByRaw('s.first, s.last')
+      ->get();
+    }
+
+
+    public function getMoyennefresh($classe, $matter, $cutting) {
+      return DB::table('registers as r')
+      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
+      ->join('students as s', 's.id', '=', 'ss.student_id')
+      ->leftJoin('moyenne_matters as mm', function ($join) use ($cutting, $matter) {
+        $join->on('mm.register_id', '=', 'r.id')
+        ->where('mm.cutting_school_year_id', $cutting)
+        ->where('mm.level_matter_id', $matter);
+      })
+      ->leftJoin('moyenne_sub_matters as msm', function ($join) use ($cutting, $matter) {
+        $join->on('msm.register_id', '=', 'r.id')
+        ->where('msm.cutting_school_year_id', $cutting);
+      })
+      ->where('r.get_classe_id', $classe)
+      ->groupBy('r.id', 's.matricul', 's.first', 's.last', 's.genre', 'mm.moyenne', 'mm.rang')
+      ->select('r.id', 's.matricul', 's.first', 's.last', 's.genre', 'mm.moyenne', 'mm.rang',
+        DB::raw('MAX(CASE WHEN msm.sub_matter_id = 1 THEN msm.moyenne END) as cf'),
+        DB::raw('MAX(CASE WHEN msm.sub_matter_id = 2 THEN msm.moyenne END) as og'),
+        DB::raw('MAX(CASE WHEN msm.sub_matter_id = 3 THEN msm.moyenne END) as eo')
+      )->get();
     }
 
     private function year() {

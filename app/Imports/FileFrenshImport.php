@@ -2,16 +2,16 @@
 
 namespace App\Imports;
 
-use App\Jobs\MoyenneEditJob;
 use App\Services\MoyenneService;
 use Illuminate\Support\Collection;
+use App\Jobs\MoyenneImportFrenshJob;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 
-class File3Import implements ToCollection, WithHeadingRow, WithValidation, SkipsOnFailure
+class FileFrenshImport implements ToCollection, WithHeadingRow, WithValidation, SkipsOnFailure
 {
     use SkipsFailures;
 
@@ -25,22 +25,33 @@ class File3Import implements ToCollection, WithHeadingRow, WithValidation, Skips
     {
         list($classe, $matter, $cutting) = explode('_', $this->str);
         $service = app(MoyenneService::class);
-        $table = [];
+        $table = [
+            'cf' => [],
+            'og' => [],
+            'eo' => [],
+        ];
 
         foreach($data as $item) {
             $student = $service->studentId($item['matricule'], $classe);
             if($student) {
-                $table[] = [
-                    'id' => $student->id,
-                    'genre' => $student->genre,
-                    'moyen' => $this->format($item['moyenne'])
-                ];
+                foreach (['cf', 'og', 'eo'] as $key) {
+                    $table[$key][] = [
+                        'id'    => $student->id,
+                        'genre' => $student->genre,
+                        'moyen' => $this->format($item[$key]),
+                    ];
+                }
             }
         }
 
-        // Déclenchement de job pour le calcul de moyenne
-        MoyenneEditJob::dispatch($table, $matter, $cutting, $classe);
+        MoyenneImportFrenshJob::dispatch(
+            [$table['cf'], $table['og'], $table['eo']],
+            $matter, 
+            $cutting,
+            $service->getClasse($classe)
+        );
     }
+
 
     public function rules(): array
     {
@@ -50,9 +61,12 @@ class File3Import implements ToCollection, WithHeadingRow, WithValidation, Skips
             '*.prenoms' => 'required|string',
             '*.genre' => 'required|string',
             '*.n' => 'required|numeric',
-            '*.moyenne' => 'nullable|numeric',
+            '*.cf' => 'nullable|numeric',
+            '*.og' => 'nullable|numeric',
+            '*.eo' => 'nullable|numeric',
         ];
     }
+
 
     private function format($moyen) {
         if (blank($moyen)) {

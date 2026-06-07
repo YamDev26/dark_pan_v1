@@ -19,24 +19,23 @@ class GestionNoteController extends Controller
     public function index(string $str)
     {
         try {
-            $explod = explode('-', $str);
-            list($classe, $matter) = explode('_', $explod[1]);
+            list($classe, $matter, $cutting) = explode('_', $str);
             $matters = $this->service->matter($matter);
 
             $data = ($matters['matter']['id'] === 2 && $matters['level_id'] < 5) ? null:
-            $this->service->EvaluatedMatter($classe, $matter, $explod[0]);
+            $this->service->EvaluatedMatter($classe, $matter, $cutting);
 
             return view('pages.notes.index_'.($data ? 1:2),[
                 'matter' => $matters,
                 'evaluateds' => $data,
                 'classe' => $this->service->classe($classe),
-                'cutting' => $this->service->cutting($explod[0]),
+                'cutting' => $this->service->cutting($cutting),
             ]);
         }
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+                'msg' => 'Une erreur est survenue !'
             ]);
         }
     }
