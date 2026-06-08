@@ -14,6 +14,7 @@
   use Yajra\DataTables\Facades\DataTables;
   class MoyenneService
   {
+    private const S_LEVEL_ID  = 5;
     private $schl;
     public function __construct() {
       $this->schl = Auth::user()->school_id ?? 1;
@@ -45,6 +46,17 @@
         );
       })
       ->rawColumns(['compte', 'libelle', 'effectif', 'action'])
+      ->make(true);
+    }
+
+
+    public function getMoyenneMCuttingClasse($level, $classe,  $cutting) {
+      $query = $this->getMoyenneCutting($level, $classe,  $cutting);
+      $compte = 0;
+      return DataTables::of($query)
+      ->addColumn('compte', function() use (&$compte) {
+        return ($compte < 9 ? '0'.++$compte : ++$compte);
+      })
       ->make(true);
     }
 
@@ -205,44 +217,6 @@
       );
     }
 
-    public function getResultat($classe, $cutting) {
-      $column = $this->matieres($classe);
-      $query = DB::table('registers as r')
-      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
-      ->join('students as s', 's.id', '=', 'ss.student_id')
-      ->leftJoin('moyenne_matters as mm', function ($join) use ($cutting) {
-        $join->on('mm.register_id', '=', 'r.id')
-        ->join('level_matters as lm', 'lm.id', '=', 'mm.level_matter_id')
-        ->join('matters as m', 'm.id', '=', 'lm.matter_id')
-        ->where('mm.cutting_school_year_id', $cutting);
-      })
-      ->leftJoin('moyenne_trimestres as mt', function ($join) use ($cutting) {
-        $join->on('mt.register_id', '=', 'r.id')
-        ->where('mt.cutting_school_year_id', $cutting);
-      })
-      ->where(['r.get_classe_id' => $classe])
-      ->orderByRaw('s.first, s.last')
-      ->selectRaw("
-        r.id,
-        s.matricul,
-        s.first,
-        s.last,
-        ".implode(',', $column).",
-        mt.moyenne AS moyenne_trim,
-        mt.rang AS rang_trim
-      ")
-      ->groupBy(
-        'r.id',
-        's.matricul',
-        's.first',
-        's.last',
-        'mt.moyenne',
-        'mt.rang'
-      )
-      ->get();
-      return $this->tableYajraResultat($query);
-    }
-
     public function matieres($str) {
       $dts = $this->getMatters($str);
       $columns = [];
@@ -259,6 +233,48 @@
       }
       return $columns;
     }
+
+
+    public function moyenneFrensh($classe, $matter, $cutting) {
+      $query = $this->getMoyennefresh($classe, $matter, $cutting);
+      $compte = 0;
+      return DataTables::of($query)
+      ->addColumn('compte', function() use (&$compte) {
+        return ($compte < 9 ? '0'.++$compte : ++$compte);
+      })
+      ->addColumn('matricule', function ($row) {
+        return ($row->matricul);
+      })
+      ->addColumn('first', function ($row) {
+        return (strtoupper($row->first));
+      })
+      ->addColumn('last', function ($row) {
+        return (ucwords($row->last));
+      })
+      ->addColumn('genre', function ($row) {
+        return ($row->genre == 'F' ? 'Feminin':'Masculin');
+      })
+      ->addColumn('cf', function ($row) {
+        return ($row->cf ? $row->cf:'--');
+      })
+      ->addColumn('og', function ($row) {
+        return ($row->og ? $row->og:'--');
+      })
+      ->addColumn('eo', function ($row) {
+        return ($row->eo ? $row->eo:'--');
+      })
+      ->addColumn('moyenne', function ($row) {
+        return ($row->moyenne ? $row->moyenne:'--');
+      })
+      ->addColumn('rang', function ($row) {
+        return ($row->rang ? $row->rang:'--');
+      })
+      ->rawColumns([
+        'compte', 'matricule', 'first', 'last', 'genre', 'cf', 'og', 'eo', 'moyenne', 'rang'
+      ])
+      ->make(true);
+    }
+
 
 
     private function cutting($classe) {
@@ -310,96 +326,6 @@
       ->make(true);
     }
 
-    public function moyenneFrensh($classe, $matter, $cutting) {
-      $query = $this->getMoyennefresh($classe, $matter, $cutting);
-      $compte = 0;
-      return DataTables::of($query)
-      ->addColumn('compte', function() use (&$compte) {
-        return ($compte < 9 ? '0'.++$compte : ++$compte);
-      })
-      ->addColumn('matricule', function ($row) {
-        return ($row->matricul);
-      })
-      ->addColumn('first', function ($row) {
-        return (strtoupper($row->first));
-      })
-      ->addColumn('last', function ($row) {
-        return (ucwords($row->last));
-      })
-      ->addColumn('genre', function ($row) {
-        return ($row->genre == 'F' ? 'Feminin':'Masculin');
-      })
-      ->addColumn('cf', function ($row) {
-        return ($row->cf ? $row->cf:'--');
-      })
-      ->addColumn('og', function ($row) {
-        return ($row->og ? $row->og:'--');
-      })
-      ->addColumn('eo', function ($row) {
-        return ($row->eo ? $row->eo:'--');
-      })
-      ->addColumn('moyenne', function ($row) {
-        return ($row->moyenne ? $row->moyenne:'--');
-      })
-      ->addColumn('rang', function ($row) {
-        return ($row->rang ? $row->rang:'--');
-      })
-      ->rawColumns([
-        'compte', 'matricule', 'first', 'last', 'genre', 'cf', 'og', 'eo', 'moyenne', 'rang'
-      ])
-      ->make(true);
-    }
-
-    private function tableYajra3($query) {
-      $compte = 0;
-      return DataTables::of($query)
-      ->addColumn('compte', function() use (&$compte) {
-        return ($compte < 9 ? '0'.++$compte : ++$compte);
-      })
-      ->addColumn('matricule', function ($row) {
-        return ($row->matricul);
-      })
-      ->addColumn('first', function ($row) {
-        return (strtoupper($row->first));
-      })
-      ->addColumn('last', function ($row) {
-        return (ucwords($row->last));
-      })
-      ->addColumn('genre', function ($row) {
-        return ($row->genre == 'F' ? 'Feminin':'Masculin');
-      })
-      ->addColumn('input', function ($row) {
-        return (
-          '<input type="hidden" name="str[]" value="'.$row->id.'_'.$row->genre.'">
-          <input type="text" name="moyen[]" class="form-control mx-0" value="'.($row->moyenne).'" placeholder="---">'
-        );
-      })
-      ->rawColumns(['compte', 'matricule', 'first', 'last', 'genre', 'input'])
-      ->make(true);
-    }
-
-    private function tableYajraResultat($query, $column) {
-      $compte = 0;
-      return DataTables::of($query)
-      ->addIndexColumn()
-      ->addColumn('compte', function() use (&$compte) {
-        return ($compte < 9 ? '0'.++$compte : ++$compte);
-      })
-      ->addColumn('matricule', function ($row) {
-        return ($row->matricul);
-      })
-      ->addColumn('name', function ($row) {
-        return (strtoupper($row->first).' '.ucwords($row->last));
-      })
-      ->addColumn('moyene', function ($row) {
-        return ($row->moyenne_trim);
-      })
-      ->addColumn('rang', function ($row) {
-        return ($row->rang_trim);
-      })
-      ->make(true);
-    }
-
     private function getStudentMoyenMatter($classe, $matter, $cutting) {
       return DB::table('registers as r')
       ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
@@ -439,24 +365,104 @@
       )->get();
     }
 
-    public function getMoyenneMatters($level, $classe,  $cutting) {
-
-      return DB::table('level_matters as lm')
-        ->join('matters as m', 'm.id', '=', 'lm.matter_id')
-        ->leftJoin('moyenne_matters as mm', function ($join) use ($classe, $cutting) {
-          $join->on('mm.level_matter_id', '=', 'lm.id')
-          ->join('registers as r', 'r.id', '=', 'mm.register_id')
-          ->where([
-            'mm.cutting_school_year_id' => $cutting,
-            'r.get_classe_id' => $classe,
-          ]);
-        })
-        ->where([
-          'lm.level_id' => $level,
-        ])
-        ->select('mm.register_id', 'mm.moyenne','m.libelle', 'm.symbol')
-        // ->orderByRaw('m.bilan_matter_id', 'm.position')
-        ->get();
-        // ->groupBy('register_id');
+    private function getSubMattersQuery($level, $classe, $cutting) {
+      return DB::table('registers as r')
+      ->join('level_matters as lm', function ($join) use ($level) {
+        $join->where('lm.level_id', $level)
+        ->where('lm.matter_id', 2);
+      })
+      ->join('sub_matters as sm', 'sm.matter_id', '=', 'lm.matter_id')
+      ->leftJoin('moyenne_sub_matters as mm', function ($join) use ($cutting) {
+        $join->on('mm.register_id', '=', 'r.id')
+        ->on('mm.sub_matter_id', '=', 'sm.id')
+        ->where('mm.cutting_school_year_id', $cutting);
+      })
+      ->where('r.get_classe_id', $classe)
+      ->select(
+        'r.id as register_id',
+        'sm.libelle',
+        'sm.symbol',
+        'mm.moyenne'
+      );
     }
+
+    private function SubMatters($level, $classe,  $cutting) {
+      return $this->getSubMattersQuery($level, $classe, $cutting)
+      ->orderBy('r.id')
+      ->orderBy('sm.id')
+      ->get()
+      ->groupBy('register_id')
+      ->map(fn ($items) => $items->values()->toArray())
+      ->toArray();
+    }
+
+    private function getMoyenneMatters($level, $classe,  $cutting) {
+      $matters = DB::table('registers as r')
+      ->join('level_matters as lm', function ($join) use ($level) {
+        $join->where('lm.level_id', $level);
+      })
+      ->join('matters as m', 'm.id', '=', 'lm.matter_id')
+      ->leftJoin('moyenne_matters as mm', function ($join) use ($cutting) {
+        $join->on('mm.register_id', '=', 'r.id')
+        ->on('mm.level_matter_id', '=', 'lm.id')
+        ->where('mm.cutting_school_year_id', $cutting);
+      })
+      ->where('r.get_classe_id', $classe)
+      ->select(
+        'r.id as register_id',
+        'm.libelle',
+        'm.symbol',
+        'mm.moyenne'
+      )
+      ->orderBy('r.id')
+      ->orderBy('m.bilan_matter_id')
+      ->orderBy('m.position')
+      ->get()
+      ->groupBy('register_id')
+      ->map(fn ($items) => $items->values()->toArray())
+      ->toArray();
+
+      if ($level >= self::S_LEVEL_ID) {
+        return $matters;
+      }
+      foreach ($this->SubMatters($level, $classe, $cutting) as $registerId => $subs) {
+        $matters[$registerId] = array_merge(
+          $subs,
+          $matters[$registerId] ?? []
+        );
+      }
+      return $matters;
+    }
+
+
+    private function getMoyenneCutting($level, $classe,  $cutting) {
+      $students = DB::table('registers as r')
+      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
+      ->join('students as s', 's.id', '=', 'ss.student_id')
+      ->leftJoin('moyenne_trimestres as mt', function ($join) use ($cutting) {
+        $join->on('mt.register_id', '=', 'r.id')
+        ->where('mt.cutting_school_year_id', $cutting);
+      })
+      ->where('r.get_classe_id', $classe)
+      ->select('r.id as register_id', 's.matricul', 's.first', 's.last', 's.genre', 'mt.moyenne', 'mt.rang')
+      ->orderBy('s.first')->orderBy('s.last')
+      ->get();
+
+      $matters = $this->getMoyenneMatters($level, $classe,  $cutting);
+      return $students->map(function ($item) use ($matters) {
+        $row = [
+          'register_id' => $item->register_id,
+          'matricul'    => $item->matricul,
+          'name'        => strtoupper($item->first).' '.ucwords($item->last),
+          'genre'       => $item->genre,
+          'moyenne'     => $item->moyenne ?? '--',
+          'rang'        => $item->rang ?? '--'
+        ];
+        foreach ($matters[$item->register_id] ?? [] as $sub) {
+          $row[$sub->symbol] = $sub->moyenne;
+        }
+        return $row;
+      });
+    }
+
   }

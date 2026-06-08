@@ -109,18 +109,15 @@ class MoyenneController extends Controller
     }
 
     
-    public function show(string $id)
+    public function show(string $str)
     {
         try {
-            list($class, $cutting) = explode('_', $id);
+            list($class, $cutting) = explode('_', $str);
             $classe = $this->service->getClasse($class);
             $matters = $this->service->getMatters($class);
             $matieres = $classe['level_id'] < 5
             ? array_merge($this->service->getSubMatter(), json_decode($matters, true))
             : json_decode($matters, true);
-
-            // dd($matieres[0]['symbol']);
-
             return view('pages.moyennes.detail',[
                 'classe' => $classe,
                 'matters' => $matters,
@@ -131,16 +128,18 @@ class MoyenneController extends Controller
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+                'msg' => 'Une erreur est survenue !'
             ]);
         }
     }
 
-    public function resultatTble(string $str)
+
+    public function tableData(string $str)
     {
         try {
-            list($classe, $cutting) = explode('_', $str);
-            return $this->service->getResultat($classe, $cutting);
+            list($class, $cutting) = explode('_', $str);
+            $classe = $this->service->getClasse($class);
+            return $this->service->getMoyenneMCuttingClasse($classe['level_id'], $class, $cutting);
         }
         catch (\Exception $e) {
             return back()->with([

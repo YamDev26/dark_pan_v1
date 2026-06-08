@@ -110,7 +110,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/index', [App\Http\Controllers\MoyenneController::class, 'index'])->name('moyenne.index');
             Route::get('/data', [App\Http\Controllers\MoyenneController::class, 'dataTable'])->name('moyenne.data');
             Route::get('/detail/{id}', [App\Http\Controllers\MoyenneController::class, 'show'])->name('moyenne.show');
-            Route::get('/show/{id}', [App\Http\Controllers\MoyenneController::class, 'resultatTble'])->name('moyenne.result');
+            Route::get('/show/{id}', [App\Http\Controllers\MoyenneController::class, 'tableData'])->name('moyenne.result');
             Route::get('/list/{id}', [App\Http\Controllers\MoyenneController::class, 'moyenne'])->name('moyenne.list');
             Route::get('/autre/{id}', [App\Http\Controllers\MoyenneController::class, 'autres'])->name('moyenne.autre');
             Route::get('/frensh/{id}', [App\Http\Controllers\MoyenneController::class, 'frensh'])->name('moyenne.frensh');

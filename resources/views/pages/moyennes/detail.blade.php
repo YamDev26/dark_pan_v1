@@ -56,6 +56,7 @@
             <th scope="col" class="text-center">N°</th>
             <th scope="col" class="text-center">Matricule</th>
             <th scope="col" class="text-center">Nom & Prenoms</th>
+            <th scope="col" class="text-center">Genre</th>
             @foreach ($matieres as $item)
               <th scope="col" class="text-center">{{ ucwords($item['symbol']) }}</th>
             @endforeach
@@ -75,24 +76,40 @@
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <script>
   $(document).ready(function() {
+
+    let columns = [
+      {data: 'compte',  className: 'text-center fw-bold', orderable: false, searchable: false },
+      { data: 'matricul', className: 'text-left' },
+      { data: 'name', className: 'text-left' },
+      { data: 'genre', className: 'text-center' },
+    ];
+
+    @foreach($matieres as $item)
+      columns.push({
+        data: '{{ $item['symbol'] }}',
+        className: 'text-center',
+        defaultContent: '--'
+      });
+    @endforeach
+
+    columns.push(
+      { data: 'moyenne', className: 'text-center' },
+      { data: 'rang', className: 'text-center' },
+    );
+
     $('#myTable').DataTable({
       processing: true,
       serverSide: true,
       ordering: false,
       ajax: '{{ route('moyenne.result', ($classe->id.'_'.$cutting->id)) }}',
-      columns: [
-        {data: 'compte',  className: 'text-center fw-bold', orderable: false, searchable: false },
-        {data: 'matricule', name: 's.matricul', className: 'text-left'},
-        {data: 'name', name: 's.first', className: 'text-left'},
-        {data: 'moyenne', name: 'mt.moyenne', className: 'text-center', orderable: false, searchable: false},
-        {data: 'rang', name: 'mt.rang', className: 'text-center', orderable: false, searchable: false},
-      ],
-      // responsive: true,
+      columns: columns,
       autoWidth: false,
       language: {
         url: '//cdn.datatables.net/plug-ins/1.13.8/i18n/fr-FR.json'
       }
     });
+
+
   })
 </script>
 @endsection
