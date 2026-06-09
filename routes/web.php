@@ -118,6 +118,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store/{id}', [App\Http\Controllers\MoyenneController::class, 'store'])->name('moyenne.store');
             Route::get('/export/{id}', [App\Http\Controllers\MoyenneController::class, 'export'])->name('moyenne.export');
             Route::post('/import/{id}', [App\Http\Controllers\MoyenneController::class, 'import'])->name('moyenne.import');
+            Route::get('/pdf/{id}', [App\Http\Controllers\MoyenneController::class, 'generate'])->name('moyenne.pdf');
+            Route::get('/edit/{id}', [App\Http\Controllers\MoyenneController::class, 'nonClasse'])->name('moyenne.classe');
+            Route::post('/edit/{id}', [App\Http\Controllers\MoyenneController::class, 'classeNon'])->name('moyenne.unclass');
         });
 
         Route::group(['prefix' => 'teacher'], function() {

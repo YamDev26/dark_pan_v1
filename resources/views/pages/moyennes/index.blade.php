@@ -35,10 +35,10 @@
       <table class="table text-start align-middle table-bordered table-hover mb-0" id="myTable">
         <thead>
           <tr class="text-white">
-            <th scope="col" class="text-center w-10">N°</th>
+            <th scope="col" class="text-center w-25">N°</th>
             <th scope="col" class="text-center w-25">Libelle</th>
-            <th scope="col" class="text-center w-20">Effectif</th>
-            <th scope="col" class="text-center w-20">Action</th>
+            <th scope="col" class="text-center w-25">Effectif</th>
+            <th scope="col" class="text-center w-25">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -62,7 +62,7 @@
         {data: 'compte',  className: 'text-center fw-bold', orderable: false, searchable: false },
         {data: 'libelle', className: 'text-center'},
         {data: 'effectif', className: 'text-center'},
-        {data: 'action', className: 'text-center dropdown', orderable: false, searchable: false},
+        {data: 'action', className: 'text-center', orderable: false, searchable: false},
       ],
       // responsive: true,
       autoWidth: false,

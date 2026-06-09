@@ -40,7 +40,7 @@
             <option value="">Choise ...</option>
             <option value="edit">Editer</option>
             <option value="valid">Valider</option>
-            <option value="pdf">Genere PFD</option>
+            <option value="pdf">Genere pdf</option>
           </select>
         </div>
         <a href="{{ route('evaluated.show', ($classe['id'].'_'.$matter['id'])) }}" class="btn btn-outline-light ml-2 py-1">Return</a>

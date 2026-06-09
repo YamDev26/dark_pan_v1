@@ -9,6 +9,7 @@ use App\Services\MoyenneService;
 use App\Events\MoyenneEditEvent;
 use App\Events\MoyenneEditFrenshEvent;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class MoyenneController extends Controller
@@ -149,6 +150,7 @@ class MoyenneController extends Controller
         }
     }
 
+
     public function moyenne(string $str)
     {
         try {
@@ -169,6 +171,7 @@ class MoyenneController extends Controller
         }
     }
 
+
     public function autres(string $str) 
     {
         try {
@@ -182,6 +185,7 @@ class MoyenneController extends Controller
             ]);
         }
     }
+
 
     public function frensh(string $str)
     {
@@ -221,6 +225,7 @@ class MoyenneController extends Controller
         }
     }
 
+
     public function import(Request $request, string $str)
     {
         try {
@@ -253,27 +258,85 @@ class MoyenneController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+
+    public function generate(string $str)
     {
-        //
+        try {
+            list($classId, $cuttingId) = explode('_', $str);
+            $classe = $this->service->getClasse($classId);
+            $matters = $this->service->getMatters($classId);
+            $cutting = $this->service->getCutting($cuttingId);
+            $matieres = $classe['level_id'] < 5
+            ? array_merge($this->service->getSubMatter(), json_decode($matters, true))
+            : json_decode($matters, true);
+            $dts = $this->service->getMoyenneMCuttingClasse($classe['level_id'], $classId, $cuttingId);
+            $name = 'liste_moyenne_'.$classe->libelle.'_'.$cutting->cutting->symbol;
+            $pdf = PDF::loadView('pdf.moyennes.general',[
+                'matters' => $matieres,
+                'cutting' => $cutting,
+                'classe' => $classe,
+                'datas' => $dts,
+            ])->setPaper('A3', 'landscape');
+
+            return $pdf->stream($name.'_'.mt_rand(100, 1000).'.pdf');
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    
+    public function nonClasse(string $str)
     {
-        //
+        try {
+            list($classId, $cuttingId) = explode('_', $str);
+            $classe = $this->service->getClasse($classId);
+            $cutting = $this->service->getCutting($cuttingId);
+            $dts = $this->service->moyenneTrimestreClasseStudent(
+                $classId, $cuttingId
+            );
+            return view('pages.moyennes.edit',[
+                'cutting' => $cutting,
+                'classe' => $classe,
+                'datas' => $dts
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    
+    public function classeNon(Request $request, string $str)
     {
-        //
+        try { dd($request);
+            $valide = $request->validate([
+                'students' => 'required|array',
+                'students.*' => 'required|string',
+                'option' => 'required|array',
+                'option*' => 'nullable|string',
+                'string'  => 'required|string',
+            ]);
+            dd($valide);
+
+            if((!$valide['string'] == $str)) {
+                return back()->with([
+                    'str' => 'danger',
+                    'msg' => 'Erreur, Incompactibilité entres les informations !'
+                ]);
+            }
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 }

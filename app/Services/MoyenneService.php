@@ -37,12 +37,10 @@
       })
       ->addColumn('action', function ($row) {
         return (
-          '<button class="btn btn-sm btn-outline-light dropdown-toggle py-0" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-ellipsis-h"></i>
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="min-width: 8rem;">'
-            .$this->cutting($row->id).
-          '</ul>'
+          '<select class="w-auto border-0 text-color-3" onchange="window.location.href=this.value;" style="background:none; color: #6C7293">
+            <option value="">Select ...</option>
+            '.$this->listCutting($row->id).'
+          </select>'
         );
       })
       ->rawColumns(['compte', 'libelle', 'effectif', 'action'])
@@ -276,21 +274,24 @@
     }
 
 
+    public function moyenneTrimestreClasseStudent($classe, $cutting) {
+      return $this->getMoyenneTrimestreClasseStudent($classe, $cutting);
+    }
 
-    private function cutting($classe) {
+
+
+    private function listCutting($classe) {
       return CuttingSchoolYear::with('cutting')
       ->where('school_year_id', $this->year())
       ->get()
       ->map(function ($item) use ($classe) {
         $url = route('moyenne.show', $classe . '_' . $item->id);
         return '
-          <li>
-            <a class="dropdown-item" href="' . $url . '">
-              ' . ucwords($item->cutting->libelle) . '
-            </a>
-          </li>
+          <option value="'.$url.'">' . ucwords($item->cutting->libelle) . '</option>
         ';
       })->implode('');
+
+      
     }
 
     private function year() {
@@ -386,6 +387,7 @@
       );
     }
 
+
     private function SubMatters($level, $classe,  $cutting) {
       return $this->getSubMattersQuery($level, $classe, $cutting)
       ->orderBy('r.id')
@@ -395,6 +397,7 @@
       ->map(fn ($items) => $items->values()->toArray())
       ->toArray();
     }
+
 
     private function getMoyenneMatters($level, $classe,  $cutting) {
       $matters = DB::table('registers as r')
@@ -436,19 +439,10 @@
 
 
     private function getMoyenneCutting($level, $classe,  $cutting) {
-      $students = DB::table('registers as r')
-      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
-      ->join('students as s', 's.id', '=', 'ss.student_id')
-      ->leftJoin('moyenne_trimestres as mt', function ($join) use ($cutting) {
-        $join->on('mt.register_id', '=', 'r.id')
-        ->where('mt.cutting_school_year_id', $cutting);
-      })
-      ->where('r.get_classe_id', $classe)
-      ->select('r.id as register_id', 's.matricul', 's.first', 's.last', 's.genre', 'mt.moyenne', 'mt.rang')
-      ->orderBy('s.first')->orderBy('s.last')
-      ->get();
 
+      $students = $this->getMoyenneTrimestreClasseStudent($classe, $cutting);
       $matters = $this->getMoyenneMatters($level, $classe,  $cutting);
+
       return $students->map(function ($item) use ($matters) {
         $row = [
           'register_id' => $item->register_id,
@@ -463,6 +457,21 @@
         }
         return $row;
       });
+    }
+
+
+    private function getMoyenneTrimestreClasseStudent($classe, $cutting) {
+      return DB::table('registers as r')
+      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
+      ->join('students as s', 's.id', '=', 'ss.student_id')
+      ->leftJoin('moyenne_trimestres as mt', function ($join) use ($cutting) {
+        $join->on('mt.register_id', '=', 'r.id')
+        ->where('mt.cutting_school_year_id', $cutting);
+      })
+      ->where('r.get_classe_id', $classe)
+      ->select('r.id as register_id', 's.matricul', 's.first', 's.last', 's.genre', 'mt.moyenne', 'mt.rang')
+      ->orderBy('s.first')->orderBy('s.last')
+      ->get();
     }
 
   }

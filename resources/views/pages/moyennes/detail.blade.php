@@ -28,7 +28,7 @@
 <div class="container-fluid pt-4 px-4">
   <div class="bg-secondary text-center rounded p-4">
     <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
-      <h4 class="mb-0">Liste moyenne</h4>
+      <h4 class="mb-0">Moyenne</h4>
       <div class="my-0">
         <h4 class='my-0'>{{ $classe['libelle'] }}</h4>
         <span class="my-0">
@@ -36,14 +36,21 @@
         </span>
       </div>
       <div class="d-flex">
-        <div class="mx-3">
+        <div class="mx-0">
           <select class="form-select form-select w-auto border-0 text-color-3" onchange="window.location.href=this.value;">
-            <option value="">Search ...</option>
+            <option value="">Matter ...</option>
             @foreach ($matters as $item)
               <option value="{{ route('moyenne.list', ($classe->id.'_'.$item->id.'_'.$cutting->id)) }}">
                 {{ ucwords($item->symbol) }}
               </option>
             @endforeach
+          </select>
+        </div>
+        <div class="mx-2">
+          <select id="mySelect" class="form-select form-select w-auto border-0 text-color-3">
+            <option value="">Autres ...</option>
+            <option value="{{ route('moyenne.pdf', ($classe->id.'_'.$cutting->id)) }}" data-option="pdf">Generate pdf</option>
+            <option value="{{ route('moyenne.classe', ($classe->id.'_'.$cutting->id)) }}" data-option="url">Non classés</option>
           </select>
         </div>
         <a href="{{ route('moyenne.index') }}" class="btn btn-outline-light py-1">Return</a>
@@ -107,6 +114,24 @@
       language: {
         url: '//cdn.datatables.net/plug-ins/1.13.8/i18n/fr-FR.json'
       }
+    });
+
+
+    $('#mySelect').on('change', function () {
+      const selected = this.selectedOptions[0];
+      const url = this.value;
+
+      if (!url) {
+        return;
+      }
+
+      if (selected.dataset.option === 'pdf') {
+        window.open(url, '_blank');
+      } else {
+        window.location.href = url;
+      }
+
+      this.selectedIndex = 0;
     });
 
 
