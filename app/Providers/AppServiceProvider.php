@@ -40,6 +40,12 @@ class AppServiceProvider extends ServiceProvider
 
             App\Events\MoyenneEditFrenshEvent::class,
             App\Listeners\MoyenneEditFrenshListener::class,
+
+            App\Events\NonClasseStudentEvent::class,
+            App\Listeners\NonClasseStudentListener::class,
+
+            App\Events\MoyenneImportGlobalEvent::class,
+            App\Listeners\MoyenneImportGlobalListener::class,
         );
     }
 }

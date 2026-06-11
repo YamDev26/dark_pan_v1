@@ -14,6 +14,6 @@ class SubMatterSeeder extends Seeder
     {
         SubMatter::create(['libelle' => 'Composition Française', 'symbol' => 'CF', 'matter_id' => 2]); // Expression Ecrit
         SubMatter::create(['libelle' => 'Orthographe-Grammaire', 'symbol' => 'OG', 'matter_id' => 2]);
-        SubMatter::create(['libelle' => 'Expression Orale', 'symbol' => 'E0', 'matter_id' => 2]);
+        SubMatter::create(['libelle' => 'Expression Orale', 'symbol' => 'EO', 'matter_id' => 2]);
     }
 }

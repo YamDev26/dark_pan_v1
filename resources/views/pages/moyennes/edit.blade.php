@@ -68,8 +68,8 @@
                 <td class="text-left">{{ ucwords($item->last) }}</td>
                 <td class="text-left">{{ $item->genre == 'F' ? 'Feminin':'Masculin' }}</td>
                 <td class="py-0 text-center">
-                  <input type="hidden" name="students[]" value="{{ $item->register_id.'_'.$item->genre }}">
-                  <input type="checkbox" name="option[]" class="form-check-input" value="{{ $item->register_id }}" {{ $item->moyenne == 'nc' ? 'checked disabled':'' }}>
+                  <input type="hidden" name="students[]" value="{{ $item->register_id }}">
+                  <input type="checkbox" name="checked[]" class="form-check-input" value="{{ $item->register_id }}" {{ $item->moyenne == 'nc' ? 'checked disabled':'' }}>
                 </td>
               </tr>
             @endforeach
@@ -95,22 +95,54 @@
 
     // Rendre tous les éléments visibles temporairement pour que les champs soient inclus dans le formulaire
     $(document).on('click', 'button[type="submit"]', function () {
-      let table = $('#myTable').DataTable();
-      table.rows().every(function(rowIdx, tableLoop, rowLoop) {
-        var row = this.node();
+      const form = document.getElementById('myForm');
+      const table = $('#myTable').DataTable();
+      $(form).find('.dt-hidden').remove();
+
+      // Ajouter les valeurs des lignes non visibles
+      table.rows().every(function () {
+        const row = this.node();
         if (!$(row).is(':visible')) {
-          $(row).find('input, select, textarea').each(function() {
-            var name = $(this).attr('name');
-            var value = $(this).val();
-            $('<input>').attr({
+          $(row).find('input, select, textarea').each(function () {
+            const name = this.name;
+            if (!name) {
+              return;
+            }
+            let value;
+            if ($(this).is(':checkbox, :radio')) {
+              if (!this.checked) {
+                return;
+              }
+              value = this.value;
+            } 
+            else {
+              value = $(this).val();
+            }
+            $('<input>', {
               type: 'hidden',
+              class: 'dt-hidden',
               name: name,
               value: value
-            }).appendTo('#myForm');
+            }).appendTo(form);
           });
         }
       });
-      $('#myForm').submit(); // Envoie du formulaire
+
+      table.$(':input').trigger('blur');
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        e.stopPropagation();
+        const invalid = table.$(':input:invalid').first();
+        if (invalid.length) {
+          const row = invalid.closest('tr');
+          const index = table.row(row).index();
+          table.page(
+            Math.floor(index / table.page.len())
+          ).draw('page');
+        }
+        return false;
+      }
+      $(form).addClass('was-validated').submit();
     });
 
 

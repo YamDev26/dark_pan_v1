@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Exports\File2Export;
 use App\Imports\File3Import;
+use App\Exports\GlobalExport;
+use App\Imports\GlobalImport;
 use App\Imports\FileFrenshImport;
 use App\Services\MoyenneService;
 use App\Events\MoyenneEditEvent;
+use App\Events\NonClasseStudentEvent;
 use App\Events\MoyenneEditFrenshEvent;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -268,7 +271,7 @@ class MoyenneController extends Controller
             $cutting = $this->service->getCutting($cuttingId);
             $matieres = $classe['level_id'] < 5
             ? array_merge($this->service->getSubMatter(), json_decode($matters, true))
-            : json_decode($matters, true);
+            : json_decode($matters, true); dd($matieres);
             $dts = $this->service->getMoyenneMCuttingClasse($classe['level_id'], $classId, $cuttingId);
             $name = 'liste_moyenne_'.$classe->libelle.'_'.$cutting->cutting->symbol;
             $pdf = PDF::loadView('pdf.moyennes.general',[
@@ -315,22 +318,79 @@ class MoyenneController extends Controller
     
     public function classeNon(Request $request, string $str)
     {
-        try { dd($request);
+        try {
             $valide = $request->validate([
                 'students' => 'required|array',
                 'students.*' => 'required|string',
-                'option' => 'required|array',
-                'option*' => 'nullable|string',
+                'checked' => 'nullable|array',
+                'checked*' => 'nullable|string',
                 'string'  => 'required|string',
             ]);
-            dd($valide);
 
-            if((!$valide['string'] == $str)) {
+            if(!($valide['string'] == $str) || !($request['checked'])) {
                 return back()->with([
                     'str' => 'danger',
-                    'msg' => 'Erreur, Incompactibilité entres les informations !'
+                    'msg' => 'Erreur, Incompactibilité ou aucune case cochée !'
                 ]);
             }
+            
+            NonClasseStudentEvent::dispatch($valide['students'], $valide['checked'], $str);
+            return to_route('moyenne.show', $str)->with([
+                'str' => 'success',
+                'msg' => 'Elève déclaré non classé. Validation effectuée, traitement en attente !'
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
+
+    public function export_1(string $str)
+    {
+        try {
+            list($id1, $id2) = explode('_', $str);
+            $classe = $this->service->getClasse($id1);
+            $cutting = $this->service->getCutting($id2);
+            $string = mt_rand(100, 1000);
+            $name = $classe['libelle'].'_'.str_replace(' ', '_', ucwords($cutting['cutting']['libelle']));
+            return Excel::download(
+                new GlobalExport($classe, $cutting), 
+                'Fiche_Moyenne_Global_'.$name.'_'.$string.'_'.$str.'.xlsx'
+            );
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
+
+    public function import_1(Request $request, string $str)
+    {
+        try {
+            $request->validate([
+                'file' => 'required|file|mimes:xlsx,xls|max:5120'
+            ]);
+            $file = $request->file('file');
+            $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $explod = explode('_', $name);
+            if(!(($explod[7].'_'.$explod[8]) == $str)) {
+                return back()->with([
+                    'str' => 'danger',
+                    'msg' => 'Une erreur, fichier incompactible !'
+                ]);
+            }
+            Excel::import(new GlobalImport($str), $file);
+            return to_route('moyenne.show', $str)->with([
+                'str' => 'success',
+                'msg' => 'Importation réussie. En attente des traitement !'
+            ]);
         }
         catch (\Exception $e) {
             return back()->with([

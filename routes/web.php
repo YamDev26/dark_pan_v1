@@ -121,6 +121,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/pdf/{id}', [App\Http\Controllers\MoyenneController::class, 'generate'])->name('moyenne.pdf');
             Route::get('/edit/{id}', [App\Http\Controllers\MoyenneController::class, 'nonClasse'])->name('moyenne.classe');
             Route::post('/edit/{id}', [App\Http\Controllers\MoyenneController::class, 'classeNon'])->name('moyenne.unclass');
+            Route::get('/global/{id}', [App\Http\Controllers\MoyenneController::class, 'export_1'])->name('moyenne.exports');
+            Route::post('/global/{id}', [App\Http\Controllers\MoyenneController::class, 'import_1'])->name('moyenne.imports');
         });
 
         Route::group(['prefix' => 'teacher'], function() {

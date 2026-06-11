@@ -13,7 +13,7 @@ class MatterSeeder extends Seeder
     public function run(): void
     {
         Matter::create(['libelle' => 'Anglais', 'symbol' => 'Ang', 'bilan_matter_id' => 1, 'position' => 3]);
-        Matter::create(['libelle' => 'Français', 'symbol' => 'Fr', 'bilan_matter_id' => 1, 'position' => 2]);
+        Matter::create(['libelle' => 'Français', 'symbol' => 'Fr', 'bilan_matter_id' => 1, 'position' => 2]); // id = 2
         Matter::create(['libelle' => 'Histoire-Géographie', 'symbol' => 'HG', 'bilan_matter_id' => 1, 'position' => 5]);
         Matter::create(['libelle' => 'Mathématique', 'symbol' => 'Math', 'bilan_matter_id' => 2, 'position' => 1]);
         Matter::create(['libelle' => 'Physique-Chimie', 'symbol' => 'PC', 'bilan_matter_id' => 2, 'position' => 2]);

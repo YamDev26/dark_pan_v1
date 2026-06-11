@@ -28,11 +28,11 @@
 <div class="container-fluid pt-4 px-4">
   <div class="bg-secondary text-center rounded p-4">
     <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
-      <h4 class="mb-0">Moyenne</h4>
+      <h4 class="mb-0">{{ ucwords($cutting['cutting']['libelle']) }}</h4>
       <div class="my-0">
         <h4 class='my-0'>{{ $classe['libelle'] }}</h4>
         <span class="my-0">
-          {{ ucwords($cutting['cutting']['libelle']) }}
+          Moyenne
         </span>
       </div>
       <div class="d-flex">
@@ -49,7 +49,8 @@
         <div class="mx-2">
           <select id="mySelect" class="form-select form-select w-auto border-0 text-color-3">
             <option value="">Autres ...</option>
-            <option value="{{ route('moyenne.pdf', ($classe->id.'_'.$cutting->id)) }}" data-option="pdf">Generate pdf</option>
+            <option value="{{ route('moyenne.pdf', ($classe->id.'_'.$cutting->id)) }}" data-option="pdf">Voir le pdf</option>
+            <option value="modal" data-option="modal">Importation</option>
             <option value="{{ route('moyenne.classe', ($classe->id.'_'.$cutting->id)) }}" data-option="url">Non classés</option>
           </select>
         </div>
@@ -78,6 +79,10 @@
     </div>
   </div>
 </div>
+@include('partials._modal_import',[
+  'url' => route('moyenne.imports', $classe->id.'_'.$cutting->id),
+  'export' => route('moyenne.exports', $classe->id.'_'.$cutting->id)
+])
 @endsection
 @section('script')
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
@@ -118,22 +123,29 @@
 
 
     $('#mySelect').on('change', function () {
-      const selected = this.selectedOptions[0];
-      const url = this.value;
-
+      const $selected = $(this).find(':selected');
+      const url = $selected.val();
+      const option = $selected.data('option');
+      
       if (!url) {
+        this.selectedIndex = 0;
         return;
       }
 
-      if (selected.dataset.option === 'pdf') {
-        window.open(url, '_blank');
-      } else {
-        window.location.href = url;
+      switch (option) {
+        case 'pdf':
+          window.open(url, '_blank');
+          break;
+        case 'modal':
+          $('#AddModal').modal('show');
+          break;
+        default:
+          window.location.href = url;
+          break;
       }
 
       this.selectedIndex = 0;
     });
-
 
   })
 </script>

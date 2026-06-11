@@ -279,6 +279,62 @@
     }
 
 
+    public function frenshIdGet($level) {
+      return DB::table('level_matters')
+      ->where('school_id', $this->schl)
+      ->where('level_id', $level)
+      ->where('matter_id', 2)
+      ->value('id');
+    }
+
+
+    public function updateMoyenne($item, $cutting, $level) {
+      MoyenneTrimestre::where('register_id', $item)
+      ->where('cutting_school_year_id', $cutting)
+      ->update([
+        'moyenne' => 'nc',
+        'rang' => 'nc',
+      ]);
+
+      $this->updateMoyenneBilan($item, $cutting, $level);
+    }
+
+
+    private function updateMoyenneBilan($item, $cutting, $level) {
+      MoyenneBilan::where('register_id', $item)
+      ->where('cutting_school_year_id', $cutting)
+      ->update([
+        'moyenne' => 'nc',
+        'rang' => 'nc',
+      ]);
+
+      $this->updateMoyenneMatter($item, $cutting, $level);
+    }
+
+    private function updateMoyenneMatter($item, $cutting, $level) {
+      MoyenneMatter::where('register_id', $item)
+      ->where('cutting_school_year_id', $cutting)
+      ->update([
+        'moyenne' => 'nc',
+        'rang' => 'nc',
+      ]);
+
+      if($level < self::S_LEVEL_ID) {
+        $this->updateMoyenneSubMatter($item, $cutting);
+      }
+    }
+
+
+    private function updateMoyenneSubMatter($item, $cutting) {
+      MoyenneSubMatter::where('register_id', $item)
+      ->where('cutting_school_year_id', $cutting)
+      ->update([
+        'moyenne' => 'nc',
+        'rang' => 'nc',
+      ]);
+    }
+
+
 
     private function listCutting($classe) {
       return CuttingSchoolYear::with('cutting')

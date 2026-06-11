@@ -9,7 +9,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
-use Maatwebsite\Excel\Concerns\Failure;
 
 class File2Import implements ToCollection, WithHeadingRow, WithValidation, SkipsOnFailure
 {
