@@ -31,8 +31,8 @@ class MoyenneSubMatterJob implements ShouldQueue
         $service = app(MoyenneService::class);
         foreach($dts as $item) {
             $service->moyenneSubMatter(
-                $item['id'], $item['moyen'], $item['rang'], 
-                $this->subMatter, $this->cutting, $this->getCoeff()
+                $item['id'], $item['moyen'], $this->subMatter, 
+                $this->cutting, $this->getCoeff(), $item['rang']
             );
         }
 

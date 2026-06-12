@@ -104,6 +104,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/search', [App\Http\Controllers\RegisterController::class, 'search'])->name('register.search');
             Route::get('/classe', [App\Http\Controllers\RegisterController::class, 'getClasse'])->name('register.classe');
             Route::post('/delete', [App\Http\Controllers\RegisterController::class, 'destroy'])->name('register.delete');
+            Route::get('/pdf/{id}', [App\Http\Controllers\RegisterController::class, 'generate'])->name('register.pdf');
         });
 
         Route::group(['prefix' => 'moyenne'], function() {

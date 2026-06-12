@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document" style="min-width: 600px">
     <div class="modal-content" style="background: #191C24">
       <div class="modal-header pt-2 pb-0 mb-0">
-        <h5 class="modal-title" id="myModalLabel">Inscription détaille</h5>
+        <h5 class="modal-title" id="myModalLabel">Détail</h5>
         <h3><i class="fa fa-user-edit text-primary"></i></h3>
       </div>
       <div class="modal-body">
@@ -34,10 +34,13 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer my-0">
-        <button type="button" class="btn btn-outline-primary py-1" data-bs-dismiss="modal" style="font-size: 14px">Fermer</button>
-        <button type="button" class="btn btn-outline-light py-1" id="subMit" style="font-size: 14px">Imprim</button>
-      </div>
+      <form action="#" method="get" id="myDetail" target="_blank">
+        @csrf
+        <div class="modal-footer my-0">
+          <button type="button" class="btn btn-outline-primary py-1" data-bs-dismiss="modal" style="font-size: 14px">Fermer</button>
+          <button type="submit" class="btn btn-outline-light py-1" style="font-size: 14px">Imprim</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

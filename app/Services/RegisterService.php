@@ -16,6 +16,11 @@
       $this->schl = Auth::user()->school_id ?? 1;
     }
 
+    public function school() {
+      return School::find($this->schl);
+    }
+
+
     public function getYajra() {
       $query = DB::table('registers as r')
       ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
@@ -144,9 +149,6 @@
       return GetClasse::find($str) ?? null;
     }
 
-    private function school() {
-      return School::find($this->schl) ?? null;
-    }
 
     private function year() {
       return SchoolYear::where('status', '1')->value('id') ?? null;

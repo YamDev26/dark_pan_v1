@@ -54,7 +54,7 @@
 
       table th,
       table td {
-        border: 1px solid #000;
+        border: 1px solid #6C7293;
         padding: 6px;
       }
 
@@ -76,7 +76,7 @@
     <div>COLLÈGE EXEMPLE</div>
 
     <div class="title">
-        BULLETIN DE NOTES
+      BULLETIN DE NOTES
     </div>
 </header>
 
@@ -92,8 +92,7 @@
           <tr>
             <th></th>
             <th>Matricule</th>
-            <th>Nom</th>
-            <th>Prénoms</th>
+            <th>Nom & Prénoms</th>
             <th>Genre</th>
             @foreach ($matters as $matter)
               <th>{{ $matter['symbol'] }}</th>

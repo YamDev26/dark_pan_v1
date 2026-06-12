@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Services\RegisterService;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 
 class RegisterController extends Controller
 {
@@ -12,9 +15,7 @@ class RegisterController extends Controller
         $this->service = $service;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
         try {
@@ -30,6 +31,7 @@ class RegisterController extends Controller
         }
     }
 
+
     public function yajra_1() {
         try {
             return $this->service->getYajra();
@@ -42,9 +44,7 @@ class RegisterController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create(Request $query)
     {
         try {
@@ -67,6 +67,7 @@ class RegisterController extends Controller
         }
     }
 
+
     public function getClasse(Request $dts)
     {
         try {
@@ -80,17 +81,13 @@ class RegisterController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
+    
     public function show(string $id)
     {
         try {
@@ -106,6 +103,7 @@ class RegisterController extends Controller
         }
     }
 
+
     public function yajra_2(string $id)
     {
         try {
@@ -119,17 +117,13 @@ class RegisterController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function search(Request $request)
     {
         try {
@@ -159,9 +153,36 @@ class RegisterController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
+    public function generate(string $str)
+    {
+        try {
+            $data = $this->service->getRegister($str);
+            $school = $this->service->school();
+            $writer = new PngWriter();
+            $qrCode = new QrCode(
+                data:'Code : '. $school->code,
+                size: 120,
+            );
+            $result = $writer->write($qrCode);
+            $image = 'data:image/png;base64,'.base64_encode($result->getString());
+
+            $pdf = PDF::loadView('pdf.file_1',[
+                'data' => $data,
+                'qrcode' => $image,
+                'school' => $school
+            ])->setPaper('A4', 'portrait');
+            return $pdf->stream('Fiche_Inscription_'.mt_rand(100, 1000).'.pdf');
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
+    
     public function destroy(Request $request)
     {
         try {

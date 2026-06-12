@@ -16,13 +16,16 @@ class MoyenneBilanMatterListener implements ShouldQueue
         $service = app(MoyenneService::class);
 
         foreach($dts as $item) {
+            if (blank($item['moyen']) || $item['moyen'] === 'nc') {
+                continue;
+            }
             $service->saveMoyenneBilanMatter(
                 $item['id'],
                 $item['moyen'],
-                $item['rang'],
-                $item['value'],
+                $item['value'] ?? 'nc',
                 $event->bilan,
-                $event->cutting
+                $event->cutting,
+                $item['rang']
             );
         }
 

@@ -4,6 +4,7 @@
   use App\Models\Serie;
   use App\Models\Level;
   use App\Models\School;
+  use App\Models\DaysWeek;
   use App\Models\GetClasse;
   use App\Models\SchoolYear;
   use Illuminate\Support\Facades\DB;
@@ -46,7 +47,7 @@
         return (ucwords($row->redoubant ? 'oui':'non'));
       })
       ->addColumn('naissance', function ($row) {
-        return (date('d.m.Y', strtotime($row->date)));
+        return (date('d/m/Y', strtotime($row->date)));
       })
       ->rawColumns(['compte', 'matricul', 'name', 'genre', 'naissance', 'affect', 'redoublant'])
       ->make(true);
@@ -127,6 +128,11 @@
       }
       $dts->delete();
       return true;
+    }
+
+
+    public function getDayWeek() {
+      return DaysWeek::orderBy('order')->get();
     }
 
 

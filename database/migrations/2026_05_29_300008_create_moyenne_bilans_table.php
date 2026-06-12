@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('moyenne');
             $table->string('rang');
-            $table->string('values');
+            $table->string('values')->nullable();
             $table->unsignedBigInteger('register_id');
             $table->unsignedBigInteger('bilan_matter_id');
             $table->unsignedBigInteger('cutting_school_year_id');

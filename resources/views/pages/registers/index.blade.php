@@ -106,8 +106,8 @@
               $('#block2').hide(); $('#block1').show();
               $('#addName').text(data['name']);
               $('#addGenre').text('Genre : '+(data['genre'] == 'F' ? 'Feminin':'Masculin'));
-              $('#addNaiss').text('Né'+(data['genre'] == 'F' ? 'é le ':' le ')+data['date']+' à '+data['lieu']);
-              $('#addMtcl').text('Matricule : '+data['matricul']);
+              $('#addNaiss').text('Né'+(data['genre'] == 'F' ? 'e le ':' le ')+data['date']+' à '+data['lieu']);
+              $('#addMtcl').text(data['matricul']);
               
               $('#SearchModal').modal('hide');
               $('#matricul').val('');
@@ -127,7 +127,12 @@
 
 
     $(document).on('click', '.dtlBtn', function() {
-      ajax($(this).data('id'), function(data) {
+      const id = $(this).data('id');
+      $('#myDetail').attr(
+        'action', "{{ route('register.pdf', ':id') }}".replace(':id', id)
+      );
+
+      ajax(id, function(data) {
         $('#dtlName').text(data['name']);
         $('#dtlMatricul').text(data['matricul']);
         $('#dtlGenre').text('Genre : '+(data['genre'] == 'F' ? 'Feminin':'Masculin'));

@@ -196,7 +196,7 @@ class TeacherController extends Controller
             $file = $request->file('file');
             $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $str = explode('_', $name);
-            if(!($str[3] == $this->service->export())) {
+            if(!($str[3] == $this->service->export()) || !($str[1] === 'Enseignant')) {
                 return back()->with([
                     'str' => 'danger',
                     'msg' => 'Erreur, fichier incompactible !'

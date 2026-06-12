@@ -15,8 +15,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('libelle');
             $table->string('symbol');
-            $table->enum('cycle1', [0,1])->default(0);
-            $table->enum('cycle2', [0,1])->default(0);
+            $table->string('cycle1')->nullable();
+            $table->string('cycle2')->nullable();
             $table->enum('status', [0,1])->default(1);
             $table->timestamps();
         });

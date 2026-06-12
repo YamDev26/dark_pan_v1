@@ -1,5 +1,5 @@
 @extends('app')
-@section('title', 'List '.$classe['libelle'])
+@section('title', 'Detail '.$classe['libelle'])
 @section('link')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <style>
@@ -32,14 +32,14 @@
         <div class="d-flex align-items-center justify-content-between mb-2">
           <h4 class="mb-0">Classe {{ $classe['libelle'] }}</h4>
           <div class="d-flex">
-            <select class="form-select form-select w-auto border-0 text-color-3 mx-2" onchange="window.location.href=this.value;">
+            <select class="form-select form-select w-auto border-0 text-color-3 mx-2" id="mySelect">
               <option value="">Search ...</option>
-              <option value="#">Emploi du temps</option>
-              <option value="#">Liste Enseignant</option>
-              <option value="#">Danwload pfd</option>
               @if (!($classe['inscrit'] >= $classe['effectif']))
-                <option value="{{ route('classe.export',$classe['id']) }}">Fiche Inscription</option>
+                <option value="{{ route('classe.export',$classe['id']) }}" data-option="file">Fiche Inscription</option>
               @endif
+              <option value="#" data-option="modal1">Liste Enseignant</option>
+              <option value="modal" data-option="modal2">Emploi du temps</option>
+              <option value="#" data-option="pdf">Generate pfd</option>
             </select>
             <a href="{{ route('classe.show',$classe['level_id']) }}" class="btn btn-outline-light py-1">Return</a>
           </div>
@@ -70,11 +70,46 @@
     </div>
   </div>
 </div>
+<!-- Modal Emploi Du Temps -->
+@include('partials._modal_emploi_tps',[
+  'days' => $days
+])
+<!-- Modal Enseignant -->
+@include('partials._modal_enseignant')
 @endsection
 @section('script')
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <script>
   $(document).ready(function() {
+
+    $('#mySelect').on('change', function () {
+      const $selected = $(this).find(':selected');
+      const url = $selected.val();
+      const option = $selected.data('option');
+      
+      if (!url) {
+        this.selectedIndex = 0;
+        return;
+      }
+
+      switch (option) {
+        case 'pdf':
+          window.open(url, '_blank');
+          break;
+        case 'modal1':
+          $('#profModal').modal('show');
+          break;
+        case 'modal2':
+          $('#tmpModal').modal('show');
+          break;
+        default:
+          window.location.href = url;
+          break;
+      }
+
+      this.selectedIndex = 0;
+    });
+
     $('#myTable').DataTable({
       processing: true,
       serverSide: true,

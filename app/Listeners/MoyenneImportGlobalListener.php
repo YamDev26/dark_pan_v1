@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class MoyenneImportGlobalListener implements ShouldQueue
 {
+    private const SUB_MATTERS = ['CF', 'OG', 'EO'];
 
     public function handle(MoyenneImportGlobalEvent $event): void
     {
@@ -16,11 +17,13 @@ class MoyenneImportGlobalListener implements ShouldQueue
 
         foreach($data as $matiere => $valeur) {
 
-            list($id, $lib) = explode('_', $matiere);
+            list($id, $libelle) = explode('_', $matiere, 2);
 
-            in_array($lib, ['CF', 'OG', 'EO']) ?
-            SubMatterImportJob::dispatch($valeur, $id, $event->cutting, $event->classe):
-            MoyenneEditJob::dispatch($valeur, $id, $event->cutting, $event->classe);
+            $job = in_array($libelle, self::SUB_MATTERS, true)
+            ? new SubMatterImportJob($valeur, $id, $event->cutting, $event->classe)
+            : new MoyenneEditJob($valeur, $id, $event->cutting, $event->classe);
+
+            dispatch($job);
         }
     }
 }

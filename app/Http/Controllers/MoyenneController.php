@@ -271,7 +271,7 @@ class MoyenneController extends Controller
             $cutting = $this->service->getCutting($cuttingId);
             $matieres = $classe['level_id'] < 5
             ? array_merge($this->service->getSubMatter(), json_decode($matters, true))
-            : json_decode($matters, true); dd($matieres);
+            : json_decode($matters, true);
             $dts = $this->service->getMoyenneMCuttingClasse($classe['level_id'], $classId, $cuttingId);
             $name = 'liste_moyenne_'.$classe->libelle.'_'.$cutting->cutting->symbol;
             $pdf = PDF::loadView('pdf.moyennes.general',[
@@ -395,7 +395,7 @@ class MoyenneController extends Controller
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'
+                'msg' => 'Une erreur est survenue !'.$e->getMessage()
             ]);
         }
     }

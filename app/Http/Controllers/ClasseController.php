@@ -14,9 +14,7 @@ class ClasseController extends Controller
         $this->service = $service;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
         try {
@@ -32,14 +30,13 @@ class ClasseController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function list(string $id)
     {
         try {
-            return view('pages.classes.list_classe',[
+            return view('pages.classes.show',[
                 'classe' => $this->service->classe($id),
+                'days' => $this->service->getDayWeek(),
                 'data' => []
             ]);
         }
@@ -50,6 +47,7 @@ class ClasseController extends Controller
             ]);
         }
     }
+
 
     public function export(string $id) {
         try {
@@ -69,6 +67,7 @@ class ClasseController extends Controller
         }
     }
 
+
     public function import(Request $request) {
         try {
             $request->validate([
@@ -81,7 +80,7 @@ class ClasseController extends Controller
             if($classe && !($classe['school_id'].$classe['school_year_id'] == $explod[4])) {
                 return back()->with([
                     'str' => 'danger',
-                    'msg' => 'Erreur, Incompactibilité lié à cet fichier !'
+                    'msg' => 'Erreur, fichier incompactible !'
                 ]);
             }
             if(!($classe['invalid'] || $classe['status'])) {
@@ -100,10 +99,11 @@ class ClasseController extends Controller
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Erreur, Mauvais fichier !'
+                'msg' => 'Une erreur est survenue !'
             ]);
         }
     }
+
 
     public function yajra(string $id) {
         try {
@@ -117,9 +117,7 @@ class ClasseController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request, string $id)
     {
         try {
@@ -150,9 +148,7 @@ class ClasseController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         try {
@@ -173,9 +169,7 @@ class ClasseController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(Request $request)
     {
         try {
@@ -198,9 +192,7 @@ class ClasseController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id)
     {
         try {
@@ -222,9 +214,7 @@ class ClasseController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    
     public function destroy(Request $request, string $id)
     {
         try {

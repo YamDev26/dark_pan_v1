@@ -159,19 +159,19 @@
       ')->first();
     }
 
-    public function saveMoyenneMatter($student, $moyenne, $rang, $matter, $cutting) {
+    public function saveMoyenneMatter($student, $moyenne, $matter, $cutting, $rang = null) {
       MoyenneMatter::updateOrCreate([
           'register_id' => $student,
           'level_matter_id' => $matter,
           'cutting_school_year_id' => $cutting,
         ], [
           'moyenne' => $moyenne,
-          'rang' => $rang
+          'rang' => $rang ?? '--'
         ]
       );
     }
 
-    public function moyenneSubMatter($student, $moyenne, $rang, $matter, $cutting, $value) {
+    public function moyenneSubMatter($student, $moyenne, $matter, $cutting, $value, $rang = null) {
       MoyenneSubMatter::updateOrCreate([
           'register_id' => $student,
           'sub_matter_id' => $matter,
@@ -179,7 +179,7 @@
         ], [
           'moyenne' => $moyenne,
           'values' => $value,
-          'rang' => $rang
+          'rang' => $rang ?? '--'
         ]
       );
     }
@@ -190,15 +190,15 @@
       return $dts ?? [];
     }
 
-    public function saveMoyenneBilanMatter($student, $moyenne, $rang, $value, $bilan, $cutting) {
+    public function saveMoyenneBilanMatter($student, $moyenne, $value, $bilan, $cutting, $rang = null) {
       MoyenneBilan::updateOrCreate([
           'register_id' => $student,
           'bilan_matter_id' => $bilan,
           'cutting_school_year_id' => $cutting,
         ], [
           'moyenne' => $moyenne,
-          'rang' => $rang,
-          'values' => $value
+          'rang' => $rang ?? '--',
+          'values' => $value ?? 'nc'
         ]
       );
     }

@@ -32,7 +32,7 @@ class MoyenneImportMatterJob implements ShouldQueue
         
         foreach($dts as $item) {
             $service->saveMoyenneMatter(
-                $item['id'], $item['moyen'], $item['rang'], $this->matter, $this->cutting
+                $item['id'], $item['moyen'], $this->matter, $this->cutting, $item['rang']
             );
         }
 

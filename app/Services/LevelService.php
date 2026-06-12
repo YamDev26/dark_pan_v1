@@ -18,13 +18,12 @@
     public function getLevels() {
       $school = $this->school();
       $levels = Level::query()
-      ->when($school['cycle1'], function ($q) use ($school) {
-        $q->where('cycle1', $school['cycle1']);
+      ->where(function ($query) use ($school) {
+        $query->where('cycle1', $school['cycle1'])
+        ->orWhere('cycle2', $school['cycle2']);
       })
-      ->when($school['cycle2'], function ($q) use ($school) {
-        $q->orWhere('cycle2', $school['cycle2']);
-      })
-      ->orderBy('id')->get();
+      ->orderBy('id')
+      ->get();
       return $levels ?? [];
     }
 

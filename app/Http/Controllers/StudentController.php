@@ -17,9 +17,7 @@ class StudentController extends Controller
         $this->school = auth()->user()->school_id;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         try {
@@ -35,9 +33,7 @@ class StudentController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function yajra()
     {
         try {
@@ -51,9 +47,7 @@ class StudentController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function year(String $id) {
         try {
             return view('pages.students.list_year',[
@@ -68,9 +62,7 @@ class StudentController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function search(String $id) {
         try {
             return $this->service->getDtYears($id);
@@ -83,9 +75,7 @@ class StudentController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
         try {
@@ -101,9 +91,7 @@ class StudentController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(StudentRequest $valid)
     {
         try {
@@ -118,17 +106,13 @@ class StudentController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit(string $id)
     {
         try {
@@ -144,9 +128,7 @@ class StudentController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(StudentRequest $valid, string $id)
     {
         try {
@@ -165,7 +147,7 @@ class StudentController extends Controller
     {
         try {
             $str = mt_rand(100, 1000).'_'.$this->service->export(); 
-            $name = 'Fiche_Enregistrement_'.$str;
+            $name = 'Fiche_Nouvel_Eleve_'.$str;
             return Excel::download(new File1Export, $name.'.xlsx');
         }
         catch (\Exception $e) {
@@ -185,7 +167,7 @@ class StudentController extends Controller
             $file = $request->file('file');
             $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $str = explode('_', $name);
-            if(!($str[3] == $this->service->export())) {
+            if(!($str[4] == $this->service->export()) || !($str[2] === 'Eleve')) {
                 return back()->with([
                     'str' => 'danger',
                     'msg' => 'Erreur, fichier incompactible !'
@@ -205,9 +187,7 @@ class StudentController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    
     public function destroy(string $id)
     {
         //

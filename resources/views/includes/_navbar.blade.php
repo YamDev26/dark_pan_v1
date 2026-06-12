@@ -49,7 +49,7 @@
           <a href="#" class="nav-link dropdown-toggle {{ request()->is(['setting/*', 'slot/*', 'level/*']) ? 'active' : '' }}" data-bs-toggle="dropdown">
             <i class="fa fa-cogs me-2"></i>Configs
           </a>
-          <div class="dropdown-menu bg-transparent border-0 active">
+          <div class="dropdown-menu bg-transparent border-0 {{ request()->is(['setting/*', 'slot/*', 'level/*']) ? 'show' : '' }}">
             <a href="{{ route('level.index') }}" class="dropdown-item {{ request()->is('level/*') ? 'active' : '' }}">Disciplines</a>
             <a href="{{ route('slot.index') }}" class="dropdown-item {{ request()->is('slot/*') ? 'active' : '' }}">Slot Times</a>
             <a href="{{ route('setting.index') }}" class="dropdown-item {{ request()->is('setting/*') ? 'active' : '' }}">School</a>

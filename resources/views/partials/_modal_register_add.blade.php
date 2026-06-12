@@ -7,7 +7,10 @@
       </div>
       <div class="modal-body pb-0">
         <div id="block1" style="display:none">
-          <h5 class="text-center" id="addName"></h4>
+          <div class="my-0 text-center ">
+            <h5 class="mb-0" id="addName"></h4>
+            <p class="mb-1 mt-0" id="addMtcl" style="font-size: 17px"></p>
+          </div>
           <div class="row">
             <div class="col-4 text-center">
               <img class="img-fluid mx-auto mt-2" src="{{ asset('assets/img/testimonial-2.jpg') }}" style="width: 100px; height: 90px; border:1px solid; border-radius: 5px">
@@ -15,7 +18,7 @@
             <div class="col-8 pt-4">
               <p class="mb-1" id="addGenre" style="font-size: 17px"></p>
               <p class="mb-1" id="addNaiss" style="font-size: 17px"></p>
-              <p class="mb-1" id="addMtcl" style="font-size: 17px"></p>
+              {{-- <p class="mb-1" id="addMtcl" style="font-size: 17px"></p> --}}
             </div>
           </div>
           <hr class="mt-0">
@@ -79,6 +82,12 @@
               </select>
             </div>
             <div class="col-6 mb-2">
+              <label for="classe" class="form-label">Série<span class="text-danger">*</span> :</label>
+              <select name="classe" class="form-select mb-3" aria-label="Default select example">
+                <option selected="">Select ...</option>
+              </select>
+            </div>
+            <div class="col-6 mb-2">
               <label for="#" class="form-label mb-3">Langue vivante 2<span class="text-danger">*</span> :</label> <br>
               <div class="form-check form-check-inline">
                 <input type="radio" name="lv2" class="form-check-input" id="lv2All" value="all" checked>
@@ -88,12 +97,6 @@
                 <input type="radio" name="lv2" class="form-check-input" id="lv2Esp" value="esp">
                 <label class="form-check-label" for="lv2Esp">Espagnol</label>
               </div>
-            </div>
-            <div class="col-6 mb-2">
-              <label for="classe" class="form-label">Série<span class="text-danger">*</span> :</label>
-              <select name="classe" class="form-select mb-3" aria-label="Default select example">
-                <option selected="">Select ...</option>
-              </select>
             </div>
             <div class="col-6 mb-2">
               <label for="classe" class="form-label">Classe actuelle<span class="text-danger">*</span> :</label>
