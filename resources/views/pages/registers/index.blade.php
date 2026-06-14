@@ -30,8 +30,13 @@
     <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
       <h4 class="mb-0">Inscription</h4>
       <div class="d-flex">
-        <button type="button" class="btn btn-outline-danger py-1" data-bs-toggle="modal" data-bs-target="#SearchModal">Nouvelle</button>
-        <button type="button" class="btn btn-outline-warning py-1 mx-2" data-bs-toggle="modal" data-bs-target="#AddModal">Import</button>
+        <select class="form-select form-select w-auto border-0 text-color-3 mx-2" id="mySelect">
+          <option value="">Inscription ...</option>
+          <option value="modal1">Par matricule</option>
+          <option value="modal2">Par fichier</option>
+        </select>
+        {{-- <button type="button" class="btn btn-outline-danger py-1" data-bs-toggle="modal" data-bs-target="#mtlModal">Nouvelle</button>
+        <button type="button" class="btn btn-outline-warning py-1 mx-2" data-bs-toggle="modal" data-bs-target="#AddModal">Import</button> --}}
         <select class="form-select form-select w-auto border-0 text-color-3" onchange="window.location.href=this.value;">
           <option value="">Search ...</option>
           @foreach ($levels as $item)
@@ -89,40 +94,113 @@
       $(this).val(numbers + letter);
     });
 
-    $(document).on('click', '#subMit', function(e) {
+
+
+    $(document).on('click', '#subMit', function (e) {
       e.preventDefault();
-      $mat = $('#matricul').val();
-      if($mat) {
-        $.ajax({
-          url: '{{ route('register.create') }}',
-          method: 'GET',
-          data: { info: $mat },
-          success: function(data){
-            if(!data) {
-              $('#uderMatricul').text($mat);
-              $('#block1').hide(); $('#block2').show();
-            }
-            else{
-              $('#block2').hide(); $('#block1').show();
-              $('#addName').text(data['name']);
-              $('#addGenre').text('Genre : '+(data['genre'] == 'F' ? 'Feminin':'Masculin'));
-              $('#addNaiss').text('Né'+(data['genre'] == 'F' ? 'e le ':' le ')+data['date']+' à '+data['lieu']);
-              $('#addMtcl').text(data['matricul']);
-              
-              $('#SearchModal').modal('hide');
+      const mat = $('#matricul').val();
+
+      if (!mat) {
+        return;
+      }
+
+      $.ajax({
+        url: '{{ route('register.create') }}',
+        method: 'GET',
+        data: { info: mat },
+        success: function (data) {
+          // Réinitialisation
+          $('#block1, #block2, #yesIscrit, #nonIscrit').hide();
+          $('input[name="lv2"]').prop('checked', false);
+          $('#btnStore').prop('disabled', true);
+
+          if (!data) {
+            $('#uderMatricul').text(mat);
+            $('#block2').show();
+          } 
+          else {
+            $('#block1').show();
+            $('#addName').text(data.name);
+
+            if (data.classe) {
+              $('#yesIscrit').show();
+            } 
+            else {
+              $('#nonIscrit').show();
+              $('#btnStore').prop('disabled', false);
+              const feminin = data.genre === 'F';
+
+              $('#addGenre').text(
+                'Genre : ' + (feminin ? 'Feminin' : 'Masculin')
+              );
+
+              $('#addNaiss').text(
+                `Né${feminin ? 'e' : ''} le ${data.date} à ${data.lieu}`
+              );
+
+              $('#addMtcl').text(data.matricul);
+              $('#inputMtl').val(data.matricul);
+              $('#studentId').val(data.id);
+
+              $('#mtlModal').modal('hide');
               $('#matricul').val('');
             }
-            $("#myModal").modal("show");
           }
-        })
+
+          $('#myModal').modal('show');
+        }
+      });
+    });
+
+
+    $(document).on('change', '#myLevel', function() {
+      let option = $(this).find(':selected');
+      let level = parseInt(option.val(), 10);
+      let symbol = option.data('symbol');
+      $('#divLv2, #divSerie').hide();
+      $('.serieOption').remove();
+      $('input[name="lv2"]').prop('checked', false);
+      
+      if (level < 3) {              // 6e et 5e
+        getClasseLevel(level);
+      }
+      else if (level >= 3 && level <= 4) { // 4e et 3e
+        $('#lv2All').prop('checked', true);
+        $('#divLv2').show();
+        getClasseLevel(level, 'all');
+      }
+      else if (level > 4) {         // Second cycle
+        $('#divSerie').show();
+        getSerieLevel(symbol);
       }
     });
 
 
-    $(document).on('change','select[name="level"]', function() {
-      let option = $(this).find(':selected');
-      $val = option.val(); $symbol = option.data('symbol'); alert($symbol);
-      geClasse($val);
+    $(document).on('change', '#mySerie', function() {
+      const level = parseInt($('#myLevel').val(), 10);
+      const serie = parseInt($(this).val(), 10);
+      $('input[name="lv2"]').prop('checked', false);
+
+      const needLv2 = [1, 2, 3].includes(serie) ||
+      (level === 5 && serie === 4);
+
+      if (needLv2) {
+        $('#lv2All').prop('checked', true);
+        $('#divLv2').show();
+        getClasseLevel(level, 'all', serie);
+      } else {
+        $('#divLv2').hide();
+        getClasseLevel(level, null, serie);
+      }
+
+    });
+
+
+    $(document).on('change', 'input[name="lv2"]', function() {
+      const level = $('#myLevel').val();
+      const serie = $('#mySerie').val();
+      const lv2 = $(this).val();
+      getClasseLevel(level, lv2, serie);
     });
 
 
@@ -167,6 +245,20 @@
     });
 
 
+    $('#mySelect').on('change', function() {
+      switch (this.value) {
+        case 'modal1':
+          $("#mtlModal").modal("show");
+          this.selectedIndex = 0;
+          break;
+        case 'modal2':
+          $("#AddModal").modal("show");
+          this.selectedIndex = 0;
+          break;
+      }
+    });
+
+
     $('#myTable').DataTable({
       processing: true,
       serverSide: true,
@@ -191,7 +283,8 @@
 
     // Function Get Jquery Create ---
 
-    function geClasse($level, $serie = null, $lv2 = null) {
+    function getClasseLevel($level, $lv2 = null, $serie = null, ) {
+      $('.classeOption').remove();
       $.ajax({
         url: '{{ route('register.classe') }}',
         method: 'GET',
@@ -200,8 +293,29 @@
           serie: $serie,
           lv2: $lv2
         },
-        success: function(data){
-          console.log(data);
+        success: function(data) {
+          for(let i = 0; i < data.length; i++) {
+            $('#myClasse').append(
+              '<option value="'+data[i].id+'" class="classeOption">'+data[i].libelle+'</option>'
+            )
+          }
+        }
+      })
+    }
+
+    function getSerieLevel($level) {
+      $.ajax({
+        url: '{{ route('register.serie') }}',
+        method: 'GET',
+        data: {
+          level: $level
+        },
+        success: function(data) {
+          for(let i = 0; i < data.length; i++) {
+            $('#mySerie').append(
+              '<option value="'+data[i].id+'" class="serieOption">'+data[i].libelle+'</option>'
+            )
+          }
         }
       })
     }

@@ -99,10 +99,11 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/create', [App\Http\Controllers\RegisterController::class, 'create'])->name('register.create');
             Route::post('/store', [App\Http\Controllers\RegisterController::class, 'store'])->name('register.store');
             Route::get('/show/{id}', [App\Http\Controllers\RegisterController::class, 'show'])->name('register.show');
-            Route::get('/yajra_1', [App\Http\Controllers\RegisterController::class, 'yajra_1'])->name('register.yajra_1');
-            Route::get('/yajra_1/{id}', [App\Http\Controllers\RegisterController::class, 'yajra_2'])->name('register.yajra_2');
+            Route::get('/data', [App\Http\Controllers\RegisterController::class, 'dataTable'])->name('register.yajra_1');
+            Route::get('/data/{id}', [App\Http\Controllers\RegisterController::class, 'data'])->name('register.yajra_2');
             Route::get('/search', [App\Http\Controllers\RegisterController::class, 'search'])->name('register.search');
             Route::get('/classe', [App\Http\Controllers\RegisterController::class, 'getClasse'])->name('register.classe');
+            Route::get('/serie', [App\Http\Controllers\RegisterController::class, 'getSerie'])->name('register.serie');
             Route::post('/delete', [App\Http\Controllers\RegisterController::class, 'destroy'])->name('register.delete');
             Route::get('/pdf/{id}', [App\Http\Controllers\RegisterController::class, 'generate'])->name('register.pdf');
         });

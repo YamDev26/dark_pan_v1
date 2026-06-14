@@ -1,6 +1,7 @@
 <?php
   namespace App\Services;
 
+  use App\Models\Serie;
   use App\Models\Level;
   use App\Models\School;
   use App\Models\Register;
@@ -11,6 +12,7 @@
   use Yajra\DataTables\Facades\DataTables;
   class RegisterService
   {
+    private const ACTIF  = 1;
     private $schl;
     public function __construct() {
       $this->schl = Auth::user()->school_id ?? 1;
@@ -104,18 +106,26 @@
       }
     }
 
-    public function getClasse($level, $serie = null, $lv2 = null) {
+    public function getClasse($level, $lv2 = null, $serie = null,) {
       return GetClasse::query()
-      ->where('school_year_id', $this->year())
-      ->where('school_id', $this->schl)
-      ->where('level_id', $level)
-      ->where('invalid', '1')
-      ->where('status', '1')
-      ->when($serie !== null, function ($query) use ($serie) {
-        $query->where('serie_id', $serie);
-      })->when($lv2 !== null, function ($query) use ($lv2) {
-        $query->where('lv2', $lv2);
-      })->orderBy('id')->get();
+      ->where([
+        'school_year_id' => $this->year(),
+        'school_id'      => $this->schl,
+        'level_id'       => $level,
+        'invalid'        => (string)self::ACTIF,
+        'status'         => (string)self::ACTIF,
+      ])
+      ->when($serie, fn ($query) => $query->where('serie_id', $serie))
+      ->when($lv2, fn ($query) => $query->whereIn('lv2', [$lv2, 'mix']))
+      ->orderBy('id')
+      ->get();
+    }
+
+    public function getSerie($symbol) {
+      return Serie::query()
+      ->where($symbol, (string)self::ACTIF)
+      ->orderBy('id')
+      ->get();
     }
 
     public function getRegister($str) {

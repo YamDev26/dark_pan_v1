@@ -30,6 +30,9 @@
         <a class="nav-item nav-link {{ request()->is('moyenne/*') ? 'active' : '' }}" href="{{ route('moyenne.index') }}">
           <i class="fa fa-chart-bar me-2"></i>Moyennes
         </a>
+        <a class="nav-item nav-link {{ request()->is('resultat/*') ? 'active' : '' }}" href="#">
+          <i class="fa fa-table me-2"></i>Resultats
+        </a>
         <a class="nav-item nav-link {{ request()->is('register/*') ? 'active' : '' }}" href="{{ route('register.index') }}">
           <i class="fa fa-edit me-2"></i>Inscriptions
         </a>

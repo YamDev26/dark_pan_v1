@@ -3,10 +3,10 @@
     <div class="modal-content pb-0" style="background: #191C24">
       <form action="{{ $url }}" method="post" enctype="multipart/form-data">
         @csrf
-        <div class="modal-header py-2">
-          <h5 class="modal-title" id="myModalLabel">Import File</h5>
+        <div class="modal-header pt-2 pb-1">
+          <h5 class="modal-title" id="myModalLabel">Importation</h5>
           @if ($export)
-            <a href="{{ $export }}" class="btn btn-outline-light my-0 py-0 px-1" title="New File" style="font-size: 15px">
+            <a href="{{ $export }}" class="btn btn-outline-light my-0 py-1 px-1" title="New File" style="font-size: 15px">
               Exemplaire
             </a>
           @else
@@ -14,9 +14,9 @@
           @endif
         </div>
         <div class="modal-body py-4">
-          <div class="mb-2">
+          <div class="mb-2 px-3">
             <span class="d-flex justify-content-between">
-              <label for="file" class="col-form-label">Fichier Excel<span class="text-danger">*</span> :</label>
+              <label for="file" class="col-form-label">Chargez le fichier<span class="text-danger">*</span> :</label>
             </span>
             <input type="file" name="file" class="form-control bg-dark" id="file">
           </div>

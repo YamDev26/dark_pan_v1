@@ -32,7 +32,7 @@ class RegisterController extends Controller
     }
 
 
-    public function yajra_1() {
+    public function dataTable() {
         try {
             return $this->service->getYajra();
         }
@@ -71,7 +71,21 @@ class RegisterController extends Controller
     public function getClasse(Request $dts)
     {
         try {
-            return $this->service->getClasse($dts['level'], $dts['serie'], $dts['lv2']);
+            return $this->service->getClasse($dts['level'], $dts['lv2'], $dts['serie']);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
+
+    public function getSerie(Request $dts) 
+    {
+        try {
+            return $this->service->getSerie($dts['level']);
         }
         catch (\Exception $e) {
             return back()->with([
@@ -84,7 +98,41 @@ class RegisterController extends Controller
     
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'student'    => 'required|exists:school_students,id',
+                'matricule'  => 'required|exists:students,matricul',
+                'level'      => 'required|exists:levels,id',
+                'classe'     => 'required|exists:get_classes,id',
+                'affecte'    => 'required|string',
+                'redoublant' => 'required|string',
+                'boursier'   => 'required|string',
+                'interne'    => 'required|string',
+            ]);
+
+            $exist = $this->service->search($request['matricule']);
+            if(!$exist['class'] && !($exist['student']->id == $request['student'])) {
+                return back()->with([
+                    'str' => 'danger',
+                    'msg' => 'Erreur d\'incompatibilité !'
+                ]);
+            }
+
+            $this->service->getStore(
+                $request['student'], $request['classe'], $request['affecte'], $request['redoublant'], 
+                $request['boursier'], $request['interne'], $request['lv2'] ?? null
+            );
+            return to_route('register.index')->with([
+                'str' => 'success',
+                'msg' => 'Inscription effectée'
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
     
@@ -104,7 +152,7 @@ class RegisterController extends Controller
     }
 
 
-    public function yajra_2(string $id)
+    public function data(string $id)
     {
         try {
             return $this->service->getSearch($id);
@@ -117,11 +165,6 @@ class RegisterController extends Controller
         }
     }
 
-    
-    public function edit(string $id)
-    {
-        //
-    }
 
     
     public function search(Request $request)
@@ -142,7 +185,8 @@ class RegisterController extends Controller
                 'level' => $dt->get_classe->level->symbol,
                 'serie' => $dt->get_classe->serie_id ? $dt->get_classe->serie->libelle:null,
                 'lv2' => $dt->lv2 ?? $dt->get_classe->lv2,
-                'inscrit' => date('d/m/Y', strtotime($dt->created_at))
+                'inscrit' => date('d/m/Y', strtotime($dt->created_at)),
+                'id' => $dt->school_student->id
             ]:null;
         }
         catch (\Exception $e) {
