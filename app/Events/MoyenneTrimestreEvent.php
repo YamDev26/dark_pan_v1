@@ -8,11 +8,12 @@ class MoyenneTrimestreEvent
 {
     use Dispatchable;
 
-    public $data, $cutting;
-    public function __construct($data, $cutting)
+    public $data, $cutting, $classe;
+    public function __construct($data, $cutting, $classe)
     {
         $this->data = $data;
         $this->cutting = $cutting;
+        $this->classe = $classe;
     }
 
 }

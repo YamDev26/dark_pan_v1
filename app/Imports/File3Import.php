@@ -38,6 +38,7 @@ class File3Import implements ToCollection, WithHeadingRow, WithValidation, Skips
             }
         }
 
+        $classe = $service->getClasse($classe);
         // Déclenchement de job pour le calcul de moyenne
         MoyenneEditJob::dispatch($table, $matter, $cutting, $classe);
     }

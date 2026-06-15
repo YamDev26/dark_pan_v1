@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Services\MoyenneService;
+use App\Events\ResultatClasseEvent;
 use App\Events\MoyenneTrimestreEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -23,5 +24,10 @@ class MoyenneTrimestreListener implements ShouldQueue
                 $event->cutting
             );
         }
+
+        // Déclenchement d'Evenement
+        ResultatClasseEvent::dispatch(
+            $event->classe, $event->cutting
+        );
     }
 }

@@ -40,7 +40,7 @@ class MoyenneController extends Controller
     public function dataTable()
     {
         try {
-            return $this->service->getYajra();
+            return $this->service->getDataTableClasse();
         }
         catch (\Exception $e) {
             return back()->with([
@@ -107,7 +107,7 @@ class MoyenneController extends Controller
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'
+                'msg' => 'Une erreur est survenue !'.$e->getMessage()
             ]);
         }
     }

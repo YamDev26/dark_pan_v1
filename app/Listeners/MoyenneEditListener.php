@@ -2,14 +2,16 @@
 
 namespace App\Listeners;
 
-use App\Events\MoyenneEditEvent;
 use App\Jobs\MoyenneEditJob;
+use App\Events\MoyenneEditEvent;
+use App\Services\GestionNoteService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class MoyenneEditListener implements ShouldQueue
 {
     public function handle(MoyenneEditEvent $event): void
     {
+        $service = app(GestionNoteService::class);
         $table = [];
         $stds = $event->students;
         $moyens = $event->moyens;
@@ -25,7 +27,7 @@ class MoyenneEditListener implements ShouldQueue
         list($classe, $matter, $cutting) = explode('_', $event->str);
 
         // Déclenchement de job
-        MoyenneEditJob::dispatch($table, $matter, $cutting, $classe);
+        MoyenneEditJob::dispatch($table, $matter, $cutting, $service->classe($classe));
     }
 
 

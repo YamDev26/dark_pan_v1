@@ -15,6 +15,7 @@ class FrenshMoyenneListener implements ShouldQueue
         $service = app(MoyenneService::class);
 
         $stds = $service->getStudent($event->classe);
+        $classe = $service->getClasse($event->classe);
 
         $table = [];
         foreach($stds as $item) {
@@ -28,7 +29,7 @@ class FrenshMoyenneListener implements ShouldQueue
 
         // Déclenchement de job
         MoyenneEditJob::dispatch(
-            $table, $event->matter, $event->cutting, $event->classe
+            $table, $event->matter, $event->cutting, $classe
         );
         
     }

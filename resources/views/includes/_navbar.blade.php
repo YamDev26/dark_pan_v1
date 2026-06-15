@@ -1,7 +1,7 @@
 <div class="sidebar pe-4 pb-3">
   <nav class="navbar bg-secondary navbar-dark">
     <a href="{{ route('dashboard') }}" class="navbar-brand mx-4 mb-3">
-      <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>DarkPan</h3>
+      <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>{{ config('app.name') }}</h3>
     </a>
     <div class="navbar-nav w-100">
       <a class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
@@ -30,7 +30,7 @@
         <a class="nav-item nav-link {{ request()->is('moyenne/*') ? 'active' : '' }}" href="{{ route('moyenne.index') }}">
           <i class="fa fa-chart-bar me-2"></i>Moyennes
         </a>
-        <a class="nav-item nav-link {{ request()->is('resultat/*') ? 'active' : '' }}" href="#">
+        <a class="nav-item nav-link {{ request()->is('resultat/*') ? 'active' : '' }}" href="{{ route('resultat.index') }}">
           <i class="fa fa-table me-2"></i>Resultats
         </a>
         <a class="nav-item nav-link {{ request()->is('register/*') ? 'active' : '' }}" href="{{ route('register.index') }}">

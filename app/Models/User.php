@@ -25,6 +25,10 @@ class User extends Authenticatable
     public function teacher() {
         return $this->belongsTo(Teacher::class);
     }
+
+    public function school() {
+        return $this->belongsTo(School::class);
+    }
     
     protected function casts(): array
     {

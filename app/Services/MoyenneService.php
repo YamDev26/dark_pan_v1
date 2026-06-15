@@ -15,12 +15,13 @@
   class MoyenneService
   {
     private const S_LEVEL_ID  = 5;
-    private $schl;
+    private $schl; private const A_ACTIF  = 1;
+    
     public function __construct() {
       $this->schl = Auth::user()->school_id ?? 1;
     }
     
-    public function getYajra() {
+    public function getDataTableClasse() {
       $query = GetClasse::where('school_id', $this->schl)
       ->where('school_year_id', $this->year())->where('status', '1')
       ->orderBy('level_id')->orderBy('serie_id')->get();
@@ -38,7 +39,7 @@
       ->addColumn('action', function ($row) {
         return (
           '<select class="w-auto border-0 text-color-3" onchange="window.location.href=this.value;" style="background:none; color: #6C7293">
-            <option value="">Select ...</option>
+            <option value="">...</option>
             '.$this->listCutting($row->id).'
           </select>'
         );
@@ -170,6 +171,7 @@
         ]
       );
     }
+
 
     public function moyenneSubMatter($student, $moyenne, $matter, $cutting, $value, $rang = null) {
       MoyenneSubMatter::updateOrCreate([
@@ -346,12 +348,10 @@
           <option value="'.$url.'">' . ucwords($item->cutting->libelle) . '</option>
         ';
       })->implode('');
-
-      
     }
 
     private function year() {
-      $year = SchoolYear::where('status', '1')->first();
+      $year = SchoolYear::where('status', (string)self::A_ACTIF)->first();
       return $year ? $year->id:null;
     }
 

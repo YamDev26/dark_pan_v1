@@ -166,5 +166,11 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::post('/import/{id}', [App\Http\Controllers\GestionNoteController::class, 'import'])->name('note.import');
             });
         });
+
+        Route::group(['prefix' => 'resultat'], function() {
+            Route::get('/index', [App\Http\Controllers\ResultatController::class, 'index'])->name('resultat.index');
+            Route::get('/classe', [App\Http\Controllers\ResultatController::class, 'dataTableClasse'])->name('resultat.table1');
+            Route::get('/detail/{id}', [App\Http\Controllers\ResultatController::class, 'show'])->name('resultat.show');
+        });
     });
 });

@@ -46,6 +46,9 @@ class AppServiceProvider extends ServiceProvider
 
             App\Events\MoyenneImportGlobalEvent::class,
             App\Listeners\MoyenneImportGlobalListener::class,
+
+            App\Events\ResultatClasseEvent::class,
+            App\Listeners\ResultatClasseListener::class,
         );
     }
 }

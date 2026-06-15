@@ -81,7 +81,7 @@
       <hr style="border: 2px solid">
       <div class="text-center">
         <input type="hidden" name="string" value="{{ $classe->id.'_'.$matter->id.'_'.$cutting->id }}">
-        <input type="hidden" name="frensh" value="oui">
+        <input type="hidden" name="frensh" value="non">
         <button type="button" class="btn btn-primary w-25 py-2" data-bs-toggle="modal" data-bs-target="#myModal">Valider</button>
       </div>
     </form>

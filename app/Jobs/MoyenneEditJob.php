@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Services\MoyenneService;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -34,7 +35,10 @@ class MoyenneEditJob implements ShouldQueue
             );
         }
 
-        // Déclenchement de job pour le calcul de moyenne
-        MoyenneBilanMatterJob::dispatch($this->data, $this->matter, $this->cutting);
+        // Déclenchement de job
+        Bus::chain([
+            new MoyenneBilanMatterJob($this->data, $this->matter, $this->cutting, $this->classe->id),
+            new TauxReussiteMatterJob($this->matter, $this->classe->id, $this->cutting),
+        ])->dispatch();
     }
 }
