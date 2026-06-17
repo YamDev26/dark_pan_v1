@@ -5,6 +5,7 @@
   use App\Models\Level;
   use App\Models\School;
   use App\Models\DaysWeek;
+  use App\Models\SlotTime;
   use App\Models\GetClasse;
   use App\Models\SchoolYear;
   use Illuminate\Support\Facades\DB;
@@ -133,6 +134,45 @@
 
     public function getDayWeek() {
       return DaysWeek::orderBy('order')->get();
+    }
+
+
+    public function getTime() {
+      $times = SlotTime::where('school_id', $this->schl)
+      ->orderBy('order')
+      ->get()
+      ->groupBy('period');
+      return [$times->get(1, collect()), $times->get(2, collect())];
+    }
+
+
+    public function getMatters($level, $serie = null) {
+      return DB::table('level_matters as lm')
+      ->join('matters as m', 'm.id', '=', 'lm.matter_id')
+      ->select(
+        'lm.id',
+        'm.libelle',
+        'm.symbol',
+        'lm.value'
+      )
+      ->where('lm.school_id', $this->schl)
+      ->where('lm.level_id', $level)
+      ->when(
+        $serie !== null,
+        fn ($query) => $query->where('lm.serie_id', $serie),
+        fn ($query) => $query->whereNull('lm.serie_id')
+      )
+      ->where('m.libelle', '!=', 'conduite')
+      ->orderBy('m.bilan_matter_id')
+      ->orderBy('m.position')
+      ->get();
+    }
+
+
+    public function storeTime($data, $classe) {
+      foreach($data as $item) {
+        list($matter, $time, $day, $period) = explode('_', $item);
+      }
     }
 
 

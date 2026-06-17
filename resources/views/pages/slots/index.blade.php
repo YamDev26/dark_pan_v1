@@ -4,8 +4,8 @@
 <div class="container-fluid pt-4 px-4">
   <div class="row g-4">
     <div class="col-sm-12">
-      <div class="h-100 bg-secondary rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-2">
+      <div class="h-100 bg-secondary rounded px-4 pt-2 pb-0">
+        <div class="d-flex align-items-center justify-content-between mb-0">
           <h4 class="mb-0">Detail Heures</h4>
           @if (count($data['dt1']))
             <h3><i class="fa fa-user-edit text-primary"></i></h3>
@@ -13,7 +13,7 @@
             <a href="{{ route('slot.create') }}" class="btn btn-outline-primary py-0">Add</a>
           @endif
         </div>
-        <hr>
+        <hr class="mt-0">
         <div class="my-2">
           <div class="bg-secondary text-center rounded p-sm-4">
             <div class="table-responsive">
@@ -73,7 +73,7 @@
     <div class="modal-content pb-0" style="background: #191C24">
       <form action="{{ route('slot.update') }}" method="post">
         @csrf
-        <div class="modal-header py-2">
+        <div class="modal-header pt-2 pb-0">
           <h4 class="modal-title" id="myModalLabel">Edit Heure</h4>
           <h3><i class="fa fa-user-edit text-primary"></i></h3>
         </div>

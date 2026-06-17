@@ -44,7 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
     
     /**
-     * Route Relative a
+     * Route Relative Aux Etablissements
      */
     Route::group(['middleware' => 'UserAutres'], function() {
         Route::group(['prefix' => 'setting'], function() {
@@ -74,6 +74,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store/{id}', [App\Http\Controllers\ClasseController::class, 'store'])->name('classe.store');
             Route::get('/edit', [App\Http\Controllers\ClasseController::class, 'edit'])->name('classe.edit');
             Route::get('/list/{id}', [App\Http\Controllers\ClasseController::class, 'list'])->name('classe.list');
+            Route::get('/time/{id}', [App\Http\Controllers\ClasseController::class, 'timeList'])->name('classe.time');
+            Route::get('/add/{id}', [App\Http\Controllers\ClasseController::class, 'create'])->name('classe.create');
+            Route::post('/add/{id}', [App\Http\Controllers\ClasseController::class, 'addTime'])->name('classe.add');
             Route::get('/search/{id}', [App\Http\Controllers\ClasseController::class, 'yajra'])->name('classe.yajra');
             Route::post('/edit/{id}', [App\Http\Controllers\ClasseController::class, 'update'])->name('classe.update');
             Route::post('/delete/{id}', [App\Http\Controllers\ClasseController::class, 'destroy'])->name('classe.delete');
@@ -171,6 +174,10 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/index', [App\Http\Controllers\ResultatController::class, 'index'])->name('resultat.index');
             Route::get('/classe', [App\Http\Controllers\ResultatController::class, 'dataTableClasse'])->name('resultat.table1');
             Route::get('/detail/{id}', [App\Http\Controllers\ResultatController::class, 'show'])->name('resultat.show');
+        });
+
+        Route::group(['prefix' => 'horraire'], function() {
+            Route::get('/index', [App\Http\Controllers\ScheduleController::class, 'index'])->name('horraire.index');
         });
     });
 });

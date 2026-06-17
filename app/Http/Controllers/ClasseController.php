@@ -170,6 +170,73 @@ class ClasseController extends Controller
     }
 
 
+    public function timeList(string $str)
+    {
+        try {
+            return view('pages.classes.times',[
+                'classe' => $this->service->classe($str),
+                'days' => $this->service->getDayWeek(),
+                'data' => []
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
+
+    public function create(string $str)
+    {
+        try {
+            $classe = $this->service->classe($str);
+            $matters = $this->service->getMatters($classe['level_id'], $classe['serie_id']);
+            return view('pages.classes.create',[
+                'classe' => $classe,
+                'matters' => $matters,
+                'days' => $this->service->getDayWeek(),
+                'times' => $this->service->getTime()
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
+
+    public function addTime(Request $request, string $str)
+    {
+        try {
+            $request['select'] = array_filter($request['select'], function ($value) {
+                return !blank($value);
+            });
+
+            $data = $request->validate([
+                'select' => 'required|array',
+                'select.*' => 'required|string'
+            ]);
+            dd($data['select']);
+            return view('pages.classes.create',[
+                'classe' => $classe,
+                'matters' => $matters,
+                'days' => $this->service->getDayWeek(),
+                'times' => $this->service->getTime()
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+            ]);
+        }
+    }
+
+
     public function edit(Request $request)
     {
         try {

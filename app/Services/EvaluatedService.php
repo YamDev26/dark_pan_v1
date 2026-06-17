@@ -66,15 +66,25 @@
     }
 
     public function getMatters($level, $serie = null) {
-      $data = DB::table('level_matters as lm')
+      return DB::table('level_matters as lm')
       ->join('matters as m', 'm.id', '=', 'lm.matter_id')
-      ->select( 'lm.id', 'm.libelle', 'm.symbol', 'lm.value')
-      ->where(['lm.level_id' => $level, 'lm.serie_id' => $serie])
-      ->where('m.libelle', '!=', 'conduite')
+      ->select(
+        'lm.id',
+        'm.libelle',
+        'm.symbol',
+        'lm.value'
+      )
       ->where('lm.school_id', $this->schl)
-      ->orderByRaw(' m.bilan_matter_id, m.position')
+      ->where('lm.level_id', $level)
+      ->when(
+        $serie !== null,
+        fn ($query) => $query->where('lm.serie_id', $serie),
+        fn ($query) => $query->whereNull('lm.serie_id')
+      )
+      ->where('m.libelle', '!=', 'conduite')
+      ->orderBy('m.bilan_matter_id')
+      ->orderBy('m.position')
       ->get();
-      return $data ?? [];
     }
 
 

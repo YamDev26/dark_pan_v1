@@ -33,6 +33,9 @@
         <a class="nav-item nav-link {{ request()->is('resultat/*') ? 'active' : '' }}" href="{{ route('resultat.index') }}">
           <i class="fa fa-table me-2"></i>Resultats
         </a>
+        <a class="nav-item nav-link {{ request()->is('horraire/*') ? 'active' : '' }}" href="{{ route('horraire.index') }}">
+          <i class="fa fa-briefcase me-2"></i>Horaires
+        </a>
         <a class="nav-item nav-link {{ request()->is('register/*') ? 'active' : '' }}" href="{{ route('register.index') }}">
           <i class="fa fa-edit me-2"></i>Inscriptions
         </a>

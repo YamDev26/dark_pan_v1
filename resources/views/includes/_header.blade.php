@@ -3,7 +3,7 @@
     <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
   </a>
   <a href="#" class="sidebar-toggler flex-shrink-0">
-    <i class="fa fa-bars"></i>
+    <i class="fa fa-reply" aria-hidden="true"></i>
   </a>
   <form class="d-none d-md-flex ms-4">
     <input class="form-control bg-dark border-0" type="search" placeholder="Search">

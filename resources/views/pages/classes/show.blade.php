@@ -35,13 +35,13 @@
             <select class="form-select form-select w-auto border-0 text-color-3 mx-2" id="mySelect">
               <option value="">Search ...</option>
               @if (!($classe['inscrit'] >= $classe['effectif']))
-                <option value="{{ route('classe.export',$classe['id']) }}" data-option="file">Fiche Inscription</option>
+                <option value="{{ route('classe.export', $classe['id']) }}" data-option="file">Fiche Inscription</option>
               @endif
               <option value="#" data-option="modal1">Liste Enseignant</option>
-              <option value="modal" data-option="modal2">Emploi du temps</option>
-              <option value="#" data-option="pdf">Generate pfd</option>
+              <option value="{{ route('classe.time', $classe['id']) }}" data-option="url">Emploi du temps</option>
+              <option value="#" data-option="pdf">Generate list pfd</option>
             </select>
-            <a href="{{ route('classe.show',$classe['level_id']) }}" class="btn btn-outline-light py-1">Return</a>
+            <a href="{{ route('classe.show', $classe['level_id']) }}" class="btn btn-outline-light py-1">Return</a>
           </div>
         </div>
         <hr>

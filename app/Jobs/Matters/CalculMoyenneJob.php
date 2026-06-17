@@ -2,8 +2,8 @@
 
 namespace App\Jobs\Matters;
 
+use App\Jobs\MoyenneEditJob;
 use App\Services\GestionNoteService;
-use App\Jobs\MoyenneImportMatterJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -27,6 +27,7 @@ class CalculMoyenneJob implements ShouldQueue
     {
         $service = app(GestionNoteService::class);
         $students = $service->getStudent($this->classe);
+        $classe = $service->classe($this->classe);
 
         $table = [];
         foreach($students as $i => $item) {
@@ -39,11 +40,11 @@ class CalculMoyenneJob implements ShouldQueue
         }
 
         // Déclenchement de job pour le calcul de moyenne
-        MoyenneImportMatterJob::dispatch(
+        MoyenneEditJob::dispatch(
             $table, 
             $this->matter, 
             $this->cutting, 
-            $this->classe
+            $classe
         );
     }
 
