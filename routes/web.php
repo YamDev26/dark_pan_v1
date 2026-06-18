@@ -77,6 +77,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/time/{id}', [App\Http\Controllers\ClasseController::class, 'timeList'])->name('classe.time');
             Route::get('/add/{id}', [App\Http\Controllers\ClasseController::class, 'create'])->name('classe.create');
             Route::post('/add/{id}', [App\Http\Controllers\ClasseController::class, 'addTime'])->name('classe.add');
+            Route::get('/teacher/{id}', [App\Http\Controllers\ClasseController::class, 'teacher'])->name('classe.teacher');
+            Route::post('/teacher/{id}', [App\Http\Controllers\ClasseController::class, 'teaches'])->name('classe.teaches');
             Route::get('/search/{id}', [App\Http\Controllers\ClasseController::class, 'yajra'])->name('classe.yajra');
             Route::post('/edit/{id}', [App\Http\Controllers\ClasseController::class, 'update'])->name('classe.update');
             Route::post('/delete/{id}', [App\Http\Controllers\ClasseController::class, 'destroy'])->name('classe.delete');
@@ -178,6 +180,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::group(['prefix' => 'horraire'], function() {
             Route::get('/index', [App\Http\Controllers\ScheduleController::class, 'index'])->name('horraire.index');
+            Route::get('/data', [App\Http\Controllers\ScheduleController::class, 'dataTable'])->name('horraire.data');
+            Route::get('/show/{id}', [App\Http\Controllers\ScheduleController::class, 'show'])->name('horraire.show');
         });
     });
 });

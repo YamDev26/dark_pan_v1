@@ -7,37 +7,49 @@
     <div class="col-sm-12">
       <div class="h-100 bg-secondary rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-2">
-          <h4 class="mb-0">Add emploi du temps</h4>
+          <h4 class="mb-0">Add Teacher</h4>
           <h4 class="mb-0">{{ $classe['libelle'] }}</h4>
           <div class="d-flex">
-            <a href="{{ route('classe.time', $classe['id']) }}" class="btn btn-outline-light py-1">Return</a>
+            <a href="{{ route('classe.list', $classe['id']) }}" class="btn btn-outline-light py-1">Return</a>
           </div>
         </div>
         <hr>
-        <div class="my-2">
-          <div class="bg-secondary text-center rounded">
-            <form action="{{ route('classe.add', $classe['id']) }}" method="post" id="myForm">
+        <div class="mt-2 mb-0">
+          <div class="bg-secondary rounded">
+            <form action="{{ route('classe.teaches', $classe['id']) }}" method="post" id="myForm">
               @csrf
               <div class="table-responsive">
                 <table class="table table-bordered table-hover align-middle" id="myTable">
                   <thead>
                     <tr class="text-white">
-                      <th scope="col">Horaire</th>
-                      @foreach ($days as $day)
-                        <th scope="col">{{ ucwords($day->libelle) }}</th>
-                      @endforeach
+                      <th scope="col"></th>
+                      <th scope="col" class="text-center">Discipline</th>
+                      <th scope="col" class="text-center">Enseignant</th>
+                      <th scope="col" class="text-center">Prof principal</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach (['Matin' => $times[0], 'Après midi' => $times[1]] as $period => $slots)
-                      @if (! $loop->first)
-                        <tr>
-                          <th colspan="{{ count($days) + 1 }}" class="text-center">
-                            {{ $period }}
-                          </th>
-                        </tr>
-                      @endif
-                      @include('partials._content_slot')
+                    @foreach ($matters as $i => $matter)
+                      <tr>
+                        <th scope="col" class="text-center">{{ $i < 10 ? '0'.$i+1:$i+1 }}</th>
+                        <th>
+                          {{ $matter->symbol }}
+                          <input type="hidden" name="matter[]" value="{{ $matter->id }}">
+                        </th>
+                        <th>
+                          <select name="teacher[]" class="form-select mb-0" style="background: none">
+                            <option value="">---</option>
+                            @foreach ($users as $user)
+                              <option value="{{ $user->id.'_'.$i+1 }}">
+                                {{ ucwords($user->civility).' '.strtoupper($user->first_name).' '.ucwords($user->last_name) }}
+                              </option>
+                            @endforeach
+                          </select>
+                        </th>
+                        <th class="text-center">
+                          <input class="form-check-input" type="radio" name="cheched" value="{{ $i+1 }}">
+                        </th>
+                      </tr>
                     @endforeach
                   </tbody>
                 </table>

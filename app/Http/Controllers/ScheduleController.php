@@ -29,25 +29,33 @@ class ScheduleController extends Controller
     }
 
     
-    public function create()
+    public function dataTable()
     {
-        //
+        try {
+            return $this->service->getDataTable();
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
+    
     public function show(string $id)
     {
-        //
+        try {
+            $data = $this->service->getHoraireClasse($id);
+
+            dd($data);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
     /**

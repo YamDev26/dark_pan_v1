@@ -37,7 +37,7 @@ class ClasseController extends Controller
             return view('pages.classes.show',[
                 'classe' => $this->service->classe($id),
                 'days' => $this->service->getDayWeek(),
-                'data' => []
+                'users' => $this->service->getTeacherClasse($id)
             ]);
         }
         catch (\Exception $e) {
@@ -173,16 +173,20 @@ class ClasseController extends Controller
     public function timeList(string $str)
     {
         try {
+            $classe = $this->service->classe($str);
+            $matters = $this->service->getMatters($classe['level_id'], $classe['serie_id']);
             return view('pages.classes.times',[
-                'classe' => $this->service->classe($str),
+                'classe' => $classe,
+                'matters' => $matters,
+                'times' => $this->service->getTime(),
                 'days' => $this->service->getDayWeek(),
-                'data' => []
+                'data' => $this->service->getTableTime($str)
             ]);
         }
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'
+                'msg' => 'Une erreur est survenue !'.$e->getMessage()
             ]);
         }
     }
@@ -196,8 +200,9 @@ class ClasseController extends Controller
             return view('pages.classes.create',[
                 'classe' => $classe,
                 'matters' => $matters,
+                'times' => $this->service->getTime(),
                 'days' => $this->service->getDayWeek(),
-                'times' => $this->service->getTime()
+                'data' => $this->service->getTableTime($str)
             ]);
         }
         catch (\Exception $e) {
@@ -215,23 +220,77 @@ class ClasseController extends Controller
             $request['select'] = array_filter($request['select'], function ($value) {
                 return !blank($value);
             });
-
             $data = $request->validate([
                 'select' => 'required|array',
                 'select.*' => 'required|string'
             ]);
-            dd($data['select']);
-            return view('pages.classes.create',[
-                'classe' => $classe,
-                'matters' => $matters,
-                'days' => $this->service->getDayWeek(),
-                'times' => $this->service->getTime()
+
+            $this->service->storeTime($data['select'], $str);
+            return to_route('classe.time', $str)->with([
+                'str' => 'success',
+                'msg' => 'Enregistrment effectué !'
             ]);
         }
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
+
+    public function teacher(string $str)
+    {
+        try {
+            $classe = $this->service->classe($str);
+            $matters = $this->service->getMatters($classe['level_id'], $classe['serie_id']);
+            return view('pages.classes.edit',[
+                'classe' => $classe,
+                'matters' => $matters,
+                'users' => $this->service->getTeachers(),
+                'data' => []
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
+
+    public function teaches(Request $request, string $str)
+    {
+        try {
+            $valide = $request->validate([
+                'matter' => 'required|array',
+                'matter.*' => 'required|integer',
+                'teacher' => 'required|array',
+                'teacher.*' => 'nullable|string',
+                'cheched' => 'required|integer',
+            ]);
+
+            if (!collect($valide['teacher'])->filter()->isNotEmpty()) {
+                return back()->with([
+                    'str' => 'danger',
+                    'msg' => 'Aucun enseignant selectionné !'
+                ]);
+            }
+
+            $this->service->teachesStore(
+                $valide['matter'], $valide['teacher'], $valide['cheched'], $str
+            );
+            return to_route('classe.list', $str)->with([
+                'str' => 'success',
+                'msg' => 'Enseignant ajouté !'
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
             ]);
         }
     }

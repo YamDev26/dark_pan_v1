@@ -70,10 +70,6 @@
     </div>
   </div>
 </div>
-<!-- Modal Emploi Du Temps -->
-@include('partials._modal_emploi_tps',[
-  'days' => $days
-])
 <!-- Modal Enseignant -->
 @include('partials._modal_enseignant')
 @endsection

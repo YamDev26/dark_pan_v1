@@ -3,8 +3,9 @@
     <div class="modal-content pb-0" style="background: #191C24">
       <div class="modal-header py-2">
           <h5 class="modal-title" id="myModalLabel">Liste enseignant</h5>
-          <h5>6eme1</h5>
+          <h5>{{ $classe['libelle'] }}</h5>
         </div>
+        <hr>
         <div class="modal-body pt-4 pb-0">
           <div class="table-responsive mb-3">
             <table class="table text-start align-middle table-bordered table-hover mb-0">
@@ -16,11 +17,24 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td scope="col" class="text-center">01</td>
-                  <td>Mr Koffi Jean-Mermoz <span class="text-danger">*</span></td>
-                  <td>HG</td>
-                </tr>
+                @forelse ($users as $i => $user)
+                  <tr>
+                    <td scope="col" class="text-center">
+                      {{ $i+1 < 10 ? '0'.$i+1:$i+1 }}
+                    </td>
+                    <td>
+                      {{ ucwords($user->civility).' '.strtoupper($user->first_name).' '.ucwords($user->last_name) }}
+                      <span class="text-danger">{{ $user->checked ? '*':''  }}</span>
+                    </td>
+                    <td>
+                      {{ $user->symbol }}
+                    </td>
+                  </tr>
+                @empty
+                  <tr>
+                    <td colspan="4" class="text-center">Non defini</td>
+                  </tr>
+                @endforelse
               </tbody>
             </table>
           </div>
@@ -30,7 +44,7 @@
         </div>
         <div class="modal-footer mb-0 py-1">
           <button type="button" class="btn btn-outline-primary py-1" data-bs-dismiss="modal" style="font-size: 14px">Fermer</button>
-          <button type="submit" class="btn btn-outline-light py-1" style="font-size: 14px">Voir pdf</button>
+          <a href="{{ route('classe.teacher', $classe['id']) }}" class="btn btn-outline-light py-1" style="font-size: 14px">Editer</a>
         </div>
     </div>
   </div>

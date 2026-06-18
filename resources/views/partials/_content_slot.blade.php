@@ -1,8 +1,8 @@
 @foreach ($slots as $slot)
   <tr>
-    <th class="text-center pb-0">
+    <td class="text-center pb-0">
       {{ "{$slot['dbt']} - {$slot['fin']}" }}
-    </th>
+    </td>
     @foreach ($days as $day)
       @php
         $isWednesdayAfternoon =
@@ -15,11 +15,8 @@
             <option value="">---</option>
             @forelse ($matters as $matter)
               <option value="{{ implode('_', [
-                $matter->id,
-                $slot->id,
-                $day->id,
-                $period === 'Matin' ? 1 : 2
-              ]) }}">
+                $matter->id, $slot->id, $day->id, $period === 'Matin' ? 1 : 2
+              ]) }}" {{ editMatterTable($day->id, $slot->id, $matter->id, ($period === 'Matin' ? 1 : 2), $data) }}>
                 {{ $matter->symbol }}
               </option>
             @empty

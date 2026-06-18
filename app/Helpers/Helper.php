@@ -55,3 +55,36 @@
       return $result < 10 ? '0' . $result : $result;
     }
   }
+
+
+  // Emploi du temps afficher la matière
+  if(!function_exists('getMatterTable')) {
+    function getMatterTable($day, $time, $period, $data) {
+
+      $item = $data->first(fn ($item) =>
+        $item['slot_time_id'] == $time
+        && $item['days_week_id'] == $day
+        && $item['period'] == $period
+      );
+
+      if (! $item) {
+        return null;
+      }
+      
+      return $item->level_matter->matter->symbol;
+    }
+  }
+
+
+  // Emploi du temps afficher la matière pour edition
+  if(!function_exists('editMatterTable')) {
+    function editMatterTable($day, $time, $matter, $period, $data) {
+      $item = $data->first(fn ($item) =>
+        $item['slot_time_id'] == $time
+        && $item['days_week_id'] == $day
+        && $item['level_matter_id'] == $matter
+        && $item['period'] == $period
+      );
+      return $item ? 'selected':null;
+    }
+  }

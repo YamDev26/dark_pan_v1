@@ -1,19 +1,24 @@
 <?php
   namespace App\Services;
 
+  use App\Models\user;
   use App\Models\Serie;
   use App\Models\Level;
   use App\Models\School;
   use App\Models\DaysWeek;
   use App\Models\SlotTime;
+  use App\Models\TableTime;
   use App\Models\GetClasse;
   use App\Models\SchoolYear;
+  use App\Models\ClasseTeacher;
   use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Facades\Auth;
   use Yajra\DataTables\Facades\DataTables;
   class ClasseService
   {
+    private const U_ROLE  = 8;
     private $schl;
+
     public function __construct() {
       $this->schl = Auth::user()->school_id ?? 1;
     }
@@ -52,6 +57,19 @@
       })
       ->rawColumns(['compte', 'matricul', 'name', 'genre', 'naissance', 'affect', 'redoublant'])
       ->make(true);
+    }
+
+
+    public function getTeacherClasse($classe) {
+      return DB::table('classe_teachers as ct')
+      ->join('users as u', 'u.id', '=', 'ct.user_id')
+      ->join('level_matters as lm', 'lm.id', '=', 'ct.level_matter_id')
+      ->join('matters as m', 'm.id', '=', 'lm.matter_id')
+      ->select(['u.first_name', 'u.last_name','u.civility', 'm.symbol', 'ct.checked'])
+      ->where('ct.get_classe_id', $classe)
+      ->orderBy('m.bilan_matter_id')
+      ->orderBy('m.position')
+      ->get();
     }
 
     
@@ -169,9 +187,59 @@
     }
 
 
+    public function getTableTime($classe) {
+      return TableTime::where('get_classe_id', $classe)
+      ->orderBy('days_week_id')
+      ->orderBy('slot_time_id')
+      ->orderBy('period')
+      ->get();
+    }
+
+
+    public function getTeachers($status = '1') {
+      return user::where('school_id', $this->schl)
+      ->where(['status' => $status, 'role_id' => self::U_ROLE])
+      ->orderBy('first_name')->orderBy('last_name')->get();
+    }
+
+
+    public function teachesStore($matters, $users, $checked, $classe) {
+
+      $this->deleteUser($classe); // Vider la table 
+
+      foreach($users as $i => $item) {
+
+        if(is_null($item)) {
+          continue;
+        }
+
+        list($user, $str) = explode('_', $item, 2);
+        ClasseTeacher::updateOrCreate([
+          'user_id' => $user,
+          'get_classe_id' => $classe,
+          'level_matter_id' => $matters[$i]
+        ],
+        [
+          'checked' => ($str == $checked) ? true:false
+        ]);
+      }
+    }
+
+
     public function storeTime($data, $classe) {
+
+      TableTime::where('get_classe_id', $classe)->delete();
       foreach($data as $item) {
-        list($matter, $time, $day, $period) = explode('_', $item);
+        list($matter, $time, $day, $other) = explode('_', $item, 4);
+        TableTime::updateOrCreate([
+          'days_week_id' => $day,
+          'slot_time_id' => $time,
+          'get_classe_id' => $classe,
+          'level_matter_id' => $matter
+        ],
+        [
+          'period' => $other
+        ]);
       }
     }
 
@@ -202,6 +270,10 @@
       return $year ? $year->id:null;
     }
 
+    private function deleteUser($classe) {
+      ClasseTeacher::where('get_classe_id', $classe)
+      ->delete();
+    }
 
     private function school() {
       return School::find($this->schl) ?? null;
