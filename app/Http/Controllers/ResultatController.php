@@ -17,7 +17,9 @@ class ResultatController extends Controller
     public function index()
     {
         try {
-            return view('pages.resultats.index');
+            return view('pages.resultats.index',[
+                'cutting' => $this->service->getCuttings()
+            ]);
         }
         catch (\Exception $e) {
             return back()->with([
@@ -39,14 +41,6 @@ class ResultatController extends Controller
                 'msg' => 'Une erreur est survenue !'
             ]);
         }
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     

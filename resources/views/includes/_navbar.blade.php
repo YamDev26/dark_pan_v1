@@ -12,7 +12,7 @@
         <i class="fa fa-graduation-cap me-2" style="font-size: 19px;"></i>School
         </a>
         <a class="nav-item nav-link {{ request()->is('cutting/*') ? 'active' : '' }}" href="{{ route('cutting.index') }}">
-          <i class="fa fa-cube me-2" style="font-size: 19px;"></i>Découpage
+          <i class="fa fa-cube me-2" style="font-size: 19px;"></i>Période Scolaire
         </a>
         <a class="nav-item nav-link {{ request()->is('school_year/*') ? 'active' : '' }}" href="{{ route('school_year.index') }}">
           <i class="fab fa-yelp me-2" style="font-size: 21px;"></i>Année Scolaire
@@ -28,11 +28,14 @@
           <i class="fa fa-laptop me-2"></i>Evaluations
         </a>
         <a class="nav-item nav-link {{ request()->is('moyenne/*') ? 'active' : '' }}" href="{{ route('moyenne.index') }}">
-          <i class="fa fa-chart-bar me-2"></i>Moyennes
+          <i class="fa fa-puzzle-piece me-2"></i>Moyennes
         </a>
         <a class="nav-item nav-link {{ request()->is('resultat/*') ? 'active' : '' }}" href="{{ route('resultat.index') }}">
           <i class="fa fa-table me-2"></i>Resultats
         </a>
+        {{-- <a class="nav-item nav-link {{ request()->is('statistik/*') ? 'active' : '' }}" href="{{ route('statistik.index') }}">
+          <i class="fa fa-chart-bar me-2"></i>Statistiques
+        </a> --}}
         <a class="nav-item nav-link {{ request()->is('horraire/*') ? 'active' : '' }}" href="{{ route('horraire.index') }}">
           <i class="fa fa-briefcase me-2"></i>Horaires
         </a>

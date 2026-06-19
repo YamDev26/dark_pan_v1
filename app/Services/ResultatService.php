@@ -50,6 +50,12 @@
     }
 
 
+    public function getCuttings() {
+      return CuttingSchoolYear::with('cutting')
+      ->where('school_year_id', $this->year())
+      ->get();
+    }
+
     public function getClasse($str) {
       return GetClasse::find($str) ?? null;
     }
@@ -265,6 +271,7 @@
       ->selectRaw('MAX(mt.moyenne) as max, MIN(mt.moyenne) as min')
       ->first();
     }
+
 
     private function listCutting($classe) {
       return CuttingSchoolYear::with('cutting')

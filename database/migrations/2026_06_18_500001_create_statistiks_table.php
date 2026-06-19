@@ -1,0 +1,45 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('statistiks', function (Blueprint $table) {
+            $table->bigIncrements("id");
+            $table->integer('effectif_total');
+            $table->integer('effectif_garcon');
+            $table->integer('effectif_fille');
+            $table->integer('classified');
+            $table->integer('unranked');
+            $table->integer('admis');
+            $table->integer('admis_garcon');
+            $table->integer('admis_fille');
+            $table->string('taux_total');
+            $table->string('taux_garcon');
+            $table->string('taux_fille');
+            $table->unsignedBigInteger('level_id');
+            $table->unsignedBigInteger('school_id');
+            $table->unsignedBigInteger('cutting_school_year_id');
+            $table->foreign('level_id')->references('id')->on('levels')->onDelete('cascade');
+            $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
+            $table->foreign('cutting_school_year_id')->references('id')->on('cutting_school_years')->onDelete('cascade');
+            $table->unique(['level_id', 'school_id', 'cutting_school_year_id'], 'lsc_unique'); // Contrainte unique sur les deux colonnes
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('statistiks');
+    }
+};

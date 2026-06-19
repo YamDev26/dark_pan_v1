@@ -12,6 +12,7 @@
   class GestionNoteService
   {
     private $schl;
+    
     public function __construct() {
       $this->schl = Auth::user()->school_id ?? 1;
     }

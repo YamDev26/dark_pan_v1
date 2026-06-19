@@ -176,6 +176,10 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/index', [App\Http\Controllers\ResultatController::class, 'index'])->name('resultat.index');
             Route::get('/classe', [App\Http\Controllers\ResultatController::class, 'dataTableClasse'])->name('resultat.table1');
             Route::get('/detail/{id}', [App\Http\Controllers\ResultatController::class, 'show'])->name('resultat.show');
+
+            Route::group(['prefix' => 'statistik'], function() {
+                Route::get('/index/{id}', [App\Http\Controllers\StatistikController::class, 'index'])->name('statistik.index');
+            });
         });
 
         Route::group(['prefix' => 'horraire'], function() {

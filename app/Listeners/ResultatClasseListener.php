@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Jobs\CalculStatistikJob;
 use App\Services\ResultatService;
 use App\Events\ResultatClasseEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -33,6 +34,11 @@ class ResultatClasseListener implements ShouldQueue
             // Enregistrement Des Tranches Des Moyennes 
             $service->TrancheMoyenneSavec($event->classe, $event->cutting);
         }
+
+        // Declessement de Job
+        CalculStatistikJob::dispatch(
+            $event->classe, $event->cutting
+        );
     }
 
 

@@ -29,7 +29,17 @@
   <div class="bg-secondary text-center rounded p-4">
     <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
       <h4 class="mb-0">Gestion résultat</h4>
-      <h3><i class="fa fa-user-edit text-primary"></i></h3>
+      {{-- <h3><i class="fa fa-user-edit text-primary"></i></h3> --}}
+      <div class="mx-0">
+          <select class="form-select form-select w-auto border-0 text-color-3" onchange="window.location.href=this.value;">
+            <option value="">Statistik ...</option>
+            @foreach ($cutting as $item)
+              <option value="{{ route('statistik.index', $item->id) }}">
+                {{ ucwords($item->cutting->libelle) }}
+              </option>
+            @endforeach
+          </select>
+        </div>
     </div>
     <div class="table-responsive">
       <table class="table text-start align-middle table-bordered table-hover mb-0" id="myTable">
