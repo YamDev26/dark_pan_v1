@@ -38,7 +38,7 @@ class MoyenneEditJob implements ShouldQueue
         // Déclenchement de job
         Bus::chain([
             new MoyenneBilanMatterJob($this->data, $this->matter, $this->cutting, $this->classe->id),
-            new TauxReussiteMatterJob($this->matter, $this->classe->id, $this->cutting),
+            new TauxReussiteMatterJob($this->matter, $this->cutting, $this->classe->id),
         ])->dispatch();
     }
 }

@@ -41,10 +41,10 @@ class GestionNoteController extends Controller
     }
 
     
-    public function create(string $id)
+    public function create(string $str)
     {
         try {
-            $evaluat = $this->service->evaluated($id);
+            $evaluat = $this->service->evaluated($str);
             $dtas = $this->service->getStudent($evaluat['get_classe_id']);
             return view('pages.notes.create',[
                 'evaluat' => $evaluat,
@@ -110,10 +110,11 @@ class GestionNoteController extends Controller
     }
 
 
-    public function listNot(string $id) 
+    public function listNot(string $str) 
     {
         try {
-            return $this->service->getNote($id);
+            list($classe, $evaluation) = explode('_', $str);
+            return $this->service->getNote($classe, $evaluation);
         }
         catch (\Exception $e) {
             return back()->with([
@@ -174,12 +175,14 @@ class GestionNoteController extends Controller
     }
 
     
-    public function edit(string $id)
+    public function edit(string $str)
     {
         try {
+            list($classe, $evaluat) = explode('_', $str);
+            $data = $this->service->getNotStudent($classe, $evaluat);
             return view('pages.notes.edit',[
-                'evaluat' => $this->service->evaluated($id),
-                'datas' => $this->service->getNotStudent($id)
+                'evaluat' => $this->service->evaluated($evaluat),
+                'datas' => $data
             ]);
         }
         catch (\Exception $e) {

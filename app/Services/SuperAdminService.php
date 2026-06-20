@@ -80,7 +80,7 @@
       $current = Carbon::now(); $i = 0;
       while( $i < sizeof($dts['str'])) {
         $status = $this->compareToDate($current, $dts['dbt'][$i], $dts['fin'][$i]);
-        $status == 2 ? CuttingSchoolYear::where('status', '1')->update(['status' => '0']):null;
+        $status == 2 ? CuttingSchoolYear::where('status', '1')->update(['status' => '3']):null;
         $this->SaveCutting($dts['year'], $dts['str'][$i], $dts['dbt'][$i], $dts['fin'][$i], $status);
         $i++;
       }

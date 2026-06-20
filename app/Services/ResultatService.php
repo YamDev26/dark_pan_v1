@@ -104,9 +104,12 @@
       }
       return DB::table('level_matters as lm')
       ->join('matters as m', 'm.id', '=', 'lm.matter_id')
-      ->leftJoin('matter_resultats as mr', function ($join) use ($cutting) {
+      ->leftJoin('matter_resultats as mr', function ($join) use ($cutting, $classe) {
         $join->on('mr.level_matter_id', '=', 'lm.id')
-        ->where('mr.cutting_school_year_id', $cutting);
+        ->where([
+          'mr.cutting_school_year_id' => $cutting,
+          'mr.get_classe_id' => $classe
+        ]);
       })
       ->where([
         'lm.level_id' => $class['level_id'],

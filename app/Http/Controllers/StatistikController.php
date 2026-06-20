@@ -17,8 +17,12 @@ class StatistikController extends Controller
     public function index($str)
     {
         $data = $this->service->getStatistik($str);
+        $result = $this->service->getResultat($str);
+        $cycle2 = $this->service->getResultatSerie($str);
         return view('pages.statistiks.index',[
-            'datas' => $data
+            'datas' => $data,
+            'result' => $result,
+            'resultats' => $cycle2
         ]);
     }
 

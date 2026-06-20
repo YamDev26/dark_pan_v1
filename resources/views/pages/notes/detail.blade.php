@@ -44,7 +44,7 @@
             @if (!$existe)
               <option value="{{ route('note.create', $evaluat['id']) }}">Add Note</option>
             @else
-              <option value="{{ route('note.edit', $evaluat['id']) }}">Edit Note</option>
+              <option value="{{ route('note.edit', $evaluat['get_classe_id'].'_'.$evaluat['id']) }}">Edit Note</option>
               <option value="#">Get Pdf</option>
             @endif
           </select>
@@ -81,7 +81,7 @@
       processing: true,
       serverSide: true,
       ordering: false,
-      ajax: '{{ route('note.yajra', $evaluat['id']) }}',
+      ajax: '{{ route('note.yajra', $evaluat['get_classe_id'].'_'.$evaluat['id']) }}',
       columns: [
         {data: 'compte',  className: 'text-center fw-bold', orderable: false, searchable: false },
         {data: 'matricule', className: 'text-left'},

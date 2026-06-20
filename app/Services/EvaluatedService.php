@@ -24,7 +24,7 @@
     public function getClasse() {
       $query = GetClasse::where('school_id', $this->schl)
       ->where('school_year_id', $this->year())->where('status', '1')
-      ->orderBy('id')->orderBy('level_id')->get();
+      ->orderBy('level_id')->orderBy('id')->get();
 
       $compte = 0;
       return DataTables::of($query)

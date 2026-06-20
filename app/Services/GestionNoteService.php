@@ -18,8 +18,8 @@
     }
 
     
-    public function getNote($evaluat) {
-      $query = $this->studentGet($evaluat);
+    public function getNote($classe, $evaluat) {
+      $query = $this->studentGet($classe, $evaluat);
       $compte = 0;
       return DataTables::of($query)
       ->addColumn('compte', function() use (&$compte) {
@@ -116,8 +116,8 @@
     }
 
 
-    public function getNotStudent($evaluat) {
-      return $this->studentGet($evaluat);
+    public function getNotStudent($classe, $evaluat) {
+      return $this->studentGet($classe, $evaluat);
     }
 
 
@@ -182,7 +182,7 @@
     }
 
 
-    private function studentGet($evaluat) {
+    private function studentGet($classe, $evaluat) {
       return DB::table('registers as r')
       ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
       ->join('students as s', 's.id', '=', 'ss.student_id')
@@ -191,6 +191,7 @@
         ->join('evaluateds as ev', 'ev.id', '=', 'e.evaluated_id')
         ->where('ev.id', $evaluat);
       })
+      ->where('r.get_classe_id', $classe)
       ->select(['r.id', 'e.note', 'ev.value', 's.matricul', 's.first', 's.last', 's.genre'])
       ->orderByRaw('s.first, s.last')
       ->get();
