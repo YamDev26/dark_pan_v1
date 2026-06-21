@@ -15,7 +15,7 @@
         </tr>
     </thead>
     <tbody>
-      @foreach ($resultats as $niveau)
+      @foreach ($cycle2 as $niveau)
         @foreach ($niveau['series'] as $index => $serie)
           <tr>
             @if ($index === 0)
@@ -25,13 +25,13 @@
             @endif
             <td class="text-center">{{ $serie['serie'] }}</td>
             <td class="text-center">
-              {{ $serie['nbre_g'] ? ($serie['nbre_g'] < 10 ? '0'.$serie['nbre_g']:$serie['nbre_g']):'--' }}
+              {{ $serie['nbres_g'] ? ($serie['nbres_g'] < 10 ? '0'.$serie['nbres_g']:$serie['nbres_g']):'--' }}
             </td>
             <td class="text-center">
-              {{ $serie['nbre_f'] ? ($serie['nbre_f'] < 10 ? '0'.$serie['nbre_f']:$serie['nbre_f']):'--' }}
+              {{ $serie['nbres_f'] ? ($serie['nbres_f'] < 10 ? '0'.$serie['nbres_f']:$serie['nbres_f']):'--' }}
             </td>
             <td class="text-center">
-              {{ $serie['nbre_t'] ? ($serie['nbre_t'] < 10 ? '0'.$serie['nbre_t']:$serie['nbre_t']):'--' }}
+              {{ $serie['nbres_t'] ? ($serie['nbres_t'] < 10 ? '0'.$serie['nbres_t']:$serie['nbres_t']):'--' }}
             </td>
             <td class="text-center">
               {{ $serie['admis_g'] ? ($serie['admis_g'] < 10 ? '0'.$serie['admis_g']:$serie['admis_g']):'--' }}
@@ -51,26 +51,26 @@
       <tr>
         <td colspan="2" class="text-center">Résultat</td>
         <td class="text-center">
-          {{ $result ? ($result->nbres_g < 10 ? '0'.$result->nbres_g:$result->nbres_g):'--' }}
+          {{ $result2 ? ($result2->nbres_g < 10 ? '0'.$result2->nbres_g:$result2->nbres_g):'--' }}
         </td>
         <td class="text-center">
-          {{ $result ? ($result->nbres_f < 10 ? '0'.$result->nbres_f:$result->nbres_f):'--' }}
+          {{ $result2 ? ($result2->nbres_f < 10 ? '0'.$result2->nbres_f:$result2->nbres_f):'--' }}
         </td>
         <td class="text-center">
-          {{ $result ? ($result->nbres_t < 10 ? '0'.$result->nbres_t:$result->nbres_t):'--' }}
+          {{ $result2 ? ($result2->nbres_t < 10 ? '0'.$result2->nbres_t:$result2->nbres_t):'--' }}
         </td>
         <td class="text-center">
-          {{ $result ? ($result->admis_g < 10 ? '0'.$result->admis_g:$result->admis_g):'--' }}
+          {{ $result2 ? ($result2->admis_g < 10 ? '0'.$result2->admis_g:$result2->admis_g):'--' }}
         </td>
         <td class="text-center">
-          {{ $result ? ($result->admis_f < 10 ? '0'.$result->admis_f:$result->admis_f):'--' }}
+          {{ $result2 ? ($result2->admis_f < 10 ? '0'.$result2->admis_f:$result2->admis_f):'--' }}
         </td>
         <td class="text-center">
-          {{ $result ? ($result->admis < 10 ? '0'.$result->admis:$result->admis):'--' }}
+          {{ $result2 ? ($result2->admis < 10 ? '0'.$result2->admis:$result2->admis):'--' }}
         </td>
-        <td class="text-center">{{ $result ? ($result->taux_g.' %'):'--' }}</td>
-        <td class="text-center">{{ $result ? ($result->taux_f.' %'):'--' }}</td>
-        <td class="text-center">{{ $result ? ($result->taux_a.' %'):'--' }}</td>
+        <td class="text-center">{{ $result2 ? ($result2->taux_g.' %'):'--' }}</td>
+        <td class="text-center">{{ $result2 ? ($result2->taux_f.' %'):'--' }}</td>
+        <td class="text-center">{{ $result2 ? ($result2->taux_a.' %'):'--' }}</td>
       </tr>
     </tbody>
 </table>

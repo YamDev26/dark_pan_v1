@@ -2,16 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\DashboardService;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    private $service;
+
+    public function __construct(DashboardService $service)
+    {
+        $this->service = $service;
+    }
+    
+
+
     public function index()
     {
         try{
+            
+            $this->service->updateCuttingDate();
+
             if(!(auth()->check() && auth()->user()->status)){
                 auth()->logout();
                 return Redirect()->route('page.inactif')->with([
@@ -24,7 +34,7 @@ class DashboardController extends Controller
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'
+                'msg' => 'Une erreur est survenue !'.$e->getMessage()
             ]);
         }
     }

@@ -25,23 +25,23 @@
             <div class="bg-secondary rounded h-100">
                 <nav>
                   <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
-                      data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
-                      aria-selected="true">Niveau</button>
-                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-                      data-bs-target="#nav-profile" type="button" role="tab"
-                      aria-controls="nav-profile" aria-selected="false">Série</button>
+                    <button class="nav-link active" id="nav-cycle1-tab" data-bs-toggle="tab" data-bs-target="#nav-cycle1" type="button" role="tab" aria-controls="nav-cycle1"
+                      aria-selected="true">Cycle 1</button>
+                    <button class="nav-link" id="nav-cycle2-tab" data-bs-toggle="tab" data-bs-target="#nav-cycle2" type="button" role="tab"
+                      aria-controls="nav-cycle2" aria-selected="false">Cycle 2</button>
+                    <button class="nav-link" id="nav-total-tab" data-bs-toggle="tab" data-bs-target="#nav-total" type="button" role="tab"
+                      aria-controls="nav-total" aria-selected="false">Total</button>
                   </div>
                 </nav>
                 <div class="tab-content pt-3" id="nav-tabContent">
-                  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                    @include('partials._table_level_statistik',[
-                      'datas' => $datas,
-                      'result' => $result,
-                    ])
+                  <div class="tab-pane fade show active" id="nav-cycle1" role="tabpanel" aria-labelledby="nav-cycle1-tab">
+                    @include('partials._table_cycle_1_statistik')
                   </div>
-                  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                    @include('partials._table_serie_statistik')
+                  <div class="tab-pane fade" id="nav-cycle2" role="tabpanel" aria-labelledby="nav-cycle2-tab">
+                    @include('partials._table_cycle_2_statistik')
+                  </div>
+                  <div class="tab-pane fade" id="nav-total" role="tabpanel" aria-labelledby="nav-total-tab">
+                    @include('partials._table_total_statistik')
                   </div>
                 </div>
             </div>

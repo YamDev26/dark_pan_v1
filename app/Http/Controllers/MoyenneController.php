@@ -141,9 +141,11 @@ class MoyenneController extends Controller
     public function tableData(string $str)
     {
         try {
-            list($class, $cutting) = explode('_', $str);
+            list($class, $cutting) = explode('_', $str); 
             $classe = $this->service->getClasse($class);
-            return $this->service->getMoyenneMCuttingClasse($classe['level_id'], $class, $cutting);
+            return $this->service->getMoyenneMCuttingClasse(
+                $classe['level_id'], $class, $cutting, $classe['serie_id']
+            );
         }
         catch (\Exception $e) {
             return back()->with([

@@ -25,17 +25,26 @@
         </div>
         <hr class="mt-0">
         <div class="my-2">
+          @php
+            $hasActif = collect($data)->contains('actif', 2);
+          @endphp
           <div class="bg-secondary rounded h-100">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               @foreach ($data as $i => $item)
-                <button class="nav-link {{ ($item['actif'] == 2) ? 'active':($loop->first ? 'active' : '') }}" id="{{ $item['actif'] == 2 ? 'actif':'tab-'.$i  }}" data-atf="{{ $item['actif'] }}" data-id="{{ $item['id'] }}" data-bs-toggle="tab" data-bs-target="#content-{{ $i }}" type="button" role="tab" aria-controls="content-{{ $i }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                @php
+                  $isActive = $item['actif'] == 2 || (!$hasActif && $loop->first);
+                @endphp
+                <button class="nav-link {{ $isActive ? 'active' : '' }}" id="{{ $isActive ? 'actif' : 'tab-'.$i  }}" data-atf="{{ $item['actif'] }}" data-id="{{ $item['id'] }}" data-bs-toggle="tab" data-bs-target="#content-{{ $i }}" type="button" role="tab" aria-controls="content-{{ $i }}" aria-selected="{{ $isActive ? 'true' : 'false' }}">
                   {{ ucwords($item['cutting']) }}
                 </button>
               @endforeach
             </div>
             <div class="tab-content pt-1" id="nav-tabContent">
               @foreach ($data as $i => $item)
-                <div class="tab-pane fade {{ ($item['actif'] == 2) ? 'show active':($loop->first ? 'show active' : '') }}" id="content-{{ $i }}" role="tabpanel" aria-labelledby="tab-{{ $i }}">
+                @php
+                  $isActive = $item['actif'] == 2 || (!$hasActif && $loop->first);
+                @endphp
+                <div class="tab-pane fade {{ $isActive ? 'active show' : '' }}" id="content-{{ $i }}" role="tabpanel" aria-labelledby="tab-{{ $i }}">
                   @include('partials._table_evaluated', ['data' => $item['evaluated']])
                 </div>
               @endforeach

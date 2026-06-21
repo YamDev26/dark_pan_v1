@@ -18,8 +18,10 @@ return new class extends Migration
             $table->unsignedBigInteger('cutting_id');
             $table->unsignedBigInteger('school_year_id');
             $table->enum('status', [1,2,3])->comment('En attente, En cours, Terminé');
+            $table->date('updated');
             $table->foreign('cutting_id')->references('id')->on('cuttings')->onDelete('cascade');
             $table->foreign('school_year_id')->references('id')->on('school_years')->onDelete('cascade');
+            $table->unique(['cutting_id', 'school_year_id'], 'cs_unique'); // Contrainte unique sur les deux colonnes
             $table->timestamps();
         });
     }

@@ -16,56 +16,56 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($datas as $i => $data)
+      @foreach ($total as $i => $data)
         <tr>
           {{-- <td class="text-center">{{ $i+1 < 10 ? '0'.$i+1:$i+1 }}</td> --}}
           <td class="text-center">{{ $data->symbol }}</td>
           <td class="text-center">
-            {{ $data->effectif_garcon ? ($data->effectif_garcon < 10 ? '0'.$data->effectif_garcon:$data->effectif_garcon):'--' }}
+            {{ $data->nbres_g ? ($data->nbres_g < 10 ? '0'.$data->nbres_g:$data->nbres_g):'--' }}
           </td>
           <td class="text-center">
-            {{ $data->effectif_fille ? ($data->effectif_fille < 10 ? '0'.$data->effectif_fille:$data->effectif_fille):'--' }}
+            {{ $data->nbres_f ? ($data->nbres_f < 10 ? '0'.$data->nbres_f:$data->nbres_f):'--' }}
           </td>
           <td class="text-center">
-            {{ $data->effectif_total ? ($data->effectif_total < 10 ? '0'.$data->effectif_total:$data->effectif_total):'--' }}
+            {{ $data->nbres_t ? ($data->nbres_t < 10 ? '0'.$data->nbres_t:$data->nbres_t):'--' }}
           </td>
           <td class="text-center">
-            {{ $data->admis_garcon ? ($data->admis_garcon < 10 ? '0'.$data->admis_garcon:$data->admis_garcon):'--' }}
+            {{ $data->admis_g ? ($data->admis_g < 10 ? '0'.$data->admis_g:$data->admis_g):'--' }}
           </td>
           <td class="text-center">
-            {{ $data->admis_fille ? ($data->admis_fille < 10 ? '0'.$data->admis_fille:$data->admis_fille):'--' }}
+            {{ $data->admis_f ? ($data->admis_f < 10 ? '0'.$data->admis_f:$data->admis_f):'--' }}
           </td>
           <td class="text-center">
             {{ $data->admis ? ($data->admis < 10 ? '0'.$data->admis:$data->admis):'--' }}
           </td>
-          <td class="text-center">{{ $data->taux_garcon ? ($data->taux_garcon.' %'):'--' }}</td>
-          <td class="text-center">{{ $data->taux_fille ? ($data->taux_fille.' %'):'--' }}</td>
-          <td class="text-center">{{ $data->taux_total ? ($data->taux_total.' %'):'--' }}</td>
+          <td class="text-center">{{ $data->taux_g ? ($data->taux_g.' %'):'--' }}</td>
+          <td class="text-center">{{ $data->taux_f ? ($data->taux_f.' %'):'--' }}</td>
+          <td class="text-center">{{ $data->taux_a ? ($data->taux_a.' %'):'--' }}</td>
         </tr>
       @endforeach
       <tr>
         <td class="text-center">Résultat</td>
         <td class="text-center">
-          {{ $result ? ($result->nbres_g < 10 ? '0'.$result->nbres_g:$result->nbres_g):'--' }}
+          {{ $result3 ? ($result3->nbres_g < 10 ? '0'.$result3->nbres_g:$result3->nbres_g):'--' }}
         </td>
         <td class="text-center">
-          {{ $result ? ($result->nbres_f < 10 ? '0'.$result->nbres_f:$result->nbres_f):'--' }}
+          {{ $result3 ? ($result3->nbres_f < 10 ? '0'.$result3->nbres_f:$result3->nbres_f):'--' }}
         </td>
         <td class="text-center">
-          {{ $result ? ($result->nbres_t < 10 ? '0'.$result->nbres_t:$result->nbres_t):'--' }}
+          {{ $result3 ? ($result3->nbres_t < 10 ? '0'.$result3->nbres_t:$result3->nbres_t):'--' }}
         </td>
         <td class="text-center">
-          {{ $result ? ($result->admis_g < 10 ? '0'.$result->admis_g:$result->admis_g):'--' }}
+          {{ $result3 ? ($result3->admis_g < 10 ? '0'.$result3->admis_g:$result3->admis_g):'--' }}
         </td>
         <td class="text-center">
-          {{ $result ? ($result->admis_f < 10 ? '0'.$result->admis_f:$result->admis_f):'--' }}
+          {{ $result3 ? ($result3->admis_f < 10 ? '0'.$result3->admis_f:$result3->admis_f):'--' }}
         </td>
         <td class="text-center">
-          {{ $result ? ($result->admis < 10 ? '0'.$result->admis:$result->admis):'--' }}
+          {{ $result3 ? ($result3->admis < 10 ? '0'.$result3->admis:$result3->admis):'--' }}
         </td>
-        <td class="text-center">{{ $result ? ($result->taux_g.' %'):'--' }}</td>
-        <td class="text-center">{{ $result ? ($result->taux_f.' %'):'--' }}</td>
-        <td class="text-center">{{ $result ? ($result->taux_a.' %'):'--' }}</td>
+        <td class="text-center">{{ $result3 ? ($result3->taux_g.' %'):'--' }}</td>
+        <td class="text-center">{{ $result3 ? ($result3->taux_f.' %'):'--' }}</td>
+        <td class="text-center">{{ $result3 ? ($result3->taux_a.' %'):'--' }}</td>
       </tr>
     </tbody>
   </table>

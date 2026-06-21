@@ -77,12 +77,33 @@
 
 
     public function createCtg($dts) {
-      $current = Carbon::now(); $i = 0;
-      while( $i < sizeof($dts['str'])) {
-        $status = $this->compareToDate($current, $dts['dbt'][$i], $dts['fin'][$i]);
-        $status == 2 ? CuttingSchoolYear::where('status', '1')->update(['status' => '3']):null;
-        $this->SaveCutting($dts['year'], $dts['str'][$i], $dts['dbt'][$i], $dts['fin'][$i], $status);
-        $i++;
+
+      $current = now();
+
+      foreach ($dts['str'] as $i => $item) {
+
+        $status = $this->compareToDate(
+          $current,
+          $dts['dbt'][$i],
+          $dts['fin'][$i]
+        );
+
+        if ($status == 2) {
+          CuttingSchoolYear::where('status', 1)
+          ->update([
+            'status'  => 3,
+            'updated' => $current,
+          ]);
+        }
+
+        $this->SaveCutting(
+          $dts['year'],
+          $item,
+          $dts['dbt'][$i],
+          $dts['fin'][$i],
+          $status,
+          $current
+        );
       }
     }
 
@@ -180,11 +201,12 @@
       };
     }
 
-    private function SaveCutting($year, $cutting, $debt, $fin, $status) {
+    private function SaveCutting($year, $cutting, $debt, $fin, $status, $actuel) {
       CuttingSchoolYear::create([
         'fin' => $fin,
         'debut' => $debt,
         'status' => $status,
+        'updated' => $actuel,
         'cutting_id' => $cutting,
         'school_year_id' => $year,
       ]);

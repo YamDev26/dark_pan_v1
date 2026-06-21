@@ -49,8 +49,8 @@
     }
 
 
-    public function getMoyenneMCuttingClasse($level, $classe,  $cutting) {
-      $query = $this->getMoyenneCutting($level, $classe,  $cutting);
+    public function getMoyenneMCuttingClasse($level, $classe,  $cutting, $serie = null) {
+      $query = $this->getMoyenneCutting($level, $classe,  $cutting, $serie);
       $compte = 0;
       return DataTables::of($query)
       ->addColumn('compte', function() use (&$compte) {
@@ -455,10 +455,11 @@
     }
 
 
-    private function getMoyenneMatters($level, $classe,  $cutting) {
+    private function getMoyenneMatters($level, $classe, $cutting, $serie = null) {
       $matters = DB::table('registers as r')
-      ->join('level_matters as lm', function ($join) use ($level) {
-        $join->where('lm.level_id', $level);
+      ->join('level_matters as lm', function ($join) use ($level, $serie) {
+        $join->where('lm.level_id', $level)
+        ->where('lm.serie_id', $serie);
       })
       ->join('matters as m', 'm.id', '=', 'lm.matter_id')
       ->leftJoin('moyenne_matters as mm', function ($join) use ($cutting) {
@@ -494,10 +495,10 @@
     }
 
 
-    private function getMoyenneCutting($level, $classe,  $cutting) {
+    private function getMoyenneCutting($level, $classe, $cutting, $serie = null) {
 
       $students = $this->getMoyenneTrimestreClasseStudent($classe, $cutting);
-      $matters = $this->getMoyenneMatters($level, $classe,  $cutting);
+      $matters = $this->getMoyenneMatters($level, $classe, $cutting, $serie);
 
       return $students->map(function ($item) use ($matters) {
         $row = [

@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('statistiks', function (Blueprint $table) {
             $table->bigIncrements("id");
-            $table->integer('effectif_total');
-            $table->integer('effectif_garcon');
-            $table->integer('effectif_fille');
-            $table->integer('classified');
-            $table->integer('unranked');
+            $table->integer('nbres_t');
+            $table->integer('nbres_g');
+            $table->integer('nbres_f');
             $table->integer('admis');
-            $table->integer('admis_garcon');
-            $table->integer('admis_fille');
-            $table->string('taux_total');
-            $table->string('taux_garcon');
-            $table->string('taux_fille');
+            $table->integer('admis_g');
+            $table->integer('admis_f');
+            $table->string('taux_a');
+            $table->string('taux_g');
+            $table->string('taux_f');
+            $table->integer('classee');
+            $table->integer('non_classe');
             $table->unsignedBigInteger('level_id');
             $table->unsignedBigInteger('school_id');
             $table->unsignedBigInteger('cutting_school_year_id');

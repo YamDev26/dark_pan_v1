@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class StatistikController extends Controller
 {
+    private const TOTAL = 'total';  private const CYCLE_1 = 'cycle1'; private const CYCLE_2 = 'cycle2';
     private $service;
 
     public function __construct(StatistikService $service)
@@ -16,13 +17,13 @@ class StatistikController extends Controller
     
     public function index($str)
     {
-        $data = $this->service->getStatistik($str);
-        $result = $this->service->getResultat($str);
-        $cycle2 = $this->service->getResultatSerie($str);
         return view('pages.statistiks.index',[
-            'datas' => $data,
-            'result' => $result,
-            'resultats' => $cycle2
+            'cycle1' => $this->service->getResultatCycle1($str),
+            'cycle2' => $this->service->getResultatCycle2($str),
+            'total' => $this->service->getStatistikTotal($str),
+            'result1' => $this->service->getResultat($str, self::CYCLE_1),
+            'result2' => $this->service->getResultat($str, self::CYCLE_2),
+            'result3' => $this->service->getResultat($str, self::TOTAL),
         ]);
     }
 

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('statistik_series', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('nbre_t');
-            $table->integer('nbre_g');
-            $table->integer('nbre_f');
+            $table->integer('nbres_t');
+            $table->integer('nbres_g');
+            $table->integer('nbres_f');
             $table->integer('admis');
             $table->integer('admis_g');
             $table->integer('admis_f');
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('taux_g');
             $table->string('taux_f');
             $table->integer('classee');
-            $table->integer('no_classe');
+            $table->integer('non_classe');
             $table->unsignedBigInteger('level_id');
             $table->unsignedBigInteger('serie_id');
             $table->unsignedBigInteger('school_id');

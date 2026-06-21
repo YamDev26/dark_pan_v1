@@ -13,7 +13,10 @@ class CalculStatistikJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private const SYMBOL_1 = '<'; private const SYMBOL_2 = '>=';
+
     protected $classe, $cutting;
+
     public function __construct($classe, $cutting)
     {
         $this->classe = $classe;
@@ -32,9 +35,9 @@ class CalculStatistikJob implements ShouldQueue
         $resutl = $service->tauxReussite($this->cutting, $class->level_id)
         ;
         $service->statistikSave(
-            $class->level_id, $this->cutting, $resutl->effectif, $resutl->garcons, $resutl->filles, $resutl->admis,
-            $resutl->classes, $resutl->non_classes, $resutl->admis_garcons, $resutl->admis_filles,
-            $this->format($resutl->taux_reussite), $this->format($resutl->taux_garcons), $this->format($resutl->taux_filles)
+            $class->level_id, $this->cutting, [$resutl->effectif, $resutl->garcons, $resutl->filles, $resutl->admis,
+            $resutl->admis_garcons, $resutl->admis_filles, $this->format($resutl->taux_reussite),
+            $this->format($resutl->taux_garcons), $this->format($resutl->taux_filles), $resutl->classes, $resutl->non_classes, ]
         );
 
         // Enregistrment de resultat par niveau et serie
@@ -43,20 +46,38 @@ class CalculStatistikJob implements ShouldQueue
                 $this->cutting, $class->level_id, $this->serie($class->serie_id)
             );
 
+            $cycle2 = $service->getResultatCycle($this->cutting, self::SYMBOL_2);
+            $type = 'cycle2';
+
             $service->saveResultatSerie(
-                $class->level_id, $class->serie_id, $this->cutting, $resultSerie->effectif, $resultSerie->garcons, $resultSerie->filles,
+                $class->level_id, $class->serie_id, $this->cutting, [$resultSerie->effectif, $resultSerie->garcons, $resultSerie->filles,
                 $resultSerie->admis, $resultSerie->admis_garcons, $resultSerie->admis_filles, $this->format($resultSerie->taux_reussite),
-                $this->format($resultSerie->taux_garcons), $this->format($resultSerie->taux_filles), $resultSerie->classes, $resultSerie->non_classes
+                $this->format($resultSerie->taux_garcons), $this->format($resultSerie->taux_filles), $resultSerie->classes, $resultSerie->non_classes]
+            );
+
+            $service->SaveResultatGlobal(
+                $this->cutting, $type, [$cycle2->effectif, $cycle2->garcons, $cycle2->filles, $cycle2->admis, 
+                $cycle2->admis_garcons, $cycle2->admis_filles, $this->format($cycle2->taux_reussite), 
+                $this->format($cycle2->taux_garcons), $this->format($cycle2->taux_filles), $cycle2->classes, $cycle2->non_classes]
+            );
+        }
+        else { // Enregistrement Resultat Cycle 1
+            $cycle1 = $service->getResultatCycle($this->cutting, self::SYMBOL_1);
+            $type = 'cycle1';
+            $service->SaveResultatGlobal(
+                $this->cutting, $type, [$cycle1->effectif, $cycle1->garcons, $cycle1->filles, $cycle1->admis, 
+                $cycle1->admis_garcons, $cycle1->admis_filles, $this->format($cycle1->taux_reussite), 
+                $this->format($cycle1->taux_garcons), $this->format($cycle1->taux_filles), $cycle1->classes, $cycle1->non_classes]
             );
         }
 
         // Enregistrment de resultat scolaire
         $global = $service->getResultatScolaire($this->cutting);
-
+        $type = 'total';
         $service->SaveResultatGlobal(
-            $this->cutting, $global->effectif, $global->garcons, $global->filles, $global->admis, 
+            $this->cutting, $type, [$global->effectif, $global->garcons, $global->filles, $global->admis, 
             $global->admis_garcons, $global->admis_filles, $this->format($global->taux_reussite), 
-            $this->format($global->taux_garcons), $this->format($global->taux_filles), $global->classes, $global->non_classes
+            $this->format($global->taux_garcons), $this->format($global->taux_filles), $global->classes, $global->non_classes]
         );
     }
 

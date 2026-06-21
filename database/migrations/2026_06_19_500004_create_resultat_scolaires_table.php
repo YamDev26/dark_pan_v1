@@ -24,11 +24,12 @@ return new class extends Migration
             $table->string('taux_f');
             $table->integer('classee');
             $table->integer('non_classe');
+            $table->enum('type',['cycle1', 'cycle2', 'total']);
             $table->unsignedBigInteger('school_id');
             $table->unsignedBigInteger('cutting_school_year_id');
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
             $table->foreign('cutting_school_year_id')->references('id')->on('cutting_school_years')->onDelete('cascade');
-            $table->unique(['school_id', 'cutting_school_year_id'], 'sc_unique'); // Contrainte unique sur les deux colonnes
+            $table->unique(['type', 'school_id', 'cutting_school_year_id'], 'tsc_unique'); // Contrainte unique sur les deux colonnes
             $table->timestamps();
         });
     }
