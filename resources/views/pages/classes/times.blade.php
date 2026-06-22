@@ -1,6 +1,5 @@
 @extends('app')
 @section('title', 'Emploi Du Temps '.$classe['libelle'])
-
 @section('content')
 <div class="container-fluid pt-4 px-4">
   <div class="row g-4">
@@ -10,10 +9,10 @@
           <h4 class="mb-0">Emploi du temps</h4>
           <h4 class="mb-0">{{ $classe['libelle'] }}</h4>
           <div class="d-flex">
-            <select class="form-select form-select w-auto border-0 text-color-3 mx-2" onchange="window.location.href=this.value;">
+            <select class="form-select form-select w-auto border-0 text-color-3 mx-2" id="mySelect">
               <option value="">...</option>
-              <option value="{{ route('classe.create', $classe['id']) }}">Edit</option>
-              <option value="#" data-option="pdf">pfd</option>
+              <option value="{{ route('classe.create', $classe['id']) }}" data-option="url">Edit</option>
+              <option value="{{ route('classe.pdf_1', $classe['id']) }}" data-option="pdf">pfd</option>
             </select>
             <a href="{{ route('classe.list', $classe['id']) }}" class="btn btn-outline-light py-1">Return</a>
           </div>
@@ -69,4 +68,32 @@
     </div>
   </div>
 </div>
+@endsection
+@section('script')
+<script>
+  $(document).ready(function() {
+
+    $('#mySelect').on('change', function () {
+
+      const $selected = $(this).find(':selected');
+      const url = $selected.val();
+      const option = $selected.data('option');
+      
+      if (!url) {
+        this.selectedIndex = 0;
+        return;
+      }
+
+      switch (option) {
+        case 'pdf':
+          window.open(url, '_blank');
+          break;
+        default:
+          window.location.href = url;
+          break;
+      }
+      this.selectedIndex = 0;
+    });
+  })
+</script>
 @endsection

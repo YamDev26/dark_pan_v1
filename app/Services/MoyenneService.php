@@ -1,6 +1,7 @@
 <?php
   namespace App\Services;
 
+  use App\MOdels\School;
   use App\Models\GetClasse;
   use App\Models\SchoolYear;
   use App\Models\LevelMatter;
@@ -19,6 +20,10 @@
     
     public function __construct() {
       $this->schl = Auth::user()->school_id ?? 1;
+    }
+
+    public function school() {
+      return School::find($this->schl) ?? null;
     }
     
     public function getDataTableClasse() {
@@ -337,6 +342,28 @@
     }
 
 
+    public function getMoyenneCutting($level, $classe, $cutting, $serie = null) {
+
+      $students = $this->getMoyenneTrimestreClasseStudent($classe, $cutting);
+      $matters = $this->getMoyenneMatters($level, $classe, $cutting, $serie);
+
+      return $students->map(function ($item) use ($matters) {
+        $row = [
+          'register_id' => $item->register_id,
+          'matricul'    => $item->matricul,
+          'name'        => strtoupper($item->first).' '.ucwords($item->last),
+          'genre'       => $item->genre,
+          'moyenne'     => $item->moyenne ?? '--',
+          'rang'        => $item->rang ?? '--'
+        ];
+        foreach ($matters[$item->register_id] ?? [] as $sub) {
+          $row[$sub->symbol] = $sub->moyenne;
+        }
+        return $row;
+      });
+    }
+
+
 
     private function listCutting($classe) {
       return CuttingSchoolYear::with('cutting')
@@ -492,28 +519,6 @@
         );
       }
       return $matters;
-    }
-
-
-    private function getMoyenneCutting($level, $classe, $cutting, $serie = null) {
-
-      $students = $this->getMoyenneTrimestreClasseStudent($classe, $cutting);
-      $matters = $this->getMoyenneMatters($level, $classe, $cutting, $serie);
-
-      return $students->map(function ($item) use ($matters) {
-        $row = [
-          'register_id' => $item->register_id,
-          'matricul'    => $item->matricul,
-          'name'        => strtoupper($item->first).' '.ucwords($item->last),
-          'genre'       => $item->genre,
-          'moyenne'     => $item->moyenne ?? '--',
-          'rang'        => $item->rang ?? '--'
-        ];
-        foreach ($matters[$item->register_id] ?? [] as $sub) {
-          $row[$sub->symbol] = $sub->moyenne;
-        }
-        return $row;
-      });
     }
 
 

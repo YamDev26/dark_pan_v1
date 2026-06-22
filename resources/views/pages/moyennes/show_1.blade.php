@@ -37,16 +37,20 @@
           Moyenne
         </span>
       </div>
-      <Div class="d-flex">
-        <a href="{{ route('moyenne.create', ($classe->id.'_'.$matter->id.'_'.$cutting->id)) }}" class="btn btn-outline-primary py-1 mx-3">Edit</a>
+      <div class="d-flex">
+        <select class="form-select form-select w-auto border-0 text-color-3 mx-2" id="mySelect">
+          <option value="">Search</option>
+          <option value="{{ route('moyenne.create', ($classe->id.'_'.$matter->id.'_'.$cutting->id)) }}" data-option="url">Edit</option>
+          <option value="{{ route('moyenne.pdf_1', ($classe->id.'_'.$matter->id.'_'.$cutting->id)) }}" data-option="pdf">pfd</option>
+        </select>
         <a href="{{ route('moyenne.show', ($classe->id.'_'.$cutting->id)) }}" class="btn btn-outline-light py-1">Return</a>
-      </Div>
+      </div>
     </div>
     <div class="table-responsive">
       <table class="table text-start align-middle table-bordered table-hover mb-0" id="myTable">
         <thead>
           <tr class="text-white">
-            <th scope="col" class="text-center">N°</th>
+            <th scope="col"></th>
             <th scope="col" class="text-center">Matricule</th>
             <th scope="col" class="text-center">Nom</th>
             <th scope="col" class="text-center">Prenoms</th>
@@ -67,6 +71,29 @@
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <script>
   $(document).ready(function() {
+
+    $('#mySelect').on('change', function () {
+
+      const $selected = $(this).find(':selected');
+      const url = $selected.val();
+      const option = $selected.data('option');
+      
+      if (!url) {
+        this.selectedIndex = 0;
+        return;
+      }
+
+      switch (option) {
+        case 'pdf':
+          window.open(url, '_blank');
+          break;
+        default:
+          window.location.href = url;
+          break;
+      }
+      this.selectedIndex = 0;
+    });
+
     $('#myTable').DataTable({
       processing: true,
       serverSide: true,

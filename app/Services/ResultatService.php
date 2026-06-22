@@ -50,6 +50,23 @@
     }
 
 
+    public function studentMoyenneList($classe, $cutting) {
+      return DB::table('registers as r')
+      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
+      ->join('students as s', 's.id', '=', 'ss.student_id')
+      ->leftJoin('moyenne_trimestres as mt', function ($join) use ($cutting) {
+        $join->on('mt.register_id', '=', 'r.id')
+        ->where('mt.cutting_school_year_id', $cutting);
+      })
+      ->where('r.get_classe_id', $classe)
+      ->select([
+        'r.id', 's.matricul', 's.first', 's.last', 's.genre', 'mt.moyenne', 'mt.rang'
+      ])
+      ->orderByRaw('s.first, s.last')
+      ->get();
+    }
+
+
     public function getCuttings() {
       return CuttingSchoolYear::with('cutting')
       ->where('school_year_id', $this->year())

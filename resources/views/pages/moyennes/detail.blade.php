@@ -1,5 +1,5 @@
 @extends('app')
-@section('title', 'Moyenne '.$classe['libelle'])
+@section('title', 'List Moyenne '.$classe['libelle'])
 @section('link')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <style>
@@ -61,7 +61,7 @@
       <table class="table text-start align-middle table-bordered table-hover mb-0" id="myTable">
         <thead>
           <tr class="text-white">
-            <th scope="col" class="text-center">N°</th>
+            <th scope="col" class="text-center"></th>
             <th scope="col" class="text-center">Matricule</th>
             <th scope="col" class="text-center">Nom & Prenoms</th>
             <th scope="col" class="text-center">Genre</th>

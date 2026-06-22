@@ -15,4 +15,9 @@ class GetClasse extends Model
     public function serie() {
         return $this->belongsTo(Serie::class);
     }
+
+
+    public function school_year() {
+        return $this->belongsTo(SchoolYear::class);
+    }
 }

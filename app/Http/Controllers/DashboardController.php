@@ -19,8 +19,6 @@ class DashboardController extends Controller
     public function index()
     {
         try{
-            
-            $this->service->updateCuttingDate();
 
             if(!(auth()->check() && auth()->user()->status)){
                 auth()->logout();
@@ -29,12 +27,15 @@ class DashboardController extends Controller
                     'msg' => 'Votre compte a été désactivé !'
                 ]);
             }
+
+            $this->service->updateCuttingDate();
+
             return view('pages.dashboard');
         }
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+                'msg' => 'Une erreur est survenue !'
             ]);
         }
     }

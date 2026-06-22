@@ -79,11 +79,13 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/add/{id}', [App\Http\Controllers\ClasseController::class, 'addTime'])->name('classe.add');
             Route::get('/teacher/{id}', [App\Http\Controllers\ClasseController::class, 'teacher'])->name('classe.teacher');
             Route::post('/teacher/{id}', [App\Http\Controllers\ClasseController::class, 'teaches'])->name('classe.teaches');
-            Route::get('/search/{id}', [App\Http\Controllers\ClasseController::class, 'yajra'])->name('classe.yajra');
+            Route::get('/search/{id}', [App\Http\Controllers\ClasseController::class, 'dataTable'])->name('classe.yajra');
             Route::post('/edit/{id}', [App\Http\Controllers\ClasseController::class, 'update'])->name('classe.update');
             Route::post('/delete/{id}', [App\Http\Controllers\ClasseController::class, 'destroy'])->name('classe.delete');
             Route::get('/export/{id}', [App\Http\Controllers\ClasseController::class, 'export'])->name('classe.export');
             Route::post('/import', [App\Http\Controllers\ClasseController::class, 'import'])->name('classe.import');
+            Route::get('/pdf/{id}', [App\Http\Controllers\ClasseController::class, 'generate'])->name('classe.pdf');
+            Route::get('/pdf_1/{id}', [App\Http\Controllers\ClasseController::class, 'generatePdf'])->name('classe.pdf_1');
         });
 
         Route::group(['prefix' => 'student'], function() {
@@ -126,6 +128,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/export/{id}', [App\Http\Controllers\MoyenneController::class, 'export'])->name('moyenne.export');
             Route::post('/import/{id}', [App\Http\Controllers\MoyenneController::class, 'import'])->name('moyenne.import');
             Route::get('/pdf/{id}', [App\Http\Controllers\MoyenneController::class, 'generate'])->name('moyenne.pdf');
+            Route::get('/matters/{id}', [App\Http\Controllers\MoyenneController::class, 'generate_1'])->name('moyenne.pdf_1');
             Route::get('/edit/{id}', [App\Http\Controllers\MoyenneController::class, 'nonClasse'])->name('moyenne.classe');
             Route::post('/edit/{id}', [App\Http\Controllers\MoyenneController::class, 'classeNon'])->name('moyenne.unclass');
             Route::get('/global/{id}', [App\Http\Controllers\MoyenneController::class, 'export_1'])->name('moyenne.exports');
@@ -176,6 +179,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/index', [App\Http\Controllers\ResultatController::class, 'index'])->name('resultat.index');
             Route::get('/classe', [App\Http\Controllers\ResultatController::class, 'dataTableClasse'])->name('resultat.table1');
             Route::get('/detail/{id}', [App\Http\Controllers\ResultatController::class, 'show'])->name('resultat.show');
+            Route::get('/show/{id}', [App\Http\Controllers\ResultatController::class, 'edit'])->name('resultat.edit');
+            Route::get('/pdf/{id}', [App\Http\Controllers\ResultatController::class, 'generete'])->name('resultat.pdf');
 
             Route::group(['prefix' => 'statistik'], function() {
                 Route::get('/index/{id}', [App\Http\Controllers\StatistikController::class, 'index'])->name('statistik.index');

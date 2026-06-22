@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\ResultatService;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ResultatController extends Controller
 {
@@ -67,45 +68,44 @@ class ResultatController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    
+    public function edit(string $str)
     {
-        //
+        try {
+            list($classe, $cutting) = explode('_', $str);
+            $data = $this->service->studentMoyenneList(
+                $classe, $cutting
+            );
+
+            return view('pages.resultats.show',[
+                'data' => $data,
+                'classe' => $this->service->getClasse($classe),
+                'cutting' => $this->service->getCutting($cutting),
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    
+    public function generete(Request $request, string $id)
     {
-        //
+        try {
+            $pdf = Pdf::loadView('pdf.bulletins.index_1');
+            return $pdf->stream('bulletin.pdf');
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    
 }
 
-
-
-// Exemple de tableau de bord d'une classe
-// Effectif : 48 élèves.
-// Garçons : 26 (54,2 %).
-// Filles : 22 (45,8 %).
-// Moyenne générale : 11,84/20.
-// Taux de réussite : 72,9 %.
-// Premier : 17,35/20.
-// Dernier : 06,20/20.
-// Taux d'absentéisme : 3,8 %.
-// Matière la plus réussie : Mathématiques.
-// Matière la plus difficile : Physique.
-
-// Si vous développez une application de gestion scolaire, 
-// ces indicateurs constituent généralement le noyau d'un tableau de bord destiné au directeur, 
-// au surveillant ou au professeur principal.

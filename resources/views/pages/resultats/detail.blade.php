@@ -34,11 +34,7 @@
         <span class="my-0">Statistique</span>
       </div>
       <div class="d-flex">
-        <div class="mx-2">
-          <select id="mySelect" class="form-select form-select w-auto border-0 text-color-3">
-            <option value="">Autres ...</option>
-          </select>
-        </div>
+        <a href="{{ route('resultat.edit',$classe['id'].'_'.$cutting['id']) }}" class="btn btn-outline-danger mx-2 py-1">Detail</a>
         <a href="{{ route('resultat.index') }}" class="btn btn-outline-light py-1">Return</a>
       </div>
     </div>

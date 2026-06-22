@@ -23,8 +23,13 @@
       $this->schl = Auth::user()->school_id ?? 1;
     }
 
-    public function getYajra($str) {
-      $query = DB::table('registers as r')
+    public function school() {
+      return School::find($this->schl) ?? null;
+    }
+
+
+    public function getStudentClasse($str) {
+      return DB::table('registers as r')
       ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
       ->join('students as s', 's.id', '=', 'ss.student_id')
       ->select([
@@ -32,6 +37,11 @@
         's.lieu', 'r.affecte', 'r.redoubant', 'r.boursier', 'r.lv2'
       ])
       ->where('r.get_classe_id', $str)->orderBy('s.first')->orderBy('s.last')->get();
+    }
+
+
+    public function dataTable($str) {
+      $query = $this->getStudentClasse($str);
       $compte = 0;
       return DataTables::of($query)
       ->addColumn('compte', function() use (&$compte) {
@@ -46,14 +56,14 @@
       ->addColumn('genre', function ($row) {
         return (ucwords($row->genre == 'F' ? 'Feminin':'Masculin'));
       })
+      ->addColumn('naissance', function ($row) {
+        return (date('d/m/Y', strtotime($row->date)));
+      })
       ->addColumn('affect', function ($row) {
         return (ucwords($row->affecte ? 'oui':'non'));
       })
       ->addColumn('redoublant', function ($row) {
         return (ucwords($row->redoubant ? 'oui':'non'));
-      })
-      ->addColumn('naissance', function ($row) {
-        return (date('d/m/Y', strtotime($row->date)));
       })
       ->rawColumns(['compte', 'matricul', 'name', 'genre', 'naissance', 'affect', 'redoublant'])
       ->make(true);
@@ -273,9 +283,5 @@
     private function deleteUser($classe) {
       ClasseTeacher::where('get_classe_id', $classe)
       ->delete();
-    }
-
-    private function school() {
-      return School::find($this->schl) ?? null;
     }
   }

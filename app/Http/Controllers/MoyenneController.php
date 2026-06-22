@@ -107,7 +107,7 @@ class MoyenneController extends Controller
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+                'msg' => 'Une erreur est survenue !'
             ]);
         }
     }
@@ -274,16 +274,67 @@ class MoyenneController extends Controller
             $matieres = $classe['level_id'] < 5
             ? array_merge($this->service->getSubMatter(), json_decode($matters, true))
             : json_decode($matters, true);
-            $dts = $this->service->getMoyenneMCuttingClasse($classe['level_id'], $classId, $cuttingId);
+            $dts = $this->service->getMoyenneCutting(
+                $classe['level_id'], $classId, $cuttingId, $classe['serie_id']
+            );
+            
             $name = 'liste_moyenne_'.$classe->libelle.'_'.$cutting->cutting->symbol;
-            $pdf = PDF::loadView('pdf.moyennes.general',[
+            $pdf = PDF::loadView('pdf.listes.moyenne_trimestre',[
+                'school' => $this->service->school(),
                 'matters' => $matieres,
                 'cutting' => $cutting,
                 'classe' => $classe,
                 'datas' => $dts,
             ])->setPaper('A3', 'landscape');
 
-            return $pdf->stream($name.'_'.mt_rand(100, 1000).'.pdf');
+            $canvas = $pdf->getDomPDF()->getCanvas();
+            $canvas->page_text(
+                1160,      // x
+                822,      // y
+                "{PAGE_NUM} / {PAGE_COUNT}",
+                null,
+                9
+            );
+            return $pdf->stream($name.'.pdf');
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
+
+    public function generate_1(string $str)
+    {
+        try {
+            list($classId, $matter, $cuttingId) = explode('_', $str);
+            $matters = $this->service->getMatter($matter);
+            $classe = $this->service->getClasse($classId);
+            $cutting = $this->service->getCutting($cuttingId);
+            $int = ($matters['matter']['id'] === 2 && $matters['level_id'] < 5) ? true:false;
+            $data = $int ?  $this->service->getStudentMoyenneFrensh($classId, $matter, $cuttingId):
+            $this->service->getStudentMoyenne($classId, $matter, $cuttingId);
+            
+            $name = 'liste_moyenne_'.$classe->libelle.'_'.$cutting->cutting->symbol.'_'.$matters->matter->symbol;
+            $pdf = PDF::loadView('pdf.listes.moyenne_matiere_'.($int ? 2:1),[
+                'school' => $this->service->school(),
+                'matters' => $matters,
+                'cutting' => $cutting,
+                'classe' => $classe,
+                'data' => $data,
+            ]);
+
+            $canvas = $pdf->getDomPDF()->getCanvas();
+            $canvas->page_text(
+                570,      // x
+                822,      // y
+                "{PAGE_NUM} / {PAGE_COUNT}",
+                null,
+                9
+            );
+            return $pdf->stream($name.'.pdf');
         }
         catch (\Exception $e) {
             return back()->with([
@@ -397,7 +448,7 @@ class MoyenneController extends Controller
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+                'msg' => 'Une erreur est survenue !'
             ]);
         }
     }

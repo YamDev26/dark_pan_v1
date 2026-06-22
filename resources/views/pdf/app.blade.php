@@ -1,136 +1,166 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="Application Gestion Ecole">
-    <meta name="author" content="YamDev 26">
-    <title>{{ config('app.name') }} | @yield('title')</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@yield('title')</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
+
+    @page {
+      margin: 20px 10px 20px 10px; /* Supprime toutes les marges */
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Times New Roman', serif;
+    }
+    .watermark {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-50deg);
+      font-size: 100px;
+      color: rgba(0, 0, 0, 0.05);
+      z-index: -1;
+      white-space: nowrap;
+      text-decoration: underline;
+      pointer-events: none;
+    }
+
+    .header {
+      margin-bottom: 15px;
+      margin-top: 0px;
+      padding-top: 5px;
+      border-top: 1px dashed #000;
+    }
+
+    .header-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .header-table td {
+      vertical-align: top;
+      border: none;
+    }
+
+    .logo {
+      width: 80px;
+    }
+
+    .logo img {
+      width: 70px;
+      height: auto;
+    }
+
+    .school-info {
+      text-align: center;
+    }
+
+    .country {
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .motto {
+      font-size: 10px;
+      margin-bottom: 5px;
+    }
+
+    .school-name {
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .school-contact {
+      font-size: 10px;
+    }
+
+    .year {
+      width: 120px;
+      text-align: right;
+      font-size: 12px;
+    }
+
+    .document-title {
+      margin-top: 10px;
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 5px;
+      text-decoration: underline
+    }
+
+    .footer {
+      position: fixed;
+      bottom: -45px;
+      border-top: 1px solid gray;
+      padding-top: 3px;
+      left: 0;
+      right: 0;
+      height: 50px;
+      text-align: center;
+      font-size: 12px;
+      color: #000;
+    }
+
+    .footer-text {
+      display: inline-block;
+    }
+
+    .page-number {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  </style>
+  @yield('link')
 </head>
-<style>
-  @page {
-    margin: 50px 25px 50px 25px; /* top, right, bottom, left */
-  }
-
-  body {
-    font-size: .875em;
-    overflow-x: hidden;
-    color: #353c4e;
-    font-family: "Open Sans", sans-serif;
-  }
-
-  .watermark {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-50deg);
-    font-size: 100px;
-    color: rgba(0, 0, 0, 0.05);
-    z-index: -1;
-    white-space: nowrap;
-    pointer-events: none;
-  }
-
-  #header {
-    position: fixed;
-    border-bottom: 1px solid gray;
-    left: 0;
-    right: 0;
-    top: -40px;
-    text-align: center;
-    font-size: 10px;
-    color: #555;
-  }
-
-  #footer {
-    position: fixed;
-    bottom: -60px;
-    border-top: 1px solid gray;
-    left: 0;
-    right: 0;
-    height: 40px;
-    text-align: center;
-    font-size: 12px;
-  }
-</style>
 <body>
-    <div class="watermark">
-      @yield('watermark')
-    </div>
-    
-    <header id="header">
-      <table style="width: 100%; margin: 0px auto; padding:0%">
-        <tbody>
-          <tr>
-            <td style="width: 50%">
-              <table style="width: 100%">
-                <tbody>
-                  <tr>
-                    <td>
-                      <div style="text-align: center; font-size: 10px">Ministère de l'Education Nationale, de l'Enseignement <br> Technique et de la   Formation Professionnelle</div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-            <td style="width: 50%">
-              <table style="width: 100%">
-                <tbody>
-                  <tr>
-                    <td>
-                      <div style="text-align: center; font-size: 10px;">
-                        <b>REPUBLIQUEDE COTE D'IVOIRE</b><br>
-                        <i>Union - Discipline - Travail</i>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div style="width: 100%; margin: 0px auto; padding:0%; border: 1px solid">
-        <table style="width: 100%">
-          <tbody>
-            <tr>
-              <td style="width: 10%; border-right: 1px solid">
-                <img src="{{ public_path('storage/'. $school->logo) }}" width="80" height="70">
-              </td>
-              <td style="width: 80%; text-align:center">
-                <h2 style="margin:0%">{{ ucwords($school->name) }}</h2>
-                {{ $school->email }}
-              </td>
-              <td style="width: 10%; border-left: 1px solid">
-                <img src="{{ $qrcode }}" width="80" height="70">
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </header>
-    
-    <div class="content">
-      @yield('content')
-    </div>
-    
-    <footer id="footer">
-        <table style="width: 100%">
-            <tbody>
-                <tr>
-                    <td style="width: 50%">
-                      <i style="text-align: left; font-size: 12px; margin:0%">{{ ucwords($school->name) }}</i>
-                    </td>
-                    <td style="width: 25%">
-                      <i style="text-align: center; font-size: 12px; margin:0%">{{ $school->email }}</i>
-                    </td>
-                    <td style="width: 25%">
-                      <i style="text-align: right; float:right; font-size: 12px; margin:0%">{{ date('Y').' ~ '.random_int(1000, 5000) }}</i>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </footer>
+  <div class="watermark"> @yield('fond_page') </div>
+  <div class="header">
+    <table class="header-table">
+      <tr>
+        <td class="logo">
+          <img src="{{ public_path('storage/'. $school->logo) }}" alt="Logo de l'école">
+        </td>
+
+        <td class="school-info">
+          <div class="country">REPUBLIQUE DE COTE D'IVOIRE</div>
+          <div class="motto">Union - Discipline - Travail</div>
+
+          <div class="school-name">
+            {{ $school->name }}
+          </div>
+
+          <div class="school-contact">
+            {{ $school->addres }} • Tél : {{ $school->phon }}
+          </div>
+        </td>
+
+        <td class="year">
+          Année Scolaire
+          <p style="font-size: 14px; padding-top: 3px">
+            <strong>@yield('school_year')</strong>
+          </p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  @yield('content')
+
+  <div class="footer">
+    <span class="footer-text">
+      {{ $school->email }} • {{ $school->addres }} •
+      {{ $school->phon }} • {{ $classe->libelle }} • 
+      {{date('Y-m-d').' ~ N°'.mt_rand(100, 999).'-'.$school->id}}
+    </span>
+    @yield('num_page')
+  </div>
 </body>
 </html>

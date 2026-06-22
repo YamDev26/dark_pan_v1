@@ -6,6 +6,7 @@ use App\Imports\File2Import;
 use App\Services\ClasseService;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ClasseController extends Controller
 {
@@ -105,9 +106,9 @@ class ClasseController extends Controller
     }
 
 
-    public function yajra(string $id) {
+    public function dataTable(string $id) {
         try {
-            return $this->service->getYajra($id);
+            return $this->service->dataTable($id);
         }
         catch (\Exception $e) {
             return back()->with([
@@ -186,7 +187,7 @@ class ClasseController extends Controller
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+                'msg' => 'Une erreur est survenue !'
             ]);
         }
     }
@@ -340,7 +341,61 @@ class ClasseController extends Controller
         }
     }
 
+
+    public function generate(string $str)
+    {
+        try {
+            $classe = $this->service->classe($str);
+            $data = $this->service->getStudentClasse($str);
+            $pdf = Pdf::loadView('pdf.listes.classe',[
+                'data' => $data,
+                'classe' => $classe,
+                'school' => $this->service->school(),
+            ]);
+
+            $canvas = $pdf->getDomPDF()->getCanvas();
+            $canvas->page_text(
+                570,      // x
+                822,      // y
+                "{PAGE_NUM} / {PAGE_COUNT}",
+                null,
+                9
+            );
+            return $pdf->stream('liste_de_classe_'.$classe['libelle'].'.pdf');
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
+
+
+    public function generatePdf(string $str)
+    {
+        try {
+            $classe = $this->service->classe($str);
+            $data = $this->service->getTableTime($str);
+            $pdf = Pdf::loadView('pdf.listes.emploi_temps',[
+                'data' => $data,
+                'classe' => $classe,
+                'times' => $this->service->getTime(),
+                'days' => $this->service->getDayWeek(),
+                'school' => $this->service->school(),
+            ])
+            ->setPaper('a4', 'landscape');
+            return $pdf->stream('emploi_temps_'.$classe['libelle'].'.pdf');
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
+    }
     
+
     public function destroy(Request $request, string $id)
     {
         try {

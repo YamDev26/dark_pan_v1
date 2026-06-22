@@ -39,7 +39,7 @@
               @endif
               <option value="#" data-option="modal1">Liste Enseignant</option>
               <option value="{{ route('classe.time', $classe['id']) }}" data-option="url">Emploi du temps</option>
-              <option value="#" data-option="pdf">Generate list pfd</option>
+              <option value="{{ route('classe.pdf', $classe['id']) }}" data-option="pdf">Generate list pfd</option>
             </select>
             <a href="{{ route('classe.show', $classe['level_id']) }}" class="btn btn-outline-light py-1">Return</a>
           </div>
