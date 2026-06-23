@@ -78,7 +78,7 @@
 
     public function createCtg($dts) {
 
-      $current = now();
+      $current = now()->toDateString();
 
       foreach ($dts['str'] as $i => $item) {
 
@@ -110,15 +110,18 @@
 
     public function updateCutting($dts) {
       CuttingSchoolYear::where('status', '1')->update(['status' => '0']);
-      $current = Carbon::now(); $i = 0;
-      while( $i < sizeof($dts['str'])) {
+      $current = now()->toDateString();
+
+      foreach($dts['str'] as $i => $item) {
+
         $status = $this->compareToDate($current, $dts['dbt'][$i], $dts['fin'][$i]);
-        CuttingSchoolYear::where('id', $dts['str'][$i])->update([
+        CuttingSchoolYear::where('id', $item)->update([
           'status' => $status,
+          'updated' => $current,
           'fin' => $dts['fin'][$i],
           'debut' => $dts['dbt'][$i]
         ]);
-        $i++;
+
       }
     }
 

@@ -30,8 +30,8 @@
 @section('school_year', $classe->school_year->libelle)
 @section('fond_page', 'LISTE MOYENNE CLASSE')
 @section('content')
-<div class="document-title" style="margin-top: 20px">
-    LISTE MOYENNE CLASSE {{ strtoupper($cutting->cutting->libelle).' '.$classe->libelle }}
+<div class="document-title" style="margin-top: 20px; font-size: 22px">
+    LISTE MOYENNE {{ strtoupper($cutting->cutting->libelle) }} CLASSE {{ $classe->libelle }}
   </div>
 
   <div class="content" style="margin-top: 50px">

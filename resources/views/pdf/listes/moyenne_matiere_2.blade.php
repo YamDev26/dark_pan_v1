@@ -31,7 +31,7 @@
 @section('fond_page', 'MOYENNE MATIERE')
 @section('content')
   <div class="document-title">
-    LISTE MOYENNE FRANCAIS {{ $classe->libelle }}
+    LISTE MOYENNE {{ strtoupper($cutting->cutting->libelle) }} FRANCAIS {{ $classe->libelle }}
   </div>
 
   <div class="content" style="margin-top: 30px">

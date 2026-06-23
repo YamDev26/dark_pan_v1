@@ -32,7 +32,7 @@
       {{-- <h3><i class="fa fa-user-edit text-primary"></i></h3> --}}
       <div class="mx-0">
           <select class="form-select form-select w-auto border-0 text-color-3" onchange="window.location.href=this.value;">
-            <option value="">Statistik ...</option>
+            <option value="">Search ...</option>
             @foreach ($cutting as $item)
               <option value="{{ route('statistik.index', $item->id) }}">
                 {{ ucwords($item->cutting->libelle) }}

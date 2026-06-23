@@ -10,7 +10,7 @@
           <h4 class="mb-0">{{ $classe['libelle'] }}</h4>
           <div class="d-flex">
             <select class="form-select form-select w-auto border-0 text-color-3 mx-2" id="mySelect">
-              <option value="">...</option>
+              <option value="">Search ...</option>
               <option value="{{ route('classe.create', $classe['id']) }}" data-option="url">Edit</option>
               <option value="{{ route('classe.pdf_1', $classe['id']) }}" data-option="pdf">pfd</option>
             </select>

@@ -180,7 +180,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/classe', [App\Http\Controllers\ResultatController::class, 'dataTableClasse'])->name('resultat.table1');
             Route::get('/detail/{id}', [App\Http\Controllers\ResultatController::class, 'show'])->name('resultat.show');
             Route::get('/show/{id}', [App\Http\Controllers\ResultatController::class, 'edit'])->name('resultat.edit');
-            Route::get('/pdf/{id}', [App\Http\Controllers\ResultatController::class, 'generete'])->name('resultat.pdf');
+            Route::post('/pdf/{id}', [App\Http\Controllers\ResultatController::class, 'generete'])->name('resultat.pdf');
 
             Route::group(['prefix' => 'statistik'], function() {
                 Route::get('/index/{id}', [App\Http\Controllers\StatistikController::class, 'index'])->name('statistik.index');

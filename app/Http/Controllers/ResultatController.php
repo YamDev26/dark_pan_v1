@@ -95,6 +95,19 @@ class ResultatController extends Controller
     public function generete(Request $request, string $id)
     {
         try {
+            
+            $valide = $request->validate([
+                'student' => 'required|array',
+                'student.*' => 'required|string',
+            ]);
+
+            if (!collect($valide['student'])->filter()->isNotEmpty()) {
+                return back()->with([
+                    'str' => 'danger',
+                    'msg' => 'Aucun élève selectionné !'
+                ]);
+            }
+
             $pdf = Pdf::loadView('pdf.bulletins.index_1');
             return $pdf->stream('bulletin.pdf');
         }

@@ -2,276 +2,310 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Bulletin de Notes</title>
-
+<title>Bulletin Trimestriel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
 
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+    @page {
+        margin: 20px 10px 20px 10px; /* Supprime toutes les marges */
+    }
+
+    body{
+        font-family: 'Times New Roman', serif;
+        font-size:12px;
+        background:#fff;
+        padding:10px;
+    }
+
+.bulletin{
+    width:100%;
+    max-width:1200px;
+    margin:auto;
+    /* border:1px solid #000; */
 }
 
-body{
-  font-family: Arial, Helvetica, sans-serif;
-  font-size:12px;
-  color:#000;
-  padding:6px;
+/* ===========================
+   ENTETE
+=========================== */
+
+.header{
+    display:flex;
+    align-items:flex-start;
+    border-top: 1px dashed #d6d3d3;
 }
 
-table{
-  width:100%;
-  border-collapse:collapse;
+.bloc-gauche{
+    width:35%;
+    text-align:center;
+    padding:10px;
 }
 
-.border{
-  border:0.5px solid #000;
+/* .republique{
+    font-size:11px;
+    font-weight:bold;
+    line-height:1.2;
+} */
+
+.bloc-centre{
+    width:40%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding-top:10px;
 }
 
-td,th{
-  vertical-align:top;
+.titre{
+    border: 1px solid #000;
+    width:320px;
+    text-align:center;
+    font-size:14px;
+    padding:8px;
 }
 
-.text-center{
-  text-align:center;
+.trimestre{
+    font-size:18px;
+    font-weight:bold;
 }
 
-.text-right{
-  text-align:right;
+.bloc-droite{
+    width:25%;
+    text-align:center;
+    padding-top:10px;
+    font-size:14px;
+    font-weight:bold;
 }
 
-.bold{
-  font-weight:bold;
+/* ===========================
+   ETABLISSEMENT
+=========================== */
+
+.table-etablissement{
+    width:100%;
+    border-collapse:collapse;
 }
 
-.header-table td{
-  padding:5px;
+.table-etablissement td{
+    border:1px solid #000;
+    padding:6px;
+    vertical-align:middle;
 }
 
 .logo{
-  width:85px;
-  text-align:center;
-}
-
-.logo img{
-  width:70px;
-  height:auto;
-}
-
-.school-info{
-  text-align:center;
-  line-height:1.3;
-}
-
-.school-name{
-  font-size:17px;
-  font-weight:600;
-  margin-top:5px;
-}
-
-.contact-table td{
-  padding:4px 8px;
-  font-size:13px;
-}
-
-.bulletin-title{
-    margin-top:8px;
-    margin-bottom:8px;
-    text-align: center;
-    padding-bottom:3px;
-    font-size: 17px;
+    width:90px;
+    text-align:center;
     font-weight:bold;
 }
 
-.bulletin-title span{
-    /* font-style:italic; */
+.etablissement{
+    width:auto;
 }
 
-.student-header{
-    background:#e6e6e6;
+.etablissement strong{
     font-size:18px;
+}
+
+.ligne-info{
+    margin-top:15px;
+}
+
+.telephone{
+    margin-left:25px;
+}
+
+.code{
+    width:260px;
+    line-height:1.8;
+}
+
+/* ===========================
+   IDENTITE ELEVE
+=========================== */
+
+.table-identite{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.table-identite td{
+    border:1px solid #000;
+    vertical-align:top;
+    padding:10px;
+}
+
+.infos-eleve{
+    width:38%;
+}
+
+.nom{
+    font-size:20px;
     font-weight:bold;
+    line-height:1.1;
+    margin-bottom:10px;
 }
 
-.student-header td{
-    padding:4px 8px;
-}
-
-.student-info td{
-    padding:6px 8px;
-}
-
-.label{
+.matricule{
+    font-size:16px;
     font-weight:bold;
+    margin-bottom:15px;
 }
 
-.big-value{
-    font-size:18px;
-    font-weight:bold;
+.classe{
+    margin-top:20px;
 }
 
-.watermark{
-    position:relative;
-    overflow:hidden;
+.infos-centre{
+    width:25%;
+    line-height:1.5;
 }
 
-.watermark::after{
-    content:"";
-    position:absolute;
-    right:30px;
-    top:0;
-    width:150px;
-    height:150px;
-    opacity:.10;
-    background-size:contain;
-    background-repeat:no-repeat;
+.infos-droite{
+    width:25%;
+    line-height:1.5;
 }
 
+.photo{
+    width:120px;
+    text-align:center;
+    vertical-align:middle !important;
+    font-size:28px;
+}
 </style>
-</head>
-<body>
+<div class="bulletin">
 
-<!-- EN-TETE -->
-<table class="header-table">
-    <tr>
+    <!-- ENTETE -->
+    <div class="header">
 
-        <!-- LOGO -->
-        <td width="12%" class="border logo">
-            <img src="logo.png" alt="Logo">
-        </td>
+        <table style="width: 100%">
+            <tr>
+                <td class="bloc-gauche">
+                    <div class="republique">
+                        <span style="font-size: 12px; font-weight:bold; line-height:1.3;">
+                            REPUBLIQUE DE CÔTE D'IVOIRE<br>
+                        </span>
+                        <span style="font-size: 10px; line-height: 1.2;">
+                            MINISTERE DE L'EDUCATION NATIONALE DE <br>
+                            L'ALPHABETISATION ET DE L'ENSEIGNEMENT TECHNIQUE<br>
+                        </span>
+                        {{-- DIRECTION REGIONALE AGBOVILLE --}}
+                    </div>
+    
+                </td>
 
-        <!-- ECOLE -->
-        <td width="40%" class="border school-info">
-            <div class="bold">REPUBLIQUE DE COTE D'IVOIRE</div>
+                <td class="bloc-centre">
+                    <div class="titre">
+                        BULLETIN DE NOTES SCOLAIRES
+                        <div class="trimestre">3ème trimestre</div>
+                    </div>
+                </td>
 
-            MINISTERE DE L'EDUCATION NATIONALE DE<br>
-            L'ALPHABETISATION ET DE L'ENSEIGNEMENT TECHNIQUE
+                <td class="bloc-droite">
+                    <div>
+                        Année scolaire<br>
+                        <strong>2015/2016</strong>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-            <div class="school-name">
-                COURS SECONDAIRE LA ROCHELLE
-            </div>
-        </td>
-
-        <!-- CONTACT -->
-        <td width="48%" class="border">
-            <table class="contact-table">
-                <tr>
-                  <td><b>Adresse :</b> 10 BP1041 ABIDJAN 10</td>
-                  <td class="text-right"><b>Code :</b> 025014</td>
-                </tr>
-
-                <tr>
-                    <td><b>Téléphone :</b> 27 21 56 48 56</td>
-                    <td class="text-right"><b>Statut :</b> Privé</td>
-                </tr>
-
-                <tr>
-                    <td colspan="2">
-                        <b>E-mail :</b>
-                        courssecondairelarochelle@gmail.com
-                    </td>
-                </tr>
-            </table>
-        </td>
-
-    </tr>
-</table>
-
-<!-- TITRE -->
-<div class="bulletin-title">
-    <div style="text-decoration: underline; margin-bottom: 7px">
-      BULLETIN DE NOTES
     </div>
-    <span>Troisième Trimestre - Année scolaire : 2024-2025</span>
+
+    <!-- ETABLISSEMENT -->
+    <table class="table-etablissement">
+        <tr>
+            <td rowspan="2" class="logo">
+                LOGO
+            </td>
+
+            <td rowspan="2" class="etablissement">
+                <div>
+                    Etablissement :
+                    <strong>LYCEE MODERNE 3 AGBOVILLE</strong>
+                </div>
+
+                <div class="ligne-info">
+                    Adresse postale :
+                    <strong>Adresse postale</strong>
+
+                    <span class="telephone">
+                        Téléphone:
+                        <strong>01957723</strong>
+                    </span>
+                </div>
+            </td>
+
+            <td class="code">
+                Code:
+                <strong>000680</strong>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="code">
+                statut:
+                <strong>Public</strong>
+                <br><br>
+                E-mail:
+                <strong>mdaniellekouame@gmail.com</strong>
+            </td>
+        </tr>
+    </table>
+
+    <!-- IDENTITE -->
+    <table class="table-identite">
+
+        <tr>
+
+            <td class="infos-eleve">
+
+                <div class="nom">
+                    AYEMENET ARNAUD PAUL<br>
+                    VIANNEY
+                </div>
+
+                <div class="matricule">
+                    Matricule: 08052229D
+                </div>
+
+                <div class="classe">
+                    Classe : TD1
+                </div>
+
+                <div>
+                    Bulletin N° 10/47
+                </div>
+
+            </td>
+
+            <td class="infos-centre">
+
+                <div>Genre : <strong>M</strong></div>
+                <div>Né le <strong>05/11/1997</strong></div>
+                <div>Lieu de naissance : <strong>AGBOVILLE</strong></div>
+                <div>Nationalité : <strong>IVOIRIENNE</strong></div>
+
+            </td>
+
+            <td class="infos-droite">
+
+                <div>Redoublant : <strong>non</strong></div>
+                <div>Boursier : <strong>non</strong></div>
+                <div>Interne : <strong>d/p</strong></div>
+                <div>Affecté : <strong>oui</strong></div>
+
+            </td>
+
+            <td class="photo">
+                PHOTO
+            </td>
+
+        </tr>
+
+    </table>
+
 </div>
-
-<!-- BLOC ELEVE -->
-<table class="border">
-
-    <tr class="student-header">
-        <td width="70%">
-            ABOUA CALEB PRINCE JOEL
-        </td>
-
-        <td width="30%" class="text-right">
-            Matricule : 24 426 232 K
-        </td>
-    </tr>
-
-    <tr>
-        <td colspan="2" class="watermark">
-
-            <table class="student-info">
-
-                <tr>
-                    <td width="35%">
-                        <span class="label">Classe :</span>
-                        <span class="big-value">6èmeA1</span>
-                    </td>
-
-                    <td width="25%">
-                        <span class="label">Effectif :</span>
-                        <span class="big-value">57</span>
-                    </td>
-
-                    <td width="20%">
-                        <span class="label">Interne :</span>
-                        Non
-                    </td>
-
-                    <td width="20%"></td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <span class="label">Sexe :</span>
-                        Masculin
-                    </td>
-
-                    <td>
-                        <span class="label">Redoublant(e) :</span>
-                        Non
-                    </td>
-
-                    <td>
-                        <span class="label">Affecté(e) :</span>
-                        Oui
-                    </td>
-
-                    <td></td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <span class="label">Nationalité :</span>
-                        Ivoirienne
-                    </td>
-
-                    <td>
-                        <span class="label">Régime :</span>
-                    </td>
-
-                    <td></td>
-                    <td></td>
-                </tr>
-
-                <tr>
-                    <td colspan="4">
-                        <span class="label">Né (e) le :</span>
-                        19/08/2013
-
-                        &nbsp;&nbsp; à &nbsp;&nbsp;
-
-                        TREICHVILLE
-                    </td>
-                </tr>
-
-            </table>
-
-        </td>
-    </tr>
-
-</table>
 
 </body>
 </html>
