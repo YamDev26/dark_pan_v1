@@ -88,3 +88,12 @@
       return $item ? 'selected':null;
     }
   }
+
+
+  // Emploi du temps afficher la matière pour edition
+  if(!function_exists('getLibelleCutting')) {
+    function getLibelleCutting($libelle) {
+      list($lib, $val) = explode(' ', $libelle);
+      return ($val == 1 ? '1er ':$val.'eme ').strtoupper($lib);
+    }
+  }

@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Services\ResultatService;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use BaconQrCode\Writer;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+
 
 class ResultatController extends Controller
 {
@@ -92,7 +97,7 @@ class ResultatController extends Controller
     }
 
     
-    public function generete(Request $request, string $id)
+    public function generete(Request $request, string $str)
     {
         try {
             
@@ -107,18 +112,49 @@ class ResultatController extends Controller
                     'msg' => 'Aucun élève selectionné !'
                 ]);
             }
+            list($classeId, $cuttingId) = explode('_', $str);
+            
+            $classe = $this->service->getClasse($classeId);
+            $cutting = $this->service->getCutting($cuttingId);
 
-            $pdf = Pdf::loadView('pdf.bulletins.index_1');
+            $matters = $this->service->getMoyenneMatters($valide['student'][0], $cuttingId, $classe);
+            $bilans = $this->service->getMoyenneBilan($valide['student'][0], $cuttingId);
+            
+            $pdf = Pdf::loadView('pdf.bulletins.index',[
+                'bilans' => $bilans,
+                'classe' => $classe,
+                'cutting' => $cutting,
+                'matters' => $matters,
+                'qrCode' => $this->qrcode(),
+                'school' => $this->service->school(),
+            ]);
+
             return $pdf->stream('bulletin.pdf');
         }
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'
+                'msg' => 'Une erreur est survenue !'.$e->getMessage()
             ]);
         }
     }
 
+
+    private function qrcode()
+    {
+        $school = $this->service->school();
+        $renderer = new ImageRenderer(
+            new RendererStyle(100),
+            new SvgImageBackEnd()
+        );
+
+        $writer = new Writer($renderer);
+        $png = base64_encode($writer->writeString(
+            ucwords($school->name)
+        ));
+
+        return ('data:image/png;base64,'.$png);
+    }
     
 }
 

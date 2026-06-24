@@ -20,6 +20,11 @@
     public function __construct() {
       $this->schl = Auth::user()->school_id ?? 1;
     }
+
+
+    public function school() {
+      return School::find($this->schl) ?? null;
+    }
     
     
     public function getDataTableClasse() {
@@ -63,6 +68,48 @@
         'r.id', 's.matricul', 's.first', 's.last', 's.genre', 'mt.moyenne', 'mt.rang'
       ])
       ->orderByRaw('s.first, s.last')
+      ->get();
+    }
+
+
+    public function getMoyenneMatters($student, $cutting, $classe) {
+      return DB::table('level_matters as lm')
+      ->join('matters as m', 'm.id', '=', 'lm.matter_id')
+      ->leftJoin('moyenne_matters as mm', function ($join) use ($student, $cutting) {
+        $join->on('mm.level_matter_id', '=', 'lm.id')
+        ->where('mm.register_id', $student)
+        ->where('mm.cutting_school_year_id', $cutting);
+      })
+      ->select(
+        'm.libelle',
+        'm.symbol',
+        'lm.value as values',
+        'mm.moyenne',
+        'mm.rang',
+        'm.bilan_matter_id as bilan',
+      )
+      ->selectRaw('COALESCE(mm.moyenne, 0) * COALESCE(lm.value, 0) as total')
+      ->where('lm.level_id', $classe['level_id'])
+      ->where('lm.serie_id', $classe['serie_id'])
+      ->orderBy('m.bilan_matter_id')
+      ->orderBy('m.position')
+      ->get()
+      ->groupBy('bilan');
+    }
+
+
+    public function getMoyenneBilan($student, $cutting) {
+      return DB::table('bilan_matters as bm')
+      ->leftJoin('moyenne_bilans as mb', function ($join) use ($student, $cutting) {
+        $join->on('mb.bilan_matter_id', '=', 'bm.id')
+        ->where('mb.cutting_school_year_id', $cutting)
+        ->where('mb.register_id', $student);
+      })
+      ->select([
+        'bm.id', 'bm.libelle', 'mb.moyenne', 'mb.rang', 'mb.values',
+      ])
+      ->selectRaw('COALESCE(mb.moyenne, 0) * COALESCE(mb.values, 0) as total')
+      ->orderBy('bm.id')
       ->get();
     }
 
@@ -309,9 +356,5 @@
     private function year() {
       $year = SchoolYear::where('status', (string)self::A_ACTIF)->first();
       return $year ? $year->id:null;
-    }
-
-    private function school() {
-      return School::find($this->schl) ?? null;
     }
   }
