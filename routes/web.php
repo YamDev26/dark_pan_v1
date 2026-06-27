@@ -194,3 +194,14 @@ Route::group(['middleware' => 'auth'], function () {
         });
     });
 });
+
+
+// Je me concentrerais sur un ERP scolaire prêt à déployer comprenant :
+// gestion des élèves ------------------------ ok
+// inscriptions       ------------------------ ok
+// emplois du temps   ------------------------ ok
+// notes et bulletins ------------------------ En cours
+// paiements          ------------------------ Non
+// présences          ------------------------ Non
+// génération de PDF  ------------------------ En cours
+// espace enseignant  ------------------------ Non

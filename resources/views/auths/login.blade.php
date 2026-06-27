@@ -2,13 +2,14 @@
 @section('title', 'Login')
 @section('content')
 <div class="container-fluid">
-  <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
-    <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-      <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3">
+  <div class="row g-0" style="min-height: 100vh;">
+    <div class="col-12 col-xl-7 col-xxl-7 auth-cover-left align-items-center justify-content-center d-none d-xl-flex">
+    </div>
+    <div class="col-12 col-xl-5 col-xxl-5 vh-100 d-flex justify-content-center align-items-center">
+      <div class="bg-secondary rounded p-4 pb-0 p-sm-5 my-4 mx-3 w-75">
         <div class="d-flex align-items-center justify-content-between mb-3">
           <a href="{{ route('login') }}" class="">
             <h3 class="text-primary mb-0"><i class="fa fa-user-edit me-2"></i>{{ config('app.name') }}</h3>
-            {{-- <span class="my-0 text-white" style="font-size: 11px">Le cœur de l'administration scolaire</span> --}}
           </a>
           <h3>Sign In</h3>
         </div>
@@ -30,7 +31,9 @@
             <a href="{{ route('password.request') }}">Forgot Password</a>
           </div>
           <button type="submit" class="btn btn-primary py-2 w-100 mb-4">Sign In</button>
-          <p class="text-center mb-0">Nouvelle Génération de Gestion</p>
+          <p class="text-center mb-0" style="font-size: 10px">
+            <i>Nouvelle Génération de Gestion</i>
+          </p>
         </form>
       </div>
     </div>

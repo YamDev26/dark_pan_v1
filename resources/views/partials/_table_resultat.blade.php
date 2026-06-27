@@ -49,12 +49,12 @@
         {{ $result ? ($result->min):'00' }}
       </th>
     </tr>
-    <tr>
+    {{-- <tr>
       <td class="text-center">08</td>
       <td><i class="fas fa-exclamation-triangle"></i> Élèves en difficulté</td>
       <th class="text-center">
         {{ $result ? ($result->dificulte < 10 ? '0'.$result->dificulte:$result->dificulte):'00' }}
       </th>
-    </tr>
+    </tr> --}}
   </tbody>
 </table>

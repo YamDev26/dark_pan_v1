@@ -238,25 +238,27 @@
             <tr>
                 <td class="infos-eleve">
                     <div class="nom">
-                        AYEMENET ARNAUD PAUL VIANNEY <br>
-                        • <strong style="font-size: 14px; font-weight:normal; letter-spacing: 0.1px;">08052229D</strong> •
+                        {{ strtoupper($student->first.' '.$student->last) }} <br>
+                        • <strong style="font-size: 15px; font-weight:normal; letter-spacing: 0.1px;">{{ $student->matricul }}</strong> •
                     </div>
 
                     <table style="width: 100%; margin:0%; padding-left: 12px; font-size: 13px">
                         <tr>
-                            <td>Genre : <strong>Masculin</strong></td>
-                            <td>Classe : <strong>6eme1</strong></td>
-                            <td>Affecté : <strong>Oui</strong></td>
+                            <td>Genre : <strong>{{ $student->genre == 'F' ? 'Feminin':'Masculin' }}</strong></td>
+                            <td>Classe : <strong>{{ $classe->libelle }}</strong></td>
+                            <td>Affecté{{ $student->genre == 'F' ? 'e':'' }} : <strong>{{ $student->affecte ? 'Oui':'Non' }}</strong></td>
                             
                         </tr>
                         <tr>
-                            <td>Nationalité: <strong>Ivoirienne</strong></td>
-                            <td>Redoublant: <strong>Non</strong></td>
-                            <td>Boursier : <strong>Non</strong></td>
+                            <td>Nationalité : <strong>{{ ucwords($student->libelle) }}</strong></td>
+                            <td>Redoublant{{ $student->genre == 'F' ? 'e':'' }} : <strong>{{ $student->redoubant ? 'Oui':'Non' }}</strong></td>
+                            <td>Boursi{{ $student->genre == 'F' ? 'ère':'er' }} : <strong>{{ $student->boursier ? 'Oui':'Non' }}</strong></td>
                         </tr>
                         <tr>
-                            <td colspan="2">Né le <strong>05/11/1997</strong> à <strong>Agboville</strong></td>
-                            <td>Bulletin N° <strong>10/47</strong></td>
+                            <td colspan="2">
+                                Né{{ $student->genre == 'F' ? 'e':'' }} le <strong>{{ date('d/m/Y', strtotime($student->date)) }}</strong> à <strong>{{ ucwords($student->lieu) }}</strong>
+                            </td>
+                            <td>Interne : <strong>{{ $student->interne ? 'Oui':'Non' }}</strong></td>
                         </tr>
                     </table>
                 </td>

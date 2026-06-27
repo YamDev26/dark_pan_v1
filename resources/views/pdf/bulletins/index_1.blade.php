@@ -33,6 +33,12 @@
     .bulletin-table .discipline {
         text-align: left;
         font-weight: bold;
+        padding: 5px;
+    }
+
+    .bulletin-table .disciplines {
+        text-align: left;
+        padding: 5px;
     }
 
     .bulletin-table .note {
@@ -97,11 +103,25 @@
     </thead>
 
     <tbody>
+
+        @foreach($sunMatter as $sub)
+            <tr>
+                <td class="disciplines">{{ $sub->libelle }}</td>
+                <td class="notes">{{ $sub->moyenne }}</td>
+                <td>{{ $sub->values }}</td>
+                <td>{{ $sub->total }}</td>
+                <td>{{ $sub->rang }}</td>
+                <td class="left">---</td>
+                <td class="left">---</td>
+                <td></td>
+            </tr>
+        @endforeach
+
         @foreach ($bilans as $i => $bilan)
             @foreach ($matters[$bilan->id] ?? [] as $matter)
                 <tr>
-                    <td class="discipline">{{ $matter->libelle }}</td>
-                    <td class="note">{{ $matter->moyenne }}</td>
+                    <td class="disciplines">{{ $matter->libelle }}</td>
+                    <td class="notes">{{ $matter->moyenne }}</td>
                     <td>{{ $matter->values }}</td>
                     <td>{{ $matter->total }}</td>
                     <td>{{ $matter->rang }}</td>

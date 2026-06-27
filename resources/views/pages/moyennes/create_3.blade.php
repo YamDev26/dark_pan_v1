@@ -57,6 +57,8 @@
               <th scope="col">Nom</th>
               <th scope="col">Prénoms</th>
               <th scope="col">Genre</th>
+              <th scope="col" class="text-center" style="width: 13%" title="Absences justifiées">Abs. Just</th>
+              <th scope="col" class="text-center" style="width: 13%" title="Absences non justifiées">Abs Non</th>
               <th scope="col" class="text-center" style="width: 15%">Moyenne</th>
             </tr>
           </thead>
@@ -68,9 +70,15 @@
                 <td class="text-left">{{ strtoupper($item->first) }}</td>
                 <td class="text-left">{{ ucwords($item->last) }}</td>
                 <td class="text-left">{{ $item->genre == 'F' ? 'Feminin':'Masculin' }}</td>
+                <td class="py-0 text-center">
+                  <input type="text" name="moyen2[]" class="form-control mx-0 number" value="{{ $item->justify }}" placeholder="---" style="width: 100%; background: none; font-size: 19px">
+                </td>
+                <td class="py-0 text-center">
+                  <input type="text" name="moyen3[]" class="form-control mx-0 number" value="{{ $item->noJustify }}" placeholder="---" style="width: 100%; background: none; font-size: 19px">
+                </td>
                 <td class="d-flex py-0 text-center">
                   <input type="hidden" name="students[]" value="{{ $item->id.'_'.$item->genre }}">
-                  <input type="text" name="moyen1[]" class="form-control mx-0 input" value="{{ $item->moyenne }}" placeholder="---" style="width: 90px; background: none; font-size: 19px">
+                  <input type="text" name="moyen1[]" class="form-control mx-0 moyenne" value="{{ $item->moyenne }}" placeholder="---" style="width: 90px; background: none; font-size: 19px">
                   <span class="mt-2 px-1 d-flex" style="font-size: 19px"> / 20</span>
                 </td>
               </tr>
@@ -81,7 +89,7 @@
       <hr style="border: 2px solid">
       <div class="text-center">
         <input type="hidden" name="string" value="{{ $classe->id.'_'.$matter->id.'_'.$cutting->id }}">
-        <input type="hidden" name="matter" value="autres">
+        <input type="hidden" name="matter" value="driving">
         <button type="button" class="btn btn-primary w-25 py-2" data-bs-toggle="modal" data-bs-target="#myModal">Valider</button>
       </div>
     </form>
@@ -100,7 +108,7 @@
 <script>
   $(document).ready(function() {
 
-    $('#myTable').on('keyup', '.input', function() {
+    $('#myTable').on('keyup', '.moyenne', function() {
       let value = this.value.replace(/[^0-9.]/g, '');
       const parts = value.split('.');
       if (parts.length > 2) {
@@ -114,6 +122,12 @@
       }
       this.value = value;
     });
+
+
+    $('#myTable').on('keyup', '.number', function() {
+      $(this).val($(this).val().replace(/[^0-9]/g, ''));
+    });
+
 
     // Rendre tous les éléments visibles temporairement pour que les champs soient inclus dans le formulaire
     $(document).on('click', 'button[type="submit"]', function () {

@@ -2,6 +2,7 @@
   namespace App\Services;
 
   use App\Models\Evaluat;
+  use App\Models\Absence;
   use App\Models\GetClasse;
   use App\Models\Evaluated;
   use App\Models\LevelMatter;
@@ -179,6 +180,19 @@
       ->select('ev.value', 'e.note')
       ->orderBy('ev.created')->get();
       return $data ?? [];
+    }
+
+
+    public function addAbsence($student, $cutting, $absens1 = null, $absens2 = null) {
+      Absence::updateOrCreate([
+          'register_id' => $student,
+          'cutting_school_year_id' => $cutting,
+        ], [
+          'absens1' => $absens1,
+          'absens2' => $absens2,
+          'totals' => ((int)$absens1 + (int)$absens2)
+        ]
+      );
     }
 
 

@@ -1,227 +1,244 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Bulletin</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Bulletin scolaire</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
-
-  @page {
-    margin: 20px 10px 20px 10px; /* Supprime toutes les marges */
-  }
-
-  *{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-  }
-
-  body {
-    margin: 0;
-    padding: 20px;
-    font-family: 'Times New Roman', serif;
-  }
-
-.bulletin{
-  width:100%;
-  border-collapse:collapse;
-  border:1px solid #000;
-  font-size:14px;
+  .resume{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+    font-family:"Times New Roman", serif;
+    font-size:14px;
 }
 
-.bulletin th,
-.bulletin td{
-  border:1px solid #000;
-  padding:4px;
-  vertical-align:top;
+.resume th,
+.resume td{
+    border:1px solid #444;
 }
 
-.bulletin th{
-  text-align:center;
-  font-size:15px;
-  font-weight:bold;
-  background:#f7f7f7;
+.titre th{
+    background:#f2f2f2;
+    text-align:center;
+    font-size:17px;
+    font-weight:bold;
+    padding:7px;
 }
 
-.inner{
-  width:100%;
-  border-collapse:collapse;
+.bloc{
+    vertical-align:top;
+    padding:10px 12px;
+    height:125px;
 }
 
-.inner td{
-  border:none;
-  padding: 6px 2px;
+.notes{
+    width:100%;
+    border-collapse:collapse;
 }
 
-.right{
-  /* text-align:right; */
-  font-weight:bold;
+.notes td{
+    border:none;
+    padding:6px 0;
 }
 
-.checkbox-item{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin:5px 0;
-  white-space:nowrap;
-  font-size:13px;
+.notes td:nth-child(2){
+    width:15px;
+    text-align:center;
 }
 
-.box{
-  width:12px;
-  height:12px;
-  border: 1px solid #333;
-  display:inline-block;
-  position:relative;
-  flex-shrink:0;
+.valeur{
+    text-align:right;
+    font-weight:bold;
+    white-space:nowrap;
 }
 
-.checked .box::after{
-  content:"✓";
-  position:absolute;
-  left:1px;
-  top:-4px;
-  font-size:18px;
-  font-weight:bold;
+.check{
+    margin:5px 0;
+    white-space:nowrap;
 }
 
-.right-box{
-  margin-left: 15px;
+.case{
+    display:inline-block;
+    width:14px;
+    height:14px;
+    border:1px solid #444;
+    text-align:center;
+    line-height:13px;
+    font-size:11px;
+    margin-right:6px;
+    vertical-align:middle;
 }
 
-.rappel td{
-  padding:5px 2px;
-  font-size:13px;
+.active{
+    font-weight:bold;
 }
 
-.center{
-  text-align:center;
-  vertical-align:middle;
+.signature{
+    height:150px;
+    text-align:center;
+    vertical-align:top;
+    padding:10px;
 }
 
-.appreciation{
-  line-height:1.6;
+.mention{
+    font-style:italic;
+    font-weight:bold;
+    margin-bottom:8px;
 }
 
-.qrcode{
-  width:40px;
-  height:40px;
-  border:1px solid #000;
-  margin:0 auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:10px;
-  font-weight:bold;
+.espace{
+    height:45px;
 }
 
-em{
-  font-style:italic;
+.espace-mini{
+    height:12px;
+}
+
+.signature strong{
+    font-style:italic;
+    font-size:16px;
 }
 </style>
 
 <body>
-<table class="bulletin">
-    <tr>
+
+<table class="resume">
+
+    <tr class="titre">
         <th>Résultat Trimestriel</th>
         <th>Distinctions</th>
         <th>Sanctions</th>
     </tr>
 
     <tr>
-        <!-- RESULTAT -->
-        <td>
-            <table class="inner">
+
+        <td class="bloc">
+
+            <table class="notes">
                 <tr>
-                    <td>Plus forte moyenne :</td>
-                    <td class="right">17,68/20</td>
+                    <td>Plus forte moyenne</td>
+                    <td>:</td>
+                    <td class="valeur">17,68/20</td>
                 </tr>
+
                 <tr>
-                    <td>Plus faible Moyenne :</td>
-                    <td class="right">10,24/20</td>
+                    <td>Plus faible moyenne</td>
+                    <td>:</td>
+                    <td class="valeur">10,24/20</td>
                 </tr>
+
                 <tr>
-                    <td>Moyenne Classe :</td>
-                    <td class="right">13,93/20</td>
+                    <td>Moyenne de classe</td>
+                    <td>:</td>
+                    <td class="valeur">13,93/20</td>
                 </tr>
             </table>
+
         </td>
 
-        <!-- DISTINCTIONS -->
-        <td>
-            <div class="checkbox-item">
-                <span class="box"></span>
+        <td class="bloc">
+
+            <div class="check">
+                <span class="case"></span>
                 Tableau d'honneur
-                <span class="box right-box"></span>
-                Refusé
             </div>
 
-            <div class="checkbox-item checked">
-                <span class="box"></span>
+            <div class="check">
+                <span class="case active">✓</span>
                 Tableau d'honneur + Encouragement
             </div>
 
-            <div class="checkbox-item">
-                <span class="box"></span>
+            <div class="check">
+                <span class="case"></span>
                 Tableau d'honneur + Félicitations
             </div>
+
+            <div class="check">
+                <span class="case"></span>
+                Refusé
+            </div>
+
         </td>
 
-        <!-- SANCTIONS -->
-        <td>
-            <div class="checkbox-item">
-                <span class="box"></span>
+        <td class="bloc">
+
+            <div class="check">
+                <span class="case"></span>
                 Avertissement pour travail insuffisant
             </div>
 
-            <div class="checkbox-item">
-                <span class="box"></span>
-                Blâme pour Travail insuffisant
+            <div class="check">
+                <span class="case"></span>
+                Blâme pour travail insuffisant
             </div>
 
-            <div class="checkbox-item">
-                <span class="box"></span>
-                Avertissement pour mauvaise Conduite
+            <div class="check">
+                <span class="case"></span>
+                Avertissement pour mauvaise conduite
             </div>
 
-            <div class="checkbox-item">
-                <span class="box"></span>
-                Blâme pour mauvaise Conduite
+            <div class="check">
+                <span class="case"></span>
+                Blâme pour mauvaise conduite
             </div>
+
         </td>
+
     </tr>
 
-    <tr>
+    <tr class="titre">
         <th></th>
         <th>Appréciation du Conseil de Classe</th>
-        <th>VISA DU CHEF D'ETABLISSEMENT</th>
+        <th>Visa du Chef d'Établissement</th>
     </tr>
 
     <tr>
-      <td></td>
-      <!-- APPRECIATION -->
-      <td class="center">
-        <div class="appreciation">
-          <strong><em>Assez bon travail, continuez !</em></strong>
-          <br>
-          Le Professeur Principal.
-          <br><br>
-          <strong><em>M. YAPO THEODORE BROCHO</em></strong>
-        </div>
-      </td>
 
-      <!-- VISA -->
-      <td class="center">
-          <div>ABIDJAN, le 14/05/2025</div>
-          <br>
-          <div>Le Directeur des Etudes</div>
-          <br><br>
-          <strong><em>M. KOSSONOU Kouassi Yeboua</em></strong>
-      </td>
+        <td></td>
+
+        <td class="signature">
+
+            <p class="mention">
+                Assez bon travail, continuez !
+            </p>
+
+            <p>
+                Le Professeur Principal
+            </p>
+
+            <div class="espace"></div>
+
+            <strong>
+                M. YAPO THEODORE BROCHO
+            </strong>
+
+        </td>
+
+        <td class="signature">
+
+            <p>
+                ABIDJAN, le 14/05/2025
+            </p>
+
+            <div class="espace-mini"></div>
+
+            <p>
+                Le Directeur des Études
+            </p>
+
+            <div class="espace"></div>
+
+            <strong>
+                M. KOSSONOU Kouassi Yeboua
+            </strong>
+
+        </td>
+
     </tr>
+
 </table>
 
 </body>

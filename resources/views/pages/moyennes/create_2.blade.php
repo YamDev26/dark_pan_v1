@@ -53,9 +53,9 @@
               <th scope="col">Nom</th>
               <th scope="col">Prénoms</th>
               <th scope="col">Genre</th>
-              <th scope="col" class="text-center" style="width: 12%">Moyenne CF</th>
-              <th scope="col" class="text-center" style="width: 12%">Moyenne OG</th>
-              <th scope="col" class="text-center" style="width: 12%">Moyenne EO</th>
+              <th scope="col" class="text-center" style="width: 15%">Moyenne CF</th>
+              <th scope="col" class="text-center" style="width: 15%">Moyenne OG</th>
+              <th scope="col" class="text-center" style="width: 15%">Moyenne EO</th>
             </tr>
           </thead>
           <tbody>
@@ -91,7 +91,7 @@
         </table>
         <hr style="border: 2px solid">
         <input type="hidden" name="string" value="{{ $classe->id.'_'.$matter->id.'_'.$cutting->id }}">
-        <input type="hidden" name="frensh" value="oui">
+        <input type="hidden" name="matter" value="frensh">
         <div class="text-center">
           <button type="button" class="btn btn-primary w-25 py-2" data-bs-toggle="modal" data-bs-target="#myModal">Valider From</button>
         </div>

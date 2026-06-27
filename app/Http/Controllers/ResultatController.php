@@ -113,18 +113,23 @@ class ResultatController extends Controller
                 ]);
             }
             list($classeId, $cuttingId) = explode('_', $str);
+
+            $sunMatter = $this->service->getMoyenneSubMatter($valide['student'][0], $cuttingId);
             
             $classe = $this->service->getClasse($classeId);
             $cutting = $this->service->getCutting($cuttingId);
+            $student = $this->service->getStudent($valide['student'][0], $classeId);
 
             $matters = $this->service->getMoyenneMatters($valide['student'][0], $cuttingId, $classe);
             $bilans = $this->service->getMoyenneBilan($valide['student'][0], $cuttingId);
             
-            $pdf = Pdf::loadView('pdf.bulletins.index',[
+            $pdf = Pdf::loadView('pdf.bulletins.index_1',[
                 'bilans' => $bilans,
                 'classe' => $classe,
                 'cutting' => $cutting,
                 'matters' => $matters,
+                'student' => $student,
+                'sunMatter' => $sunMatter,
                 'qrCode' => $this->qrcode(),
                 'school' => $this->service->school(),
             ]);

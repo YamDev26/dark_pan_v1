@@ -11,6 +11,7 @@ use App\Services\MoyenneService;
 use App\Events\MoyenneEditEvent;
 use App\Events\NonClasseStudentEvent;
 use App\Events\MoyenneEditFrenshEvent;
+use App\Events\MoyenneEditDrivingEvent;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -54,14 +55,11 @@ class MoyenneController extends Controller
     {
         try {
             list($classe, $matter, $cutting) = explode('_', $str);
-            $matters = $this->service->getMatter($matter);
-            $verif = ($matters['matter']['id'] === 2 && $matters['level_id'] < 5) ? true:false;
-            $data = $verif ?  $this->service->getStudentMoyenneFrensh($classe, $matter, $cutting):
-            $this->service->getStudentMoyenne($classe, $matter, $cutting);
-            return view('pages.moyennes.create_'.($verif ? 2:1),[
-                'datas' => $data,
-                'matter' => $matters,
+            $data = $this->verifyMatter($classe, $matter, $cutting);
+            return view('pages.moyennes.create_'.$data['number'],[
+                'datas' => $data['data'],
                 'classe' => $this->service->getClasse($classe),
+                'matter' => $this->service->getMatter($matter),
                 'cutting' => $this->service->getCutting($cutting),
             ]);
         }
@@ -87,7 +85,7 @@ class MoyenneController extends Controller
                 'moyen3' => 'nullable|array',
                 'moyen3.*' => 'nullable|numeric',
                 'string'  => 'required|string',
-                'frensh'  => 'required|string',
+                'matter'  => 'required|string',
             ]);
 
             if((!$valide['string'] == $str)) {
@@ -96,9 +94,7 @@ class MoyenneController extends Controller
                     'msg' => 'Erreur, Incompactibilité entres les informations !'
                 ]);
             }
-            $valide['frensh'] == 'oui' ?
-            MoyenneEditFrenshEvent::dispatch($valide['students'], $valide['moyen1'], $valide['moyen2'], $valide['moyen3'], $str):
-            MoyenneEditEvent::dispatch($valide['students'], $valide['moyen1'], $str);
+            $this->getEvent($valide, $str);
             return to_route('moyenne.list', $str)->with([
                 'str' => 'success',
                 'msg' => 'Validation réussie. En attente des traitement !'
@@ -450,6 +446,54 @@ class MoyenneController extends Controller
                 'str' => 'danger',
                 'msg' => 'Une erreur est survenue !'
             ]);
+        }
+    }
+
+
+    private function verifyMatter($classe, $matter, $cutting)
+    {
+        $matters = $this->service->getMatter($matter);
+        if(($matters['matter']['id'] === 2) && ($matters['level_id'] < 5)) {
+            $number = 2;
+            $data = $this->service->getStudentMoyenneFrensh($classe, $matter, $cutting);
+        }
+        elseif(($matters['matter']['id'] === 13) && ($matters['matter']['libelle'] == 'Conduite')) {
+            $number = 3;
+            $data = $this->service->getAbsenceMoyenne($classe, $matter, $cutting);
+        }
+        else {
+            $number = 1;
+            $data = $this->service->getStudentMoyenne($classe, $matter, $cutting);
+        }
+        return [
+            'number' => $number,
+            'data' => $data
+        ];
+    }
+
+
+    private function getEvent($validate, $str)
+    {
+        $event = match ($validate['matter']) {
+            'french'  => MoyenneEditFrenshEvent::class,
+            'driving' => MoyenneEditDrivingEvent::class,
+            'autres'  => MoyenneEditEvent::class,
+        };
+
+        if ($validate['matter'] === 'autres') {
+            $event::dispatch(
+                $validate['students'],
+                $validate['moyen1'],
+                $str
+            );
+        } else {
+            $event::dispatch(
+                $validate['students'],
+                $validate['moyen1'],
+                $validate['moyen2'],
+                $validate['moyen3'],
+                $str
+            );
         }
     }
 }

@@ -20,6 +20,17 @@
   <link href="{{ asset('assets/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet">
   <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+
+  <style>
+    body {
+      background-image: linear-gradient(rgba(23, 23, 23, 0.6), rgba(23, 23, 23, 0.6)), url('assets/img/auth_bg.jpg');
+      background-size: cover;        /* L'image couvre tout le bloc */
+      background-position: center;   /* Centre l'image */
+      background-repeat: no-repeat;  /* Pas de répétition */
+      min-height: 100vh;
+    }
+  </style>
+
 </head>
 <body>
   <div class="container-fluid position-relative d-flex p-0">
@@ -28,6 +39,9 @@
         <span class="sr-only">Loading...</span>
       </div>
     </div>
+
+
+    {{-- <img src="{{ asset('assets/img/auth_bg.jpg') }}" alt="" srcset=""> --}}
 
     @yield('content')
   </div>

@@ -109,8 +109,22 @@
         'bm.id', 'bm.libelle', 'mb.moyenne', 'mb.rang', 'mb.values',
       ])
       ->selectRaw('COALESCE(mb.moyenne, 0) * COALESCE(mb.values, 0) as total')
-      ->orderBy('bm.id')
-      ->get();
+      ->orderBy('bm.id')->get();
+    }
+
+
+    public function getMoyenneSubMatter($student, $cutting) {
+      return DB::table('sub_matters as sm')
+      ->leftJoin('moyenne_sub_matters as ms', function ($join) use ($student, $cutting) {
+        $join->on('ms.sub_matter_id', '=', 'sm.id')
+        ->where('ms.cutting_school_year_id', $cutting)
+        ->where('ms.register_id', $student);
+      })
+      ->select([
+        'sm.id', 'sm.libelle', 'ms.moyenne', 'ms.rang', 'ms.values',
+      ])
+      ->selectRaw('COALESCE(ms.moyenne, 0) * COALESCE(ms.values, 0) as total')
+      ->orderBy('sm.id')->get();
     }
 
 
@@ -129,6 +143,23 @@
       return CuttingSchoolYear::find($str) ?? null;
     }
 
+
+    public function getStudent($student, $classe) {
+      return DB::table('registers as r')
+      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
+      ->join('students as s', 's.id', '=', 'ss.student_id')
+      ->join('notionalities as n', 'n.id', '=', 's.notionalitie_id')
+      ->where([
+        'r.id' => $student,
+        'r.get_classe_id' => $classe
+      ])
+      ->select([
+        'r.id', 's.matricul', 's.first', 's.last', 's.genre',
+        's.lieu', 'r.affecte', 'r.redoubant', 'r.boursier',
+        'r.interne', 'r.image',  's.date', 'n.libelle'
+      ])
+      ->first();
+    }
 
     public function getResultatClasse($classe, $cutting) {
       return Resultat::where('get_classe_id', $classe)

@@ -281,6 +281,29 @@
     }
 
 
+    public function getAbsenceMoyenne($classe, $matter, $cutting) {
+      return DB::table('registers as r')
+      ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
+      ->join('students as s', 's.id', '=', 'ss.student_id')
+      ->leftJoin('moyenne_matters as mm', function ($join) use ($matter, $cutting) {
+        $join->on('mm.register_id', '=', 'r.id')
+        ->where('mm.level_matter_id', $matter)
+        ->where('mm.cutting_school_year_id', $cutting);
+      })
+      ->leftJoin('absences as a', function ($join) use ($matter, $cutting) {
+        $join->on('a.register_id', '=', 'r.id')
+        ->where('a.cutting_school_year_id', $cutting);
+      }) 
+      ->select([ 
+        'r.id', 's.matricul','s.first','s.last', 's.genre', 'mm.moyenne', 'mm.rang',
+        'a.absens1 as justify', 'a.absens1 as noJustify'
+      ])
+      ->where('r.get_classe_id', $classe)
+      ->orderByRaw('s.first, s.last')
+      ->get();
+    }
+
+
     public function moyenneTrimestreClasseStudent($classe, $cutting) {
       return $this->getMoyenneTrimestreClasseStudent($classe, $cutting);
     }

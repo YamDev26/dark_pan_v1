@@ -2,9 +2,11 @@
 @section('title', 'Forgot pwd')
 @section('content')
 <div class="container-fluid">
-  <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
-    <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-      <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3">
+  <div class="row g-0" style="min-height: 100vh;">
+    <div class="col-12 col-xl-7 col-xxl-7 auth-cover-left align-items-center justify-content-center d-none d-xl-flex">
+    </div>
+    <div class="col-12 col-xl-5 col-xxl-5 vh-100 d-flex justify-content-center align-items-center">
+      <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3 w-75">
         <div class="d-flex align-items-center justify-content-between mb-3">
           <a href="{{ route('password.request') }}" class="">
             <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>{{ config('app.name') }}</h3>

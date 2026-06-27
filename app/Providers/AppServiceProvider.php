@@ -41,6 +41,9 @@ class AppServiceProvider extends ServiceProvider
             App\Events\MoyenneEditFrenshEvent::class,
             App\Listeners\MoyenneEditFrenshListener::class,
 
+            App\Events\MoyenneEditDrivingEvent::class,
+            App\Listeners\MoyenneEditDrivingListener::class,
+
             App\Events\NonClasseStudentEvent::class,
             App\Listeners\NonClasseStudentListener::class,
 
