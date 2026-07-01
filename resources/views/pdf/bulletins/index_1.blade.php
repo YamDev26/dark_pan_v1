@@ -33,12 +33,12 @@
     .bulletin-table .discipline {
         text-align: left;
         font-weight: bold;
-        padding: 5px;
+        padding: 3px 5px;
     }
 
     .bulletin-table .disciplines {
         text-align: left;
-        padding: 5px;
+        padding: 3px 5px;
     }
 
     .bulletin-table .note {
@@ -81,65 +81,73 @@
         page-break-inside: avoid;
     }
 
+    .mytable tr, .mytable td {
+        border:none;
+        text-align: left
+    }
+
 </style>
 @endsection  
 @section('content')
-<table class="bulletin-table">
-    <thead>
-        <tr>
-            <th rowspan="2" class="left">Disciplines</th>
-            <th rowspan="2">Moy</th>
-            <th rowspan="2">Coef.</th>
-            <th rowspan="2">M.Coef.</th>
-            <th rowspan="2">Rang</th>
-            {{-- <th rowspan="2">M.An</th> --}}
-            <th colspan="3">PROFESSEURS</th>
-        </tr>
-        <tr>
-            <th class="left">Nom et Prénoms</th>
-            <th class="left">Appréciations</th>
-            <th>Signatures</th>
-        </tr>
-    </thead>
 
-    <tbody>
+    @foreach ($resultat as $result)
+        <div class="pages">
+            @include('pdf.bulletins.includes.content', [
+                'school' => $result['school'],
+                'classe' => $result['classe'],
+                'cutting' => $result['cutting'],
+                'student' => $result['student'],
+                'qrCode' => $result['qrCode'],
+            ])
 
-        @foreach($sunMatter as $sub)
-            <tr>
-                <td class="disciplines">{{ $sub->libelle }}</td>
-                <td class="notes">{{ $sub->moyenne }}</td>
-                <td>{{ $sub->values }}</td>
-                <td>{{ $sub->total }}</td>
-                <td>{{ $sub->rang }}</td>
-                <td class="left">---</td>
-                <td class="left">---</td>
-                <td></td>
-            </tr>
-        @endforeach
+            <table class="bulletin-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" class="left">Disciplines</th>
+                        <th rowspan="2">Moy</th>
+                        <th rowspan="2">Coef.</th>
+                        <th rowspan="2">M.Coef.</th>
+                        <th rowspan="2">Rang</th>
+                        <th colspan="3">PROFESSEURS</th>
+                    </tr>
+                    <tr>
+                        <th class="left">Nom et Prénoms</th>
+                        <th class="left">Appréciations</th>
+                        <th>Signatures</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-        @foreach ($bilans as $i => $bilan)
-            @foreach ($matters[$bilan->id] ?? [] as $matter)
-                <tr>
-                    <td class="disciplines">{{ $matter->libelle }}</td>
-                    <td class="notes">{{ $matter->moyenne }}</td>
-                    <td>{{ $matter->values }}</td>
-                    <td>{{ $matter->total }}</td>
-                    <td>{{ $matter->rang }}</td>
-                    <td class="left">---</td>
-                    <td class="left">---</td>
-                    <td></td>
-                </tr>
-            @endforeach
+                    @include('pdf.bulletins.partials.sub_matter', [
+                        'sunMatter' => $result['sunMatter']
+                    ])
 
-            <tr style="background: #f5f5f5;">
-                <th class="discipline">{{ ucwords($bilan->libelle) }}</th>
-                <th class="note">{{ $bilan->moyenne }}</th>
-                <th>{{ $bilan->values }}</th>
-                <th>{{ $bilan->total ?? '--' }}</th>
-                <th>{{ $bilan->rang }}</th>
-                <th colspan="3"></th>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
+                    @include('pdf.bulletins.partials.matter',[
+                        'bilans' => $result['bilans'],
+                        'matters' => $result['matters']
+                    ])
+                    
+                    @include('pdf.bulletins.partials.result_student',[
+                        'student' => $result['student']
+                    ])
+                </tbody>
+            </table>
+            @include('pdf.bulletins.partials.statistik1',[
+                'result' => $result['result'],
+                'school' => $result['school'],
+                'student' => $result['student'],
+            ])
+
+            <!-- FOOTER -->
+            @include('pdf.bulletins.includes.footer',[
+                'school' => $result['school'],
+                'classe' => $result['classe'],
+                'string' => $result['string'],
+            ])
+        </div>
+        @unless($loop->last)
+        <div style="page-break-after: always;"></div>
+        @endunless
+    @endforeach
+    
 @endsection

@@ -112,40 +112,58 @@ class ResultatController extends Controller
                     'msg' => 'Aucun élève selectionné !'
                 ]);
             }
-            list($classeId, $cuttingId) = explode('_', $str);
+            list($classe, $cutting) = explode('_', $str);
 
-            $sunMatter = $this->service->getMoyenneSubMatter($valide['student'][0], $cuttingId);
+            $value = $this->definirCutting($cutting);
             
-            $classe = $this->service->getClasse($classeId);
-            $cutting = $this->service->getCutting($cuttingId);
-            $student = $this->service->getStudent($valide['student'][0], $classeId);
+            $resultat = $this->resultat($valide['student'], $str); 
 
-            $matters = $this->service->getMoyenneMatters($valide['student'][0], $cuttingId, $classe);
-            $bilans = $this->service->getMoyenneBilan($valide['student'][0], $cuttingId);
-            
-            $pdf = Pdf::loadView('pdf.bulletins.index_1',[
-                'bilans' => $bilans,
-                'classe' => $classe,
-                'cutting' => $cutting,
-                'matters' => $matters,
-                'student' => $student,
-                'sunMatter' => $sunMatter,
-                'qrCode' => $this->qrcode(),
-                'school' => $this->service->school(),
+            $pdf = Pdf::loadView('pdf.bulletins.index_'.$value,[
+                'resultat' => $resultat
             ]);
 
-            return $pdf->stream('bulletin.pdf');
+            return $pdf->stream('bulletin_scolaire_'.$classe.'.pdf');
         }
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+                'msg' => 'Une erreur est survenue !'
             ]);
         }
     }
 
 
-    private function qrcode()
+
+    private function resultat($student, $str)
+    {
+        $table = [];
+        list($classeId, $cuttingId) = explode('_', $str);
+        $classe = $this->service->getClasse($classeId);
+        $cutting = $this->service->getCutting($cuttingId);
+        $result = $this->service->getResultatClasse($classeId, $cuttingId);
+
+        foreach($student as $item) {
+            $string = mt_rand(100, 999);
+            if($item) {
+                $table[] = [
+                    'result' => $result,
+                    'string' => $string,
+                    'classe' => $classe,
+                    'cutting' => $cutting,
+                    'school' => $this->service->school(),
+                    'qrCode' => $this->qrcode($string, $cutting),
+                    'bilans' => $this->service->getMoyenneBilan($item, $cuttingId),
+                    'student' => $this->service->getStudent($item, $classeId, $cuttingId),
+                    'matters' => $this->service->getMoyenneMatters($item, $cuttingId, $classe),
+                    'sunMatter' => $classe->level_id < 5 ? $this->service->getMoyenneSubMatter($item, $cuttingId):null,
+                ];
+            }
+        }
+        return $table;
+    }
+
+
+    private function qrcode($string, $cutting)
     {
         $school = $this->service->school();
         $renderer = new ImageRenderer(
@@ -155,10 +173,20 @@ class ResultatController extends Controller
 
         $writer = new Writer($renderer);
         $png = base64_encode($writer->writeString(
-            ucwords($school->name)
+            $string.'-'.$school->id
+            .' ~ '.ucwords($cutting->cutting->libelle)
+            .' ~ '.ucwords($school->name) 
+            
         ));
-
         return ('data:image/png;base64,'.$png);
+    }
+
+
+    private function definirCutting($cuttingId)
+    {
+        $cutting = $this->service->getCutting($cuttingId);
+        $libelle = explode(' ', $cutting->cutting->libelle);
+        return $libelle[1];
     }
     
 }

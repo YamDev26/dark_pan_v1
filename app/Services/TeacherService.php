@@ -10,6 +10,7 @@
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\Hash;
   use Illuminate\Support\Str;
+  
   class TeacherService
   {
     private const ROLE  = 8;

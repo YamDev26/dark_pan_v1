@@ -51,7 +51,7 @@
         <a class="nav-item nav-link {{ request()->is('teacher/*') ? 'active' : '' }}" href="{{ route('teacher.index') }}">
           <i class="fa fa-user me-2"></i>Enseignants
         </a>
-        <a href="chart.html" class="nav-item nav-link">
+        <a  class="nav-item nav-link {{ request()->is('user/*') ? 'active' : '' }}" href="{{ route('user.index') }}">
           <i class="fa fa-users me-2"></i>Personnels
         </a>
         <div class="nav-item dropdown" title="Configurations">

@@ -123,6 +123,7 @@ class MoyenneController extends Controller
                 'matters' => $matters,
                 'matieres' => $matieres,
                 'cutting' => $this->service->getCutting($cutting),
+                'close' => $this->service->getCloseCutting($cutting)
             ]);
         }
         catch (\Exception $e) {
@@ -162,6 +163,7 @@ class MoyenneController extends Controller
                 'matter' => $matters,
                 'classe' => $this->service->getClasse($classe),
                 'cutting' => $this->service->getCutting($cutting),
+                'close' => $this->service->getCloseCutting($cutting)
             ]);
         }
         catch (\Exception $e) {

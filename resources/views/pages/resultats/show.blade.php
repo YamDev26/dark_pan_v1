@@ -60,7 +60,7 @@
           <tbody>
             @foreach ($data as $i => $item)
               <tr>
-                <td class="text-center">{{ $i < 9 ? '0'.($i+1):($i+1) }}</td>
+                <td class="text-center">{{ sprintf('%02d', $i + 1) }}</td>
                 <td class="text-left">{{ $item->matricul }}</td>
                 <td class="text-left">{{ strtoupper($item->first) }}</td>
                 <td class="text-left">{{ ucwords($item->last) }}</td>

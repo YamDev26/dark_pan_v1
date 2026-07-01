@@ -50,8 +50,10 @@
           <select id="mySelect" class="form-select form-select w-auto border-0 text-color-3">
             <option value="">Autres ...</option>
             <option value="{{ route('moyenne.pdf', ($classe->id.'_'.$cutting->id)) }}" data-option="pdf">Voir le pdf</option>
+            @if (!$close)
             <option value="modal" data-option="modal">Importation</option>
             <option value="{{ route('moyenne.classe', ($classe->id.'_'.$cutting->id)) }}" data-option="url">Non classés</option>
+            @endif
           </select>
         </div>
         <a href="{{ route('moyenne.index') }}" class="btn btn-outline-light py-1">Return</a>

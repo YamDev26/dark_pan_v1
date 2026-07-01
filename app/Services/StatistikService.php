@@ -6,15 +6,22 @@
   use App\Models\GetClasse;
   use App\Models\StatistikSerie;
   use App\Models\ResultatScolaire;
+  use App\Models\CuttingSchoolYear;
+  use App\Models\CuttingCloseSchool;
   use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Facades\Auth;
   
   class StatistikService
   {
-    private $schl; private const A_LEVEL = 5;
+    private const DIRECTEUR = 4;
+    private const FONDATEUR = 3;
+    private const ADMIN = 2;
+    private $schl, $role; 
+    private const A_LEVEL = 5;
 
     public function __construct() {
       $this->schl = Auth::user()->school_id ?? 1;
+      $this->role = Auth::user()->role_id;
     }
 
 
@@ -22,6 +29,21 @@
       return GetClasse::find($str);
     }
     
+
+    public function getCutting($str) {
+      return CuttingSchoolYear::find($str);
+    }
+
+    public function getCloseCutting($cutting) {
+      $verify = CuttingCloseSchool::where('school_id', $this->schl)
+      ->where('cutting_school_year_id', $cutting)->first();
+      
+      if($verify) {
+        return false;
+      }
+      return in_array($this->role, [self::ADMIN, self::FONDATEUR, self::DIRECTEUR]) 
+      ? true:false;
+    }
 
     public function getStatistikTotal($cutting) {
 
@@ -316,6 +338,26 @@
         'cutting_school_year_id' => $cutting,
       ],
       $this->colomnTable($table));
+    }
+
+
+    public function storeCuttingClose($cutting) {
+
+      if(!in_array($this->role, [self::ADMIN, self::FONDATEUR, self::DIRECTEUR])) {
+        return ([
+          'str' => 'danger',
+          'msg' =>'Vous n\êtes pas autorisé pour cette action !'
+        ]);
+      }
+
+      CuttingCloseSchool::updateOrCreate([
+        'school_id' => $this->schl,
+        'cutting_school_year_id' => $cutting,
+      ]);
+      return ([
+        'str' => 'success',
+        'msg' => 'Cette action s\'est déroulée avec succès.'
+      ]);
     }
 
 

@@ -184,6 +184,7 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::group(['prefix' => 'statistik'], function() {
                 Route::get('/index/{id}', [App\Http\Controllers\StatistikController::class, 'index'])->name('statistik.index');
+                Route::get('/store/{id}', [App\Http\Controllers\StatistikController::class, 'store'])->name('statistik.store');
             });
         });
 
@@ -191,6 +192,14 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/index', [App\Http\Controllers\ScheduleController::class, 'index'])->name('horraire.index');
             Route::get('/data', [App\Http\Controllers\ScheduleController::class, 'dataTable'])->name('horraire.data');
             Route::get('/show/{id}', [App\Http\Controllers\ScheduleController::class, 'show'])->name('horraire.show');
+        });
+
+
+        Route::group(['prefix' => 'user'], function() {
+            Route::get('/index', [App\Http\Controllers\UserController::class, 'index'])->name('user.index');
+            Route::get('/data', [App\Http\Controllers\UserController::class, 'dataTable'])->name('user.data');
+            Route::get('/create', [App\Http\Controllers\UserController::class, 'create'])->name('user.create');
+            Route::post('/create', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
         });
     });
 });

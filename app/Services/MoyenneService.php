@@ -10,6 +10,7 @@
   use App\Models\MoyenneSubMatter;
   use App\Models\MoyenneTrimestre;
   use App\Models\CuttingSchoolYear;
+  use App\Models\CuttingCloseSchool;
   use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Facades\Auth;
   use Yajra\DataTables\Facades\DataTables;
@@ -24,6 +25,13 @@
 
     public function school() {
       return School::find($this->schl) ?? null;
+    }
+
+
+    public function getCloseCutting($cutting) {
+        $verify = CuttingCloseSchool::where('school_id', $this->schl)
+        ->where('cutting_school_year_id', $cutting)->first();
+        return $verify ? true:false;
     }
     
     public function getDataTableClasse() {

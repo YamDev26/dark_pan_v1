@@ -1,228 +1,151 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Bulletin</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-
+@extends('pdf.bulletin')
+@section('link')
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
-
-  @page {
-    margin: 20px 10px 20px 10px; /* Supprime toutes les marges */
-  }
-
-  *{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-  }
-
-  body {
-    margin: 0;
-    padding: 20px;
+  .bulletin-table {
+    width: 100%;
+    border-collapse: collapse;
     font-family: 'Times New Roman', serif;
+    font-size: 13px;
   }
 
-.bulletin{
-  width:100%;
-  border-collapse:collapse;
-  border:1px solid #000;
-  font-size:14px;
-}
+  .bulletin-table th,
+  .bulletin-table td {
+    border: 0.6px solid #000;
+    padding: 3px 5px;
+    vertical-align: middle;
+  }
 
-.bulletin th,
-.bulletin td{
-  border:1px solid #000;
-  padding:4px;
-  vertical-align:top;
-}
+  .bulletin-table thead th {
+    background: #f5f5f5;
+    text-align: center;
+    font-weight: bold;
+  }
 
-.bulletin th{
-  text-align:center;
-  font-size:15px;
-  font-weight:bold;
-  background:#f7f7f7;
-}
+  .bulletin-table th.left,
+  .bulletin-table td.left {
+    text-align: left;
+  }
 
-.inner{
-  width:100%;
-  border-collapse:collapse;
-}
+  .bulletin-table td {
+    text-align: center;
+  }
 
-.inner td{
-  border:none;
-  padding: 6px 2px;
-}
+  .bulletin-table .discipline {
+    text-align: left;
+    font-weight: bold;
+    padding: 3px 5px;
+  }
 
-.right{
-  /* text-align:right; */
-  font-weight:bold;
-}
+  .bulletin-table .disciplines {
+    text-align: left;
+    padding: 3px 5px;
+  }
 
-.checkbox-item{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin:5px 0;
-  white-space:nowrap;
-  font-size:13px;
-}
+  .bulletin-table .note {
+    font-weight: bold;
+  }
 
-.box{
-  width:12px;
-  height:12px;
-  border: 1px solid #333;
-  display:inline-block;
-  position:relative;
-  flex-shrink:0;
-}
+  .bulletin-table tbody tr {
+    height: 25px;
+  }
 
-.checked .box::after{
-  content:"✓";
-  position:absolute;
-  left:1px;
-  top:-4px;
-  font-size:18px;
-  font-weight:bold;
-}
+  /* Largeurs proches du modèle */
+  .bulletin-table th:nth-child(1),
+  .bulletin-table td:nth-child(1) {
+    width: 25%;
+  }
 
-.right-box{
-  margin-left: 15px;
-}
+  .bulletin-table th:nth-child(7),
+  .bulletin-table td:nth-child(7) {
+    width: 25%;
+    white-space: nowrap;
+  }
 
-.rappel td{
-  padding:5px 2px;
-  font-size:13px;
-}
+  .bulletin-table th:nth-child(8),
+  .bulletin-table td:nth-child(8) {
+    width: 14%;
+  }
 
-.center{
-  text-align:center;
-  vertical-align:middle;
-}
+  .bulletin-table th:nth-child(9),
+  .bulletin-table td:nth-child(9) {
+    width: 12%;
+  }
 
-.appreciation{
-  line-height:1.6;
-}
+  /* Compatible DomPDF */
+  table {
+    page-break-inside: auto;
+  }
 
-.qrcode{
-  width:40px;
-  height:40px;
-  border:1px solid #000;
-  margin:0 auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:10px;
-  font-weight:bold;
-}
+  tr {
+    page-break-inside: avoid;
+  }
 
-em{
-  font-style:italic;
-}
+  .mytable tr, .mytable td {
+    border:none;
+    text-align: left
+  }
 </style>
+@endsection  
+@section('content')
 
-<body>
-<table class="bulletin">
-    <tr>
-        <th>Résultat Trimestriel</th>
-        <th>Distinctions</th>
-        <th>Sanctions</th>
-    </tr>
+  @foreach ($resultat as $result)
+    <div class="pages">
+      @include('pdf.bulletins.includes.content', [
+        'school' => $result['school'],
+        'classe' => $result['classe'],
+        'cutting' => $result['cutting'],
+        'student' => $result['student'],
+        'qrCode' => $result['qrCode'],
+      ])
 
-    <tr>
-        <!-- RESULTAT -->
-        <td>
-            <table class="inner">
-                <tr>
-                    <td>Plus forte moyenne :</td>
-                    <td class="right">17,68/20</td>
-                </tr>
-                <tr>
-                    <td>Plus faible Moyenne :</td>
-                    <td class="right">10,24/20</td>
-                </tr>
-                <tr>
-                    <td>Moyenne Classe :</td>
-                    <td class="right">13,93/20</td>
-                </tr>
-            </table>
-        </td>
+      <table class="bulletin-table">
+        <thead>
+          <tr>
+            <th rowspan="2" class="left">Disciplines</th>
+            <th rowspan="2">Moy</th>
+            <th rowspan="2">Coef.</th>
+            <th rowspan="2">M.Coef.</th>
+            <th rowspan="2">Rang</th>
+            <th colspan="3">PROFESSEURS</th>
+          </tr>
+          <tr>
+            <th class="left">Nom et Prénoms</th>
+            <th class="left">Appréciations</th>
+            <th>Signatures</th>
+          </tr>
+        </thead>
+        <tbody>
 
-        <!-- DISTINCTIONS -->
-        <td>
-            <div class="checkbox-item">
-                <span class="box"></span>
-                Tableau d'honneur
-                <span class="box right-box"></span>
-                Refusé
-            </div>
+          @include('pdf.bulletins.partials.sub_matter', [
+            'sunMatter' => $result['sunMatter']
+          ])
 
-            <div class="checkbox-item checked">
-                <span class="box"></span>
-                Tableau d'honneur + Encouragement
-            </div>
+          @include('pdf.bulletins.partials.matter',[
+            'bilans' => $result['bilans'],
+            'matters' => $result['matters']
+          ])
+          
+          @include('pdf.bulletins.partials.result_student',[
+            'student' => $result['student']
+          ])
+        </tbody>
+      </table>
+      @include('pdf.bulletins.partials.statistik2',[
+        'result' => $result['result'],
+        'school' => $result['school'],
+        'student' => $result['student'],
+      ])
 
-            <div class="checkbox-item">
-                <span class="box"></span>
-                Tableau d'honneur + Félicitations
-            </div>
-        </td>
-
-        <!-- SANCTIONS -->
-        <td>
-            <div class="checkbox-item">
-                <span class="box"></span>
-                Avertissement pour travail insuffisant
-            </div>
-
-            <div class="checkbox-item">
-                <span class="box"></span>
-                Blâme pour Travail insuffisant
-            </div>
-
-            <div class="checkbox-item">
-                <span class="box"></span>
-                Avertissement pour mauvaise Conduite
-            </div>
-
-            <div class="checkbox-item">
-                <span class="box"></span>
-                Blâme pour mauvaise Conduite
-            </div>
-        </td>
-    </tr>
-
-    <tr>
-        <th></th>
-        <th>Appréciation du Conseil de Classe</th>
-        <th>VISA DU CHEF D'ETABLISSEMENT</th>
-    </tr>
-
-    <tr>
-      <td></td>
-      <!-- APPRECIATION -->
-      <td class="center">
-        <div class="appreciation">
-          <strong><em>Assez bon travail, continuez !</em></strong>
-          <br>
-          Le Professeur Principal.
-          <br><br>
-          <strong><em>M. YAPO THEODORE BROCHO</em></strong>
-        </div>
-      </td>
-
-      <!-- VISA -->
-      <td class="center">
-          <div>ABIDJAN, le 14/05/2025</div>
-          <br>
-          <div>Le Directeur des Etudes</div>
-          <br><br>
-          <strong><em>M. KOSSONOU Kouassi Yeboua</em></strong>
-      </td>
-    </tr>
-</table>
-
-</body>
-</html>
+      <!-- FOOTER -->
+      @include('pdf.bulletins.includes.footer',[
+        'school' => $result['school'],
+        'classe' => $result['classe'],
+        'string' => $result['string'],
+      ])
+    </div>
+    @unless($loop->last)
+    <div style="page-break-after: always;"></div>
+    @endunless
+  @endforeach
+    
+@endsection

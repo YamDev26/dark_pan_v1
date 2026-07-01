@@ -40,8 +40,10 @@
       <div class="d-flex">
         <select class="form-select form-select w-auto border-0 text-color-3 mx-2" id="mySelect">
           <option value="">Search</option>
-          <option value="{{ route('moyenne.create', ($classe->id.'_'.$matter->id.'_'.$cutting->id)) }}" data-option="url">Edit</option>
-          <option value="{{ route('moyenne.pdf_1', ($classe->id.'_'.$matter->id.'_'.$cutting->id)) }}" data-option="pdf">pfd</option>
+          @if (!$close)
+          <option value="{{ route('moyenne.create', ($classe->id.'_'.$matter->id.'_'.$cutting->id)) }}" data-option="url">Editer</option>
+          @endif
+          <option value="{{ route('moyenne.pdf_1', ($classe->id.'_'.$matter->id.'_'.$cutting->id)) }}" data-option="pdf">Generer</option>
         </select>
         <a href="{{ route('moyenne.show', ($classe->id.'_'.$cutting->id)) }}" class="btn btn-outline-light py-1">Return</a>
       </div>

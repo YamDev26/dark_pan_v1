@@ -97,3 +97,61 @@
       return ($val == 1 ? '1er ':$val.'eme ').strtoupper($lib);
     }
   }
+
+
+  // Retourne l'appréciation selon la moyenne Par matièrer ..................
+  if(!function_exists('mentionMsg')) {
+    function mentionMsg($moyenne){
+      return match (true) {
+      $moyenne >= 18 => 'Félicitation',
+      $moyenne >= 16 => 'Très bien',
+      $moyenne >= 14 => 'Bien',
+      $moyenne >= 12 => 'Assez bien',
+      $moyenne >= 10 => 'Passable',
+      $moyenne >= 8  => 'Avertissement',
+      $moyenne >= 0  => 'Blâme',
+      default => '---',
+    };
+    }
+  }
+
+
+  // Appréciation Pour Enseignement Général
+  if(!(function_exists('appreciationGeneral'))) {
+    function appreciation($moyenne){
+      return match (true) {
+        $moyenne >= 18 => 'Travail remarquable. Félicitations pour vos excellents résultats !',
+        $moyenne >= 16 => 'Très bon travail. Continuez sur cette belle dynamique.',
+        $moyenne >= 14 => 'Bon travail. Des efforts supplémentaires à fournir.',
+        $moyenne >= 12 => 'Travail satisfaisant. Continuez vos efforts pour progresser.',
+        $moyenne >= 10 => 'Résultats acceptables. Une implication plus soutenue est souhaitable.',
+        $moyenne >= 8  => 'Les résultats demeurent fragiles. Un travail plus régulier est indispensable.',
+        $moyenne >= 0  => 'Les résultats sont très insuffisants. Il est nécessaire de redoubler d\'efforts.',
+        default => '---',
+    };
+    }
+  }
+  
+
+  // Faire un retour à la ligne au 1er point ou virgule
+  if(!(function_exists('breakAfterFirstSeparator'))) {
+    function breakAfterFirstSeparator($moyenne) {
+      $text = appreciation($moyenne);
+      return preg_replace('/([,.])/', '$1<br>', $text, 1);
+    }
+  }
+
+
+  // Format name Teacher
+  if(!(function_exists('formatName'))) {
+    function formatName($name) {
+      $explode = explode(' ', $name, 2);
+
+      if(count($explode) < 2) {
+        return ucwords($name);
+      }
+
+      $lettre = mb_substr($explode[0], 0, 1);
+      return ucwords($lettre.' '.$explode[1]);
+    }
+  }

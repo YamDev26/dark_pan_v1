@@ -17,30 +17,42 @@ class StatistikController extends Controller
     
     public function index($str)
     {
-        return view('pages.statistiks.index',[
-            'cycle1' => $this->service->getResultatCycle1($str),
-            'cycle2' => $this->service->getResultatCycle2($str),
-            'total' => $this->service->getStatistikTotal($str),
-            'result1' => $this->service->getResultat($str, self::CYCLE_1),
-            'result2' => $this->service->getResultat($str, self::CYCLE_2),
-            'result3' => $this->service->getResultat($str, self::TOTAL),
-        ]);
+        try {
+            return view('pages.statistiks.index',[
+                'cutting' => $this->service->getCutting($str),
+                'close' => $this->service->getCloseCutting($str),
+                'cycle1' => $this->service->getResultatCycle1($str),
+                'cycle2' => $this->service->getResultatCycle2($str),
+                'total' => $this->service->getStatistikTotal($str),
+                'result1' => $this->service->getResultat($str, self::CYCLE_1),
+                'result2' => $this->service->getResultat($str, self::CYCLE_2),
+                'result3' => $this->service->getResultat($str, self::TOTAL),
+            ]);
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    
+    public function store(string $str)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        try {
+            $result = $this->service->storeCuttingClose($str);
+            return back()->with([
+                'str' => $result['str'],
+                'msg' => $result['msg']
+            ]);
+        }  
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'
+            ]);
+        }
     }
 
     /**

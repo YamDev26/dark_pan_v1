@@ -80,13 +80,16 @@
         ->where('mm.register_id', $student)
         ->where('mm.cutting_school_year_id', $cutting);
       })
+      ->leftJoin('classe_teachers as ct', function ($join) use ($classe) {
+        $join->on('ct.level_matter_id', '=', 'lm.id')
+        ->join('users as u', 'u.id', '=', 'ct.user_id')
+        ->where('ct.get_classe_id', $classe['id']);
+      })
       ->select(
-        'm.libelle',
-        'm.symbol',
-        'lm.value as values',
-        'mm.moyenne',
-        'mm.rang',
-        'm.bilan_matter_id as bilan',
+        'm.libelle', 'm.symbol',
+        'lm.value as values', 'mm.moyenne',
+        'mm.rang', 'm.bilan_matter_id as bilan',
+        'u.civility', 'u.first_name', 'u.last_name'
       )
       ->selectRaw('COALESCE(mm.moyenne, 0) * COALESCE(lm.value, 0) as total')
       ->where('lm.level_id', $classe['level_id'])
@@ -144,11 +147,19 @@
     }
 
 
-    public function getStudent($student, $classe) {
+    public function getStudent($student, $classe, $cutting) {
       return DB::table('registers as r')
       ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
       ->join('students as s', 's.id', '=', 'ss.student_id')
       ->join('notionalities as n', 'n.id', '=', 's.notionalitie_id')
+      ->leftJoin('moyenne_trimestres as mt', function ($join) use ($cutting) {
+        $join->on('mt.register_id', '=', 'r.id')
+        ->where('mt.cutting_school_year_id', $cutting);
+      })
+      ->leftJoin('absences as a', function ($join) use ($cutting) {
+        $join->on('a.register_id', '=', 'r.id')
+        ->where('a.cutting_school_year_id', $cutting);
+      })
       ->where([
         'r.id' => $student,
         'r.get_classe_id' => $classe
@@ -156,8 +167,11 @@
       ->select([
         'r.id', 's.matricul', 's.first', 's.last', 's.genre',
         's.lieu', 'r.affecte', 'r.redoubant', 'r.boursier',
-        'r.interne', 'r.image',  's.date', 'n.libelle'
+        'r.interne', 'r.image',  's.date', 'n.libelle',
+        'mt.moyenne', 'mt.rang', 'mt.values',
+        'a.absens1', 'a.absens2', 'a.totals'
       ])
+      ->selectRaw('COALESCE(mt.moyenne, 0) * COALESCE(mt.values, 0) as total')
       ->first();
     }
 
