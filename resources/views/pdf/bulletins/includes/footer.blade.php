@@ -1,7 +1,7 @@
 <div class="footer">
   <span class="footer-text">
-  {{ $school->email }} • {{ $school->addres }} •
+  {{ $school->email ?? 'Adresse email' }} • {{ $school->addres ?? 'Adresse postale' }} •
   {{ $school->phon }} • {{ $classe->libelle }} • 
-  {{date('Y-m-d').' ~ N°'.$string.'-'.$school->id}}
+  {{ date('d-m-Y').' ~ N°'.$string.'-'.$school->id }}
   </span>
 </div>

@@ -15,7 +15,7 @@
             </div>
             <div class="row">
               <div class="col-4 pt-0 text-center">
-                <img class="img-fluid mx-auto" src="{{ asset('assets/img/testimonial-2.jpg') }}" style="width: 100px; height: 90px; border:1px solid; border-radius: 5px">
+                <img class="img-fluid mx-auto" src="{{ asset('assets/img/student_2.png') }}" style="width: 100px; height: 90px; border:1px solid; border-radius: 5px">
               </div>
               <div class="col-8 pt-4">
                 <p class="mb-1" id="addGenre" style="font-size: 17px"></p>

@@ -73,18 +73,19 @@
       </div>
     </div>
     <div class="nav-item dropdown">
-      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-        <img class="rounded-circle me-lg-2" src="{{ asset('assets/img/user.jpg') }}" alt="" style="width: 40px; height: 40px;">
-        <span class="d-none d-lg-inline-flex">John Doe</span>
+      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" title="{{ formatNameUser()['role'] }}">
+        <img class="rounded-circle me-lg-2" src="{{ asset('assets/img/user.png') }}" alt="" style="width: 40px; height: 40px; background: #6C7293">
+        <span class="d-none d-lg-inline-flex">{{ formatNameUser()['name'] }}</span>
+        {{-- <p style="position: fixed; font-size: 11px; margin-left: 50px; padding-bottom: 45px">Enseignant</p> --}}
       </a>
       <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-        <a href="#" class="dropdown-item">
+        <a href="{{ route('profils.index') }}" class="dropdown-item">
           <i class="fas fa-user"></i>
           My Profile
         </a>
-        <a href="#" class="dropdown-item">
+        <a href="{{ route('profils.create') }}" class="dropdown-item">
           <i class="fas fa-lock"></i>
-          Settings
+          PasssWord
         </a>
         <hr class="my-1">
         <form action="{{ route('logout') }}" method="post">

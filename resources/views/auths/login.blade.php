@@ -31,8 +31,8 @@
             <a href="{{ route('password.request') }}">Forgot Password</a>
           </div>
           <button type="submit" class="btn btn-primary py-2 w-100 mb-4">Sign In</button>
-          <p class="text-center mb-0" style="font-size: 10px">
-            <i>Nouvelle Génération de Gestion</i>
+          <p class="text-center mb-0" style="position: relative; font-size: 10px; bottom: -30px">
+            <i>L'innovation au cœur de tout</i>
           </p>
         </form>
       </div>

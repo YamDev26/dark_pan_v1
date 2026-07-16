@@ -31,8 +31,8 @@
       <div class="col-md-4 text-center">
         <i class="bi bi-exclamation-triangle display-1 text-primary"></i>
         <h1 class="mb-4">Compte Inactif</h1>
-        <p class="mb-4">Désolé, votre compte a été désactivé. <br> Veuillez contacter l'administrateur !</p>
-        <a class="btn btn-primary py-2 px-5" href="{{ route('login') }}">Back To Home</a>
+        <p class="mb-4">Désolé, votre compte a été désactivé. <br> Veuillez contacter le directeur !</p>
+        <a class="btn btn-primary py-2 px-5" href="{{ route('login') }}">Back To Login</a>
       </div>
     </div>
   </div>

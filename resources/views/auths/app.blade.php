@@ -23,7 +23,7 @@
 
   <style>
     body {
-      background-image: linear-gradient(rgba(23, 23, 23, 0.6), rgba(23, 23, 23, 0.6)), url('assets/img/auth_bg.jpg');
+      background-image: linear-gradient(rgba(23, 23, 23, 0.6), rgba(23, 23, 23, 0.6)), url('assets/img/auth.jpg');
       background-size: cover;        /* L'image couvre tout le bloc */
       background-position: center;   /* Centre l'image */
       background-repeat: no-repeat;  /* Pas de répétition */
@@ -44,6 +44,9 @@
     {{-- <img src="{{ asset('assets/img/auth_bg.jpg') }}" alt="" srcset=""> --}}
 
     @yield('content')
+    <div class="tect-center" style="position: fixed; width: 100%; text-align: center; bottom: 0px; color: rgb(217, 213, 213); font-style: italic; font-size: 12px">
+      Votre réussite, Notre engagement.
+    </div>
   </div>
 
   <!-- JavaScript Libraries -->

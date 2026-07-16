@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('classe_teachers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->boolean('checked')->default(false);
+            $table->boolean('checked')->default(false); // Indication du prof principal
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('get_classe_id');
             $table->unsignedBigInteger('level_matter_id');

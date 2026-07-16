@@ -2,6 +2,6 @@
 @section('title', 'dashboard')
 @section('content')
 
-  @include('partials.dashboard.enseignant')
+  @include('partials.dashboard._enseignant')
   
 @endsection

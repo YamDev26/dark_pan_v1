@@ -15,7 +15,7 @@
           <strong style="font-size: 18px; line-height: 1.8">{{ strtoupper($school->name) }}</strong>
         </div>
         <div class="school-contact" style="margin: 0px; font-size: 13px">
-          {{ $school->email ?? 'Adresse email' }} • {{ $school->addres ?? 'Adresse postal' }} • Tél : {{ $school->phon }}
+          {{ $school->email ?? 'Adresse email' }} • {{ $school->addres ?? 'Adresse postale' }} • Tél : {{ $school->phon }}
         </div>
         <span style="color: #d6d3d3">--------------------</span>
         <div style="margin: 0px; font-size: 13px">
@@ -60,7 +60,7 @@
       </td>
 
       <td class="photo" style="padding:0%">
-        <img src="{{ public_path('assets/img/user.jpg') }}" alt="" style="width: 80px; height: 80px; margin:0%">
+        <img src="{{ public_path('assets/img/student_2.png') }}" alt="" style="width: 90px; height: 80px; margin:0%;">
       </td>
     </tr>
   </table>

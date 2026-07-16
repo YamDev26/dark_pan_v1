@@ -16,7 +16,7 @@
           <div class="mb-3 py-2">
             <div class="d-flex justify-content-around">
               <h6>Premières Informations</h6>
-              <hr class="w-75" style="border: 2px solid">
+              <hr class="w-75" style="border: 1px solid">
             </div>
             <div class="row">
               <div class="col-12 col-sm-6 mb-2">
@@ -41,7 +41,7 @@
           <div class="mb-3 py-3">
             <div class="d-flex justify-content-around">
               <h6>Informations Sécondaires</h6>
-              <hr class="w-75" style="border: 2px solid">
+              <hr class="w-75" style="border: 1px solid">
             </div>
             <div class="row">
               <div class="col-12 col-sm-6 mb-2">
@@ -79,7 +79,7 @@
           <div class="mb-3 py-2">
             <div class="d-flex justify-content-around">
               <h6>Autres Informations</h6>
-              <hr class="w-75" style="border: 2px solid">
+              <hr class="w-75" style="border: 1px solid">
             </div>
             <div class="row">
               <div class="col-2 col-sm-2 mb-2">
@@ -178,7 +178,7 @@
               </div>
             </div>
           </div>
-          <hr style="border: 2px solid">
+          <hr style="border: 1px solid">
           <div class="text-center">
             <button type="button" class="btn btn-primary w-25 py-2" data-bs-toggle="modal" data-bs-target="#myModal">Valider From</button>
           </div>

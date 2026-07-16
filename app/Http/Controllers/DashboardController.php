@@ -30,12 +30,19 @@ class DashboardController extends Controller
 
             $this->service->updateCuttingDate();
 
-            return view('pages.dashboard');
+
+            // dd(count($this->service->getTableTime()));
+
+            return view('pages.dashboard',[
+                'times' => $this->service->getTime(),
+                'days' => $this->service->getDayWeek(),
+                'data' => $this->service->getTableTime()
+            ]);
         }
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'
+                'msg' => 'Une erreur est survenue !'.$e->getMessage()
             ]);
         }
     }

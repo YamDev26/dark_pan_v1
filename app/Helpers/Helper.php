@@ -1,5 +1,16 @@
 <?php
 
+  if(!function_exists('formatNameUser')) {
+    function formatNameUser() {
+      $user = auth()->user();
+      $lettre = mb_substr($user->last_name, 0, 2);
+      return [
+        'name' => ucwords($user->civility .' '. $user->first_name .' '. $lettre.'...'),
+        'role' => ucwords($user->role->libelle)
+      ];
+    }
+  }
+
   // Gestion Classement Student --------------------
   if(!function_exists('ClassementStudent')) {
     function ClassementStudent(array $data): array {
@@ -153,5 +164,24 @@
 
       $lettre = mb_substr($explode[0], 0, 1);
       return ucwords($lettre.' '.$explode[1]);
+    }
+  }
+
+
+  // Emploi du Temps Affiche Enseignant
+  if(!function_exists('getClasseTable')) {
+    function getClasseTable($day, $time, $period, $data) {
+
+      $item = $data->first(fn ($item) =>
+        $item->time == $time
+        && $item->days == $day
+        && $item->period == $period
+      );
+
+      if (! $item) {
+        return null;
+      }
+      
+      return $item->classe.' ['.$item->matter.']';
     }
   }

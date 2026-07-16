@@ -10,6 +10,11 @@ Route::get('/inactif', function () {
 })->name('page.inactif');
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::group(['prefix' => 'profils'], function() {
+        Route::get('/detail', [App\Http\Controllers\UserConnectController::class, 'index'])->name('profils.index');
+        Route::get('/change-pwd', [App\Http\Controllers\UserConnectController::class, 'create'])->name('profils.create');
+        Route::post('/change-pwd', [App\Http\Controllers\UserConnectController::class, 'store'])->name('profils.store');
+    });
 
     // Route Du Super Admin
     Route::group(['middleware' => 'SuperAdmin'], function() {
