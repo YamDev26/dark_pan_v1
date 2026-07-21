@@ -5,7 +5,7 @@
   <div class="row g-4">
     <div class="col-12 px-4">
       <div class="bg-secondary rounded h-100 p-4">
-        <div class="mb-4 d-flex justify-content-between">
+        <div class="mb-4 d-flex justify-content-between" style="border-bottom: 1px solid #6C7293">
           <h5 class="m-2">{{ $data ? 'Edit':'Create' }} School</h5>
           <p style="text-align:left">Les champs avec astérisque (<span class="text-danger" style="font-size: 17px">*</span>) sont obligatoires.</p>
           <a href="{{ route('setting.index') }}" class="btn btn-outline-light m-2 py-1">Return</a>
@@ -180,7 +180,7 @@
           </div>
           <hr style="border: 1px solid">
           <div class="text-center">
-            <button type="button" class="btn btn-primary w-25 py-2" data-bs-toggle="modal" data-bs-target="#myModal">Valider From</button>
+            <button type="button" class="btn btn-primary w-25 py-1" data-bs-toggle="modal" data-bs-target="#myModal">Valider</button>
           </div>
         </form>
       </div>

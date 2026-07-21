@@ -27,7 +27,7 @@
 @section('content')
 <div class="container-fluid pt-4 px-4">
   <div class="bg-secondary text-center rounded p-4">
-    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
+    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 1px solid #6C7293">
       <h4 class="mb-0">{{ ucwords($cutting['cutting']['libelle']) }}</h4>
       <div class="my-0">
         <h4 class='my-0'>{{ $classe['libelle'] }}</h4>
@@ -40,18 +40,18 @@
     </div>
     <div class="row g-4 pt-3">
       <div class="col-sm-12 col-xl-6">
-        <h5 class="mb-4 text-left">Cartes statistiques</h5>
+        <h6 class="mb-4 text-left">Statistiques classe</h6>
         <div class="table-responsive">
-          <span class="mb-3">Travail insuffisant</span>
+          <span class="mb-2">Travail insuffisant</span>
           @include('partials._table_resultat')
         </div>
       </div>
       <div class="col-sm-12 col-xl-6">
-        <h5 class="mb-4 text-left">Répartition des moyennes</h5>
+        <h6 class="mb-4 text-left">Répartition des moyennes</h6>
         <canvas id="myChart" width="400" height="250"></canvas>
       </div>
       <div class="col-12 mb-2 mt-4">
-        <h5 class="mb-0 text-left">Statistique des matières</h5>
+        <h6 class="mb-0 text-left">Statistique des matières</h6>
         <canvas id="myScale" width="400" height="150" aria-label="Hello ARIA World" role="img"></canvas>
       </div>
     </div>
@@ -70,8 +70,8 @@
         datasets: [{
           label: 'Nommbre d\'élève ',
           data: [
-            {{ $tranche['moyenne_0_849'] }}, {{ $tranche['moyenne_850_999'] }}, {{ $tranche['moyenne_10_1199'] }},
-            {{ $tranche['moyenne_12_1399'] }}, {{ $tranche['moyenne_14_1599'] }}, {{ $tranche['moyenne_16_plus'] }}
+            {{ $tranche ? $tranche['moyenne_0_849']:0 }}, {{ $tranche ? $tranche['moyenne_850_999']:0 }}, {{ $tranche ? $tranche['moyenne_10_1199']:0 }},
+            {{ $tranche ? $tranche['moyenne_12_1399']:0 }}, {{ $tranche ? $tranche['moyenne_14_1599']:0 }}, {{ $tranche ? $tranche['moyenne_16_plus']:0 }}
           ],
           backgroundColor: [
             '#6C7293',

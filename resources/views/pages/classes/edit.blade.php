@@ -1,5 +1,5 @@
 @extends('app')
-@section('title', 'Emploi Du Temps '.$classe['libelle'])
+@section('title', 'Add teacher '.$classe['libelle'])
 
 @section('content')
 <div class="container-fluid pt-4 px-4">
@@ -7,7 +7,7 @@
     <div class="col-sm-12">
       <div class="h-100 bg-secondary rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-2">
-          <h4 class="mb-0">Add Teacher</h4>
+          <h4 class="mb-0">Teacher</h4>
           <h4 class="mb-0">{{ $classe['libelle'] }}</h4>
           <div class="d-flex">
             <a href="{{ route('classe.list', $classe['id']) }}" class="btn btn-outline-light py-1">Return</a>
@@ -40,7 +40,7 @@
                           <select name="teacher[]" class="form-select mb-0" style="background: none">
                             <option value="">---</option>
                             @foreach ($users as $user)
-                              <option value="{{ $user->id.'_'.$i+1 }}">
+                              <option value="{{ $user->id.'_'.$i+1 }}" {{ $user->matter == $matter->id ? 'selected':'' }}>
                                 {{ ucwords($user->civility).' '.strtoupper($user->first_name).' '.ucwords($user->last_name) }}
                               </option>
                             @endforeach
@@ -56,7 +56,7 @@
               </div>
               <hr class="mt-1" style="border: 1px solid">
               <div class="text-center mb-O">
-                <button type="button" class="btn btn-primary w-25 py-2" data-bs-toggle="modal" data-bs-target="#myModal">Valider From</button>
+                <button type="button" class="btn btn-primary w-25 py-1" data-bs-toggle="modal" data-bs-target="#myModal">Valider</button>
               </div>
             </form>
           </div>

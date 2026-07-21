@@ -1,10 +1,5 @@
 @extends('app')
 @section('title','Change PassWord')
-@section('link')
-<style>
- 
-</style>
-@endsection
 @section('content')
 <div class="container-fluid pt-4 px-4">
   <div class="row">
@@ -46,7 +41,7 @@
             </div>
             <hr style="border: 1px solid">
             <div class="text-center">
-              <button type="submit" class="btn btn-primary w-25 py-1">Valider From</button>
+              <button type="submit" class="btn btn-primary w-25 py-1">Valider</button>
             </div>
           </form>
         </div>
@@ -54,11 +49,4 @@
     </div>
   </div>
 </div>
-@endsection
-@section('script')
-<script>
-  $(document).ready(function() {
-
-  });
-</script>
 @endsection

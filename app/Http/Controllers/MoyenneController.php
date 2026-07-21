@@ -55,6 +55,14 @@ class MoyenneController extends Controller
     {
         try {
             list($classe, $matter, $cutting) = explode('_', $str);
+
+            if($this->service->getCloseCutting($cutting)) {
+                return to_route('moyenne.list', $str)->with([
+                    'str' => 'danger',
+                    'msg' => 'Erreur, données incorrestes !'
+                ]);
+            }
+
             $data = $this->verifyMatter($classe, $matter, $cutting);
             return view('pages.moyennes.create_'.$data['number'],[
                 'datas' => $data['data'],
@@ -347,6 +355,13 @@ class MoyenneController extends Controller
     {
         try {
             list($classId, $cuttingId) = explode('_', $str);
+            if($this->service->getCloseCutting($cuttingId)) {
+                return to_route('moyenne.show', $str)->with([
+                    'str' => 'danger',
+                    'msg' => 'Erreur, données incorrestes !'
+                ]);
+            }
+
             $classe = $this->service->getClasse($classId);
             $cutting = $this->service->getCutting($cuttingId);
             $dts = $this->service->moyenneTrimestreClasseStudent(

@@ -15,7 +15,6 @@ class DashboardController extends Controller
     }
     
 
-
     public function index()
     {
         try{
@@ -29,20 +28,12 @@ class DashboardController extends Controller
             }
 
             $this->service->updateCuttingDate();
-
-
-            // dd(count($this->service->getTableTime()));
-
-            return view('pages.dashboard',[
-                'times' => $this->service->getTime(),
-                'days' => $this->service->getDayWeek(),
-                'data' => $this->service->getTableTime()
-            ]);
+            return view('pages.dashboard');
         }
         catch (\Exception $e) {
             return back()->with([
                 'str' => 'danger',
-                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+                'msg' => 'Une erreur est survenue !'
             ]);
         }
     }

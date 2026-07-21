@@ -43,7 +43,7 @@
               <div class="my-0">
                 @foreach ($value as $i => $int)
                   <div class="form-check form-check-inline mx-3">
-                    <input type="radio" name="note" class="form-check-input" id="intE-{{ $i }}" value="{{ $int }}" {{ $i == 1 ? 'checked':'' }}>
+                    <input type="radio" name="note" class="form-check-input radioEdit" id="intE-{{ $i }}" value="{{ $int }}" {{ $i == 1 ? 'checked':'' }}>
                     <label class="form-check-label" for="intE-{{ $i }}">{{ $int }}</label>
                   </div>
                 @endforeach

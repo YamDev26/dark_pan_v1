@@ -5,15 +5,14 @@
   <div class="row g-4">
     <div class="col-sm-12">
       <div class="h-100 bg-secondary rounded px-4 pt-2 pb-0">
-        <div class="d-flex align-items-center justify-content-between mb-0">
-          <h4 class="mb-0">Detail Heures</h4>
+        <div class="d-flex align-items-center justify-content-between mb-0" style="border-bottom: 1px solid #6C7293">
+          <h4 class="mb-0">Horaires</h4>
           @if (count($data['dt1']))
             <h3><i class="fa fa-user-edit text-primary"></i></h3>
           @else
             <a href="{{ route('slot.create') }}" class="btn btn-outline-primary py-0">Add</a>
           @endif
         </div>
-        <hr class="mt-0">
         <div class="my-2">
           <div class="bg-secondary text-center rounded p-sm-4">
             <div class="table-responsive">
@@ -34,7 +33,9 @@
                       <td class="text-center">{{ $item1['dbt'] }}</td>
                       <td class="text-center">{{ $item1['fin'] }}</td>
                       <td class="text-center">
-                        <buttom type="buttom" data-id="{{ $item1['id'] }}" class="btn btn-sm btn-warning text-white py-1">Edit</buttom>
+                        <buttom type="buttom" data-id="{{ $item1['id'] }}" class="btn btn-sm btn-light text-white py-0">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </buttom>
                       </td>
                     </tr>
                   @endforeach
@@ -49,7 +50,9 @@
                       <td class="text-center">{{ $item2['dbt'] }}</td>
                       <td class="text-center">{{ $item2['fin'] }}</td>
                       <td class="text-center">
-                        <buttom type="buttom" data-id="{{ $item2['id'] }}" class="btn btn-sm btn-warning text-white py-1">Edit</buttom>
+                        <buttom type="buttom" data-id="{{ $item2['id'] }}" class="btn btn-sm btn-light text-white py-0">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </buttom>
                       </td>
                     </tr>
                   @endforeach  

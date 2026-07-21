@@ -1,7 +1,10 @@
 <?php
   namespace App\Services;
 
+  use App\Models\User;
   use App\Models\School;
+  use App\Models\SlotTime;
+  use App\Models\DaysWeek;
   use App\Models\SchoolYear;
   use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Facades\Auth;
@@ -11,9 +14,59 @@
   {
     private $schl; private const TEACHER = 8;
     public function __construct() {
-      $this->schl = Auth::user()->school_id ?? 1;
+      $this->schl = Auth::user()->school_id;
     }
-    
+
+    public function school() {
+      return School::find($this->schl);
+    }
+
+    public function schoolYear() {
+      $data = SchoolYear::where('status', '1')->first();
+      return $data->libelle;
+    }
+
+    public function getUser($str) {
+      return User::find($str);
+    }
+
+    public function getDayWeek() {
+      return DaysWeek::orderBy('order')->get();
+    }
+
+    public function getTime() {
+      $times = SlotTime::where('school_id', $this->schl)
+      ->orderBy('order')
+      ->get()
+      ->groupBy('period');
+      return [$times->get(1, collect()), $times->get(2, collect())];
+    }
+
+
+    public function getTableTime($user) {
+      $schoolYearId = $this->yearActif();
+      return DB::table('classe_teachers as ct')
+      ->join('get_classes as gc', 'gc.id', '=', 'ct.get_classe_id')
+      ->join('level_matters as lm', 'lm.id', '=', 'ct.level_matter_id')
+      ->join('matters as m', 'm.id', '=', 'lm.matter_id')
+      ->join('table_times as tt', function ($join) {
+        $join->on('tt.level_matter_id', '=', 'ct.level_matter_id')
+        ->on('tt.get_classe_id', '=', 'ct.get_classe_id');
+      })
+      ->where([
+        ['ct.user_id', '=', $user],
+        ['gc.school_year_id', '=', $schoolYearId],
+      ])
+      ->select([
+        'gc.libelle as classe',
+        'tt.days_week_id as days',
+        'tt.slot_time_id as time',
+        'm.symbol as matter',
+        'tt.period',
+      ])
+      ->get();
+    }
+
     
     public function getDataTable() {
       $query = $this->getTeacher();
@@ -22,39 +75,29 @@
       ->addColumn('compte', function() use (&$compte) {
         return ($compte < 9 ? '0'.++$compte : ++$compte);
       })
-      ->addColumn('name', function ($row) {
-        return (
-          ucwords($row->civility).' '.
-          strtoupper($row->first_name)
-          .' '.ucwords($row->last_name)
-        );
+      ->addColumn('first', function ($row) {
+        return (strtoupper($row->first_name));
+      })
+      ->addColumn('last', function ($row) {
+        return (ucwords($row->last_name));
+      })
+      ->addColumn('sexe', function ($row) {
+        return ($row->civility == 'mr' ? 'Homme':'Femme');
+      })
+      ->addColumn('classe', function ($row) {
+        return (sprintf('%02d', $row->heures));
       })
       ->addColumn('horaire', function ($row) {
-        return (
-          ($row->heures < 10 ? '0'.$row->heures:$row->heures).'H'
-        );
+        return (sprintf('%02d', $row->heures).'H');
       })
       ->addColumn('action', function ($row) {
         $url = route('horraire.show', $row->id);
-        return ('<a href="'.$url.'" class="btn btn-sm btn-light text-white py-0">Detail</a>');
+        return ('<a href="'.$url.'" class="btn btn-sm btn-light text-white py-0">
+          <i class="fas fa-ellipsis-h"></i>
+        </a>');
       })
-      ->rawColumns(['compte', 'name', 'horaire', 'action'])
+      ->rawColumns(['compte', 'first', 'last', 'sexe', 'classe', 'horaire', 'action'])
       ->make(true);
-    }
-
-
-    public function getHoraireClasse($teacher) {
-      return DB::table('classe_teachers as ct')
-      ->join('get_classes as gc', 'gc.id', '=', 'ct.get_classe_id')
-      ->where('gc.school_year_id', $this->yearActif())
-      ->where('ct.user_id', $teacher)
-      ->select(
-        'gc.libelle',
-        DB::raw('COUNT(*) as heures')
-      )
-      ->groupBy('gc.id', 'gc.libelle')
-      ->orderBy('gc.level_id')
-      ->get();
     }
     
 
@@ -92,9 +135,5 @@
     private function yearActif() {
       $year = SchoolYear::where('status', '1')->first();
       return $year ? $year->id:null;
-    }
-
-    private function school() {
-      return School::find($this->schl) ?? null;
     }
   }

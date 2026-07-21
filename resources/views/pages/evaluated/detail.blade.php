@@ -45,7 +45,10 @@
                   $isActive = $item['actif'] == 2 || (!$hasActif && $loop->first);
                 @endphp
                 <div class="tab-pane fade {{ $isActive ? 'active show' : '' }}" id="content-{{ $i }}" role="tabpanel" aria-labelledby="tab-{{ $i }}">
-                  @include('partials._table_evaluated', ['data' => $item['evaluated']])
+                  @include('partials._table_evaluated', [
+                    'data' => $item['evaluated'],
+                    'url' => 'note.show'
+                  ])
                 </div>
               @endforeach
             </div>
@@ -56,7 +59,9 @@
   </div>
 </div>
 <!-- Modal Add Evaluated -->
-@include('partials._modal_new_evaluated')
+@include('partials._modal_new_evaluated', [
+  'url' => route('evaluated.store')
+])
 
 <!-- Modal Add Evaluated -->
 @include('partials._modal_edit_evaluated')

@@ -27,7 +27,7 @@
 @section('content')
 <div class="container-fluid pt-4 px-4">
   <div class="bg-secondary text-center rounded p-4">
-    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
+    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 1px solid #6C7293">
       <h4 class="mb-0">Inscription</h4>
       <div class="d-flex">
         <select class="form-select form-select w-auto border-0 text-color-3 mx-2" id="mySelect">
@@ -205,7 +205,8 @@
 
 
     $(document).on('click', '.dtlBtn', function() {
-      const id = $(this).data('id');
+      const id = $(this).data('id'); formatcheckbox();
+      $('#dltsBtn').attr('data-id', id);
       $('#myDetail').attr(
         'action', "{{ route('register.pdf', ':id') }}".replace(':id', id)
       );
@@ -231,8 +232,23 @@
     });
 
 
-    $(document).on('click', '.deleteBtn', function() {
+    $(document).on('click', 'input[name="deletes"]', function() {
+      
+      if($('input[name="deletes"]:checked').length) {
+        $('#dltsBtn').show();
+        $('#principalBtn').hide();
+      }
+      else {
+        $('#dltsBtn').hide();
+        $('#principalBtn').show();
+      }
+
+    });
+
+
+    $(document).on('click', '#dltsBtn', function() {
       $id = $(this).data('id');
+      $("#DtailModal").modal("hide");
       ajax($id, function(data) {
         console.log(data);
         $('#dtleName').text(data['name']);
@@ -329,6 +345,13 @@
           callback(data);
         }
       })
+    }
+
+    function formatcheckbox() {
+      $('#dltsBtn').hide();
+      $('#principalBtn').show();
+      $('#dltsBtn').attr('data-id', null);
+      $('input[name="deletes"]').prop('checked', false);
     }
   });
 </script>

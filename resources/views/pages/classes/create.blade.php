@@ -6,14 +6,13 @@
   <div class="row g-4">
     <div class="col-sm-12">
       <div class="h-100 bg-secondary rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-2">
-          <h4 class="mb-0">Add emploi du temps</h4>
+        <div class="d-flex align-items-center justify-content-between mb-2 pb-2" style="border-bottom: 1px solid #6C7293">
+          <h4 class="mb-0">Edit Emploi du temps</h4>
           <h4 class="mb-0">{{ $classe['libelle'] }}</h4>
           <div class="d-flex">
             <a href="{{ route('classe.time', $classe['id']) }}" class="btn btn-outline-light py-1">Return</a>
           </div>
         </div>
-        <hr>
         <div class="my-2">
           <div class="bg-secondary text-center rounded">
             <form action="{{ route('classe.add', $classe['id']) }}" method="post" id="myForm">
@@ -42,9 +41,9 @@
                   </tbody>
                 </table>
               </div>
-              <hr class="mt-1" style="border: 1px solid">
+              <hr class="mt-1" style="border: 1px solid #6C7293">
               <div class="text-center mb-O">
-                <button type="button" class="btn btn-primary w-25 py-2" data-bs-toggle="modal" data-bs-target="#myModal">Valider From</button>
+                <button type="button" class="btn btn-primary w-25 py-1" data-bs-toggle="modal" data-bs-target="#myModal">Valider</button>
               </div>
             </form>
           </div>

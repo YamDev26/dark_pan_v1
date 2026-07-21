@@ -73,8 +73,9 @@
         ->on('tt.get_classe_id', '=', 'ct.get_classe_id');
       })
       ->where([
-        ['ct.user_id', '=', $this->user],
-        ['gc.school_year_id', '=', $schoolYearId],
+        'ct.user_id' => $this->user,
+        'gc.school_id' => $this->schl,
+        'gc.school_year_id' => $schoolYearId
       ])
       ->select([
         'gc.libelle as classe',
@@ -84,6 +85,20 @@
         'tt.period',
       ])
       ->get();
+    }
+
+
+    public function nbreClasseTeacher() {
+      $schoolYearId = $this->actifYear()['id'];
+      return DB::table('classe_teachers as ct')
+      ->join('get_classes as gc', 'gc.id', '=', 'ct.get_classe_id')
+      ->where([
+        'ct.user_id' => $this->user,
+        'gc.school_id' => $this->schl,
+        'gc.school_year_id' => $schoolYearId
+      ])
+      ->distinct('gc.id')
+      ->count();
     }
 
 

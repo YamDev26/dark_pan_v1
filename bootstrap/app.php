@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->appendToGroup('SuperAdmin', [App\Http\Middleware\henshawUserHasAdmin::class]);
         $middleware->appendToGroup('UserAutres', [App\Http\Middleware\henshawUserHasAutres::class]);
+        $middleware->appendToGroup('UserEnseigment', [App\Http\Middleware\hensHawUserHasEnseigment::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

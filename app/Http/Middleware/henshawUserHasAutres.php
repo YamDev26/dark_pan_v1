@@ -15,7 +15,7 @@ class henshawUserHasAutres
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!($request->user()->role->libelle === 'SuperAdmin')){
+        if(in_array($request->user()->role->libelle, ['admin', 'fondateur', 'directeur'])) {
             return $next($request);
         }
         else{

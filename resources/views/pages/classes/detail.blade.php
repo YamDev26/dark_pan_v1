@@ -5,14 +5,13 @@
   <div class="row g-4">
     <div class="col-sm-12">
       <div class="h-100 bg-secondary rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-2">
+        <div class="d-flex align-items-center justify-content-between mb-2 pb-2" style="border-bottom: 1px solid #6C7293">
           <h4 class="mb-0">Detail {{ $level['symbol'] }}</h4>
           <div>
             <button type="button" id="addNew" class="btn btn-outline-primary py-1 mx-2" data-id="{{ $level['id'] }}">Nouvelle</button>
             <a href="{{ route('classe.index') }}" class="btn btn-outline-light py-1">Return</a>
           </div>
         </div>
-        <hr>
         <div class="my-2">
           <div class="bg-secondary text-center rounded p-sm-4">
             <div class="table-responsive">

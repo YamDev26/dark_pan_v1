@@ -1,7 +1,7 @@
 <div class="modal" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document" >
     <div class="modal-content pb-0" style="background: #191C24">
-      <form action="{{ route('evaluated.store') }}" method="post">
+      <form action="{{ $url }}" method="post">
         @csrf
         <div class="modal-header pt-2 pb-0 mb-0">
           <h5 class="modal-title" id="myModalLabel">Nouvelle Evaluation</h5>

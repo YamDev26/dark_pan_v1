@@ -30,11 +30,11 @@
   <div class="bg-secondary text-center rounded p-4">
     <form action="{{ route('resultat.pdf', $classe['id'].'_'.$cutting['id']) }}" method="post" target="_black" id="myForm">
       @csrf
-      <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
+      <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 1px solid #6C7293">
         <h4 class="mb-0">{{ ucwords($cutting['cutting']['libelle']) }}</h4>
         <div class="my-0">
           <h4 class='my-0'>{{ $classe['libelle'] }}</h4>
-          <span class="my-0">Resultat</span>
+          {{-- <span class="my-0">Resultat</span> --}}
         </div>
         <div class="d-flex">
           <button type="submit" class="btn btn-outline-danger mx-2 py-1">Generate</button>

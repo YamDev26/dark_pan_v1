@@ -27,7 +27,7 @@
 @section('content')
 <div class="container-fluid pt-4 px-4">
   <div class="bg-secondary text-center rounded p-4">
-    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
+    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 1px solid #6C7293">
       <h4 class="mb-0">Gestion Evaluation</h4>
       <h3><i class="fa fa-user-edit text-primary"></i></h3>
     </div>

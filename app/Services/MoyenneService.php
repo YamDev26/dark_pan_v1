@@ -29,9 +29,9 @@
 
 
     public function getCloseCutting($cutting) {
-        $verify = CuttingCloseSchool::where('school_id', $this->schl)
-        ->where('cutting_school_year_id', $cutting)->first();
-        return $verify ? true:false;
+      $verify = CuttingCloseSchool::where('school_id', $this->schl)
+      ->where('cutting_school_year_id', $cutting)->first();
+      return $verify ? true:false;
     }
     
     public function getDataTableClasse() {
@@ -52,7 +52,7 @@
       ->addColumn('action', function ($row) {
         return (
           '<select class="w-auto border-0 text-color-3" onchange="window.location.href=this.value;" style="background:none; color: #6C7293">
-            <option value="">...</option>
+            <option value="">select ...</option>
             '.$this->listCutting($row->id).'
           </select>'
         );

@@ -23,7 +23,7 @@
 
   <style>
     body {
-      background-image: linear-gradient(rgba(23, 23, 23, 0.6), rgba(23, 23, 23, 0.6)), url('assets/img/auth.jpg');
+      background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(2, 2, 2, 0.6)), url('assets/img/auth.jpg');
       background-size: cover;        /* L'image couvre tout le bloc */
       background-position: center;   /* Centre l'image */
       background-repeat: no-repeat;  /* Pas de répétition */

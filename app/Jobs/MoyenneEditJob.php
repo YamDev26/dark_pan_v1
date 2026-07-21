@@ -15,6 +15,7 @@ class MoyenneEditJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
     private $data, $matter, $cutting, $classe;
+
     public function __construct($data, $matter, $cutting, $classe)
     {
         $this->data = $data;
@@ -36,9 +37,13 @@ class MoyenneEditJob implements ShouldQueue
         }
 
         // Déclenchement de job
+        $cuts = $service->getCutting($this->cutting);
         Bus::chain([
             new MoyenneBilanMatterJob($this->data, $this->matter, $this->cutting, $this->classe->id),
             new TauxReussiteMatterJob($this->matter, $this->cutting, $this->classe->id),
+            $cuts->cutting->end == '1' ? 
+            new MoyenneAnnuelleMatterJob($this->matter, $this->cutting, $this->classe->id)
+            :null // calcul de la moyenne annuelle ---------------->
         ])->dispatch();
     }
 }

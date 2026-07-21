@@ -31,7 +31,7 @@
 @section('content')
 <div class="container-fluid pt-4 px-4">
   <div class="bg-secondary text-center rounded p-4">
-    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
+    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 1px solid #6C7293">
       <h4 class="mb-0">Edit moyenne</h4>
       <div class="my-0">
         <h4 class='my-0'>{{ 
@@ -78,11 +78,11 @@
           </tbody>
         </table>
       </div>
-      <hr style="border: 2px solid">
+      <hr style="border: 1px solid">
       <div class="text-center">
         <input type="hidden" name="string" value="{{ $classe->id.'_'.$matter->id.'_'.$cutting->id }}">
         <input type="hidden" name="matter" value="autres">
-        <button type="button" class="btn btn-primary w-25 py-2" data-bs-toggle="modal" data-bs-target="#myModal">Valider</button>
+        <button type="button" class="btn btn-primary w-25 py-1" data-bs-toggle="modal" data-bs-target="#myModal">Valider</button>
       </div>
     </form>
   </div>

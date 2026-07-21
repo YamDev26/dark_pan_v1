@@ -13,10 +13,9 @@
           </tr>
         </thead>
         <tbody>
-          @php $i = 1 @endphp
-          @forelse ($data as $item)
+          @forelse ($data as $i => $item)
             <tr>
-              <td class="text-center">{{ $i < 10 ? '0'.$i++:$i++ }}</td>
+              <td class="text-center">{{ sprintf('%02d', $i + 1) }}</td>
               <td class="text-left pl-3">
                 {{ ucwords($item['libelle']).($item['sub'] ? ' - '.$item['sub']:'') }}
               </td>
@@ -30,7 +29,7 @@
                   <i class="fas fa-ellipsis-h"></i>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="min-width: 6rem;">
-                  <li><a href="{{ route('note.show', $item['id']) }}" class="dropdown-item">Note</a></li>
+                  <li><a href="{{ route($url, $item['id']) }}" class="dropdown-item">Note</a></li>
                   <li><a href="#" data-id="{{ $item['id'] }}" class="dropdown-item edit">Edit</a></li>
                   <li><a href="#" class="dropdown-item delete" data-id="{{ $item['id'] }}" data-lib="{{ ucwords($item['libelle']).($item['sub'] ? ' - '.$item['sub']:'') }}">Delete</a></li>
                 </ul>

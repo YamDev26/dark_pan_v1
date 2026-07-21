@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ScheduleService;
-use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ScheduleController extends Controller
 {
@@ -46,9 +46,12 @@ class ScheduleController extends Controller
     public function show(string $id)
     {
         try {
-            $data = $this->service->getHoraireClasse($id);
-
-            dd($data);
+            return view('pages.horaires.detail',[
+                'times' => $this->service->getTime(),
+                'days' => $this->service->getDayWeek(),
+                'teacher' => $this->service->getUser($id),
+                'data' => $this->service->getTableTime($id),
+            ]);
         }
         catch (\Exception $e) {
             return back()->with([
@@ -58,27 +61,27 @@ class ScheduleController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    
+    public function generate(string $id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        try {
+            $pdf = Pdf::loadView('pdf.listes.emploi_temps_prof',[
+                'times' => $this->service->getTime(),
+                'days' => $this->service->getDayWeek(),
+                'teacher' => $this->service->getUser($id),
+                'data' => $this->service->getTableTime($id),
+                'school' => $this->service->school(),
+                'year' => $this->service->schoolYear(),
+                'classe' => null
+            ])
+            ->setPaper('a4', 'landscape');
+            return $pdf->stream('emploi_temps_prof.pdf');
+        }
+        catch (\Exception $e) {
+            return back()->with([
+                'str' => 'danger',
+                'msg' => 'Une erreur est survenue !'.$e->getMessage()
+            ]);
+        }
     }
 }

@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             LevelSeeder::class,
             SerieSeeder::class,
             DaysWeekSeeder::class,
+            DevoirsTypeSeeder::class,
             EvaluatedTypeSeeder::class,
         ]);
 

@@ -18,6 +18,18 @@
     <link href="{{ asset('assets/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+    <style>
+      .alert-count {
+        position: absolute;
+        top: 15px;
+        left: 24px;
+        width: 8px;
+        height: 8px;
+        display: flex;
+        border-radius: 50%;
+        background: #f62718;
+      }
+    </style>
     @yield('link')
 </head>
 

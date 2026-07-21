@@ -4,12 +4,38 @@
     function formatNameUser() {
       $user = auth()->user();
       $lettre = mb_substr($user->last_name, 0, 2);
-      return [
-        'name' => ucwords($user->civility .' '. $user->first_name .' '. $lettre.'...'),
-        'role' => ucwords($user->role->libelle)
-      ];
+      return ucwords($user->civility .' '. $user->first_name .' '. $lettre.'...');
     }
   }
+
+
+  if(!function_exists('getUserRole')) {
+    function getUserRole() {
+      return auth()->user()->role->libelle;
+    }
+  }
+
+  if(!function_exists('getUserDashboard')) {
+    function getUserDashboard() {
+      return match (getUserRole()) {
+        'enseignant' => 'enseigmnt',
+        default => 'admin'
+      };
+    }
+  }
+
+
+  if(!function_exists('getUserMenus')) {
+    function getUserMenus() {
+      $role = getUserRole();
+      return match (true) {
+        $role == 'enseignant' => '_enseigmnt',
+        $role == 'SuperAdmin' => '_admin',
+        in_array($role, ['admin', 'fondateur', 'directeur']) => '_autre'
+      };
+    }
+  }
+
 
   // Gestion Classement Student --------------------
   if(!function_exists('ClassementStudent')) {

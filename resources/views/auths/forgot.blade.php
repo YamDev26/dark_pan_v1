@@ -22,7 +22,10 @@
           </div>
           <button type="submit" class="btn btn-primary py-2 w-100 my-4">Send</button>
           <p class="text-center mb-0">
-            <a href="{{ route('login') }}">Back to Login</a>
+            <a href="{{ route('login') }}">Back to login</a>
+          </p>
+          <p class="text-center mb-0" style="position: relative; font-size: 10px; bottom: -35px">
+            <i>L'innovation Dans Notre Domaine d'Activité !</i>
           </p>
         </form>
       </div>

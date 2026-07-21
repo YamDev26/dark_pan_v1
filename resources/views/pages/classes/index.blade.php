@@ -5,11 +5,10 @@
   <div class="row g-4">
     <div class="col-sm-12">
       <div class="h-100 bg-secondary rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-2">
-          <h4 class="mb-0">Detail Level</h4>
+        <div class="d-flex align-items-center justify-content-between mb-2" style="border-bottom: 1px solid #6C7293">
+          <h4 class="mb-0">Niveau</h4>
           <h3><i class="fa fa-user-edit text-primary"></i></h3>
         </div>
-        <hr>
         <div class="my-2">
           <div class="bg-secondary text-center rounded p-sm-4">
             <div class="table-responsive">
@@ -32,7 +31,9 @@
                       <td class="text-center">{{ ucwords($item['symbol']) }}</td>
                       <td class="text-center">{{ $item->get_classe() }}</td>
                       <td class="text-center">
-                        <a href="{{ route('classe.show', $item['id']) }}" class="btn btn-sm btn-warning text-white py-1">Detail</a>
+                        <a href="{{ route('classe.show', $item['id']) }}" class="btn btn-sm btn-light text-white py-0">
+                          <i class="fas fa-ellipsis-h"></i>
+                        </a>
                       </td>
                     </tr>
                   @empty

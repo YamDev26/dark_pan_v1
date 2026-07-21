@@ -15,7 +15,7 @@ class henshawUserHasAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->user()->role->libelle === 'SuperAdmin'){
+        if($request->user()->role->libelle === 'SuperAdmin') {
             return $next($request);
         }
         else{

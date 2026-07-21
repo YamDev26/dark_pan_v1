@@ -75,7 +75,9 @@
       ->join('users as u', 'u.id', '=', 'ct.user_id')
       ->join('level_matters as lm', 'lm.id', '=', 'ct.level_matter_id')
       ->join('matters as m', 'm.id', '=', 'lm.matter_id')
-      ->select(['u.first_name', 'u.last_name','u.civility', 'm.symbol', 'ct.checked'])
+      ->select([
+        'u.first_name', 'u.last_name','u.civility', 'm.symbol', 'ct.checked'
+      ])
       ->where('ct.get_classe_id', $classe)
       ->orderBy('m.bilan_matter_id')
       ->orderBy('m.position')
@@ -206,10 +208,22 @@
     }
 
 
-    public function getTeachers($status = '1') {
-      return user::where('school_id', $this->schl)
-      ->where(['status' => $status, 'role_id' => self::U_ROLE])
-      ->orderBy('first_name')->orderBy('last_name')->get();
+    public function getTeachers($str, $status = '1') {
+      return DB::table('users as u')
+      ->leftJoin('classe_teachers as ct', function ($join) use ($str) {
+        $join->on('u.id', '=', 'ct.user_id')
+        ->where('ct.get_classe_id', $str);
+      })
+      ->where([
+        'u.status' => $status, 
+        'u.role_id' => self::U_ROLE,
+        'u.school_id' => $this->schl
+      ])
+      ->select([
+        'u.id', 'u.first_name', 'u.last_name', 'u.civility',
+        'ct.level_matter_id as matter', 'ct.checked'
+      ])
+      ->orderBy('u.first_name')->orderBy('u.last_name')->get();
     }
 
 

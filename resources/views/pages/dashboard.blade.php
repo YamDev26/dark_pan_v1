@@ -2,6 +2,6 @@
 @section('title', 'dashboard')
 @section('content')
 
-  @include('partials.dashboard._enseignant')
+  @livewire('dashboard.'.getUserDashboard())
   
 @endsection

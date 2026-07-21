@@ -27,7 +27,7 @@
 @section('content')
 <div class="container-fluid pt-4 px-4">
   <div class="bg-secondary text-center rounded p-4">
-    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
+    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 1px solid #6C7293">
       <h4 class="mb-0">Edit note</h4>
       <div class="my-0">
         <h4 class='my-0'>
@@ -67,17 +67,17 @@
                   <input type="hidden" name="str[]" value="{{$item->id}}">
                   <input type="text" name="note[]" class="form-control mx-0 input" data-not="{{ $item->value * 20 }}" value="{{ $item->note }}" style="width: 90px; background: none; font-size: 19px">
                   <span class="mt-2 px-1 d-flex" style="font-size: 19px">
-                    {{'/ '.$item->value * 20 }}
+                    {{'/ '.$evaluat->value * 20 }}
                   </span>
                 </td>
               </tr>
             @endforeach
           </tbody>
         </table>
-        <hr style="border: 2px solid">
+        <hr style="border: 1px solid">
         <input type="hidden" name="evaluat" value="{{ $evaluat['id'] }}">
         <div class="text-center">
-          <button type="button" class="btn btn-primary w-25 py-2" data-bs-toggle="modal" data-bs-target="#myModal">Valider From</button>
+          <button type="button" class="btn btn-primary w-25 py-1" data-bs-toggle="modal" data-bs-target="#myModal">Valider</button>
         </div>
       </div>
     </form>

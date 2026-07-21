@@ -158,7 +158,7 @@
   <div class="footer">
     <span class="footer-text">
       {{ $school->email }} • {{ $school->addres }} •
-      {{ $school->phon }} • {{ $classe->libelle }} • 
+      {{ $school->phon }} • {{ $classe ? $classe->libelle:'Enseignant' }} • 
       {{date('Y-m-d').' ~ N°'.mt_rand(100, 999).'-'.$school->id}}
     </span>
     @yield('num_page')

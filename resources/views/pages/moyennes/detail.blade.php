@@ -27,7 +27,7 @@
 @section('content')
 <div class="container-fluid pt-4 px-4">
   <div class="bg-secondary text-center rounded p-4">
-    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
+    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 1px solid #6C7293">
       <h4 class="mb-0">{{ ucwords($cutting['cutting']['libelle']) }}</h4>
       <div class="my-0">
         <h4 class='my-0'>{{ $classe['libelle'] }}</h4>

@@ -249,8 +249,7 @@ class ClasseController extends Controller
             return view('pages.classes.edit',[
                 'classe' => $classe,
                 'matters' => $matters,
-                'users' => $this->service->getTeachers(),
-                'data' => []
+                'users' => $this->service->getTeachers($str)
             ]);
         }
         catch (\Exception $e) {

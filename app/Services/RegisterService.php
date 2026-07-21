@@ -187,11 +187,11 @@
       })
       ->addColumn('action', function ($row) {
         return ('<span class="card-block remove-label m-0 pb-0 text-center">
-          <button data-id="'.$row->id.'" class="btn btn-sm btn-warning dtlBtn text-white py-1 me-2">Detail</button>
-          <button data-id="'.$row->id.'" class="btn btn-sm btn-primary me-2 deleteBtn">Delete</button>
+          <button data-id="'.$row->id.'" class="btn btn-sm btn-outline-light dtlBtn py-0 me-2">Detail</button>
         </span>');
       })
       ->rawColumns(['compte', 'matricul', 'first', 'last', 'genre', 'classe', 'action'])
       ->make(true);
+      // <button data-id="'.$row->id.'" class="btn btn-sm btn-primary me-2 deleteBtn">Delete</button>
     }
   }

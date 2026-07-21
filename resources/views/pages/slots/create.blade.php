@@ -66,7 +66,7 @@
           </div>
           <hr style="border: 2px solid">
           <div class="text-center">
-            <button type="button" class="btn btn-primary w-25 py-2" data-bs-toggle="modal" data-bs-target="#myModal">Valider From</button>
+            <button type="button" class="btn btn-primary w-25 py-1" data-bs-toggle="modal" data-bs-target="#myModal">Valider</button>
           </div>
         </form>
       </div>

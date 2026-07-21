@@ -13,6 +13,7 @@
       <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
         <i class="fa fa-envelope me-lg-2"></i>
         <span class="d-none d-lg-inline-flex">Message</span>
+        <span class="alert-count"></span>
       </a>
       <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
         <a href="#" class="dropdown-item">
@@ -52,6 +53,7 @@
       <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
         <i class="fa fa-bell me-lg-2"></i>
         <span class="d-none d-lg-inline-flex">Notificatin</span>
+        <span class="alert-count"></span>
       </a>
       <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
           <a href="#" class="dropdown-item">
@@ -73,10 +75,9 @@
       </div>
     </div>
     <div class="nav-item dropdown">
-      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" title="{{ formatNameUser()['role'] }}">
-        <img class="rounded-circle me-lg-2" src="{{ asset('assets/img/user.png') }}" alt="" style="width: 40px; height: 40px; background: #6C7293">
-        <span class="d-none d-lg-inline-flex">{{ formatNameUser()['name'] }}</span>
-        {{-- <p style="position: fixed; font-size: 11px; margin-left: 50px; padding-bottom: 45px">Enseignant</p> --}}
+      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" title="{{ ucwords(getUserRole()) }}">
+        <i class="fas fa-user" style="font-size: 20px"></i>
+        <span class="d-none d-lg-inline-flex">{{ formatNameUser() }}</span>
       </a>
       <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
         <a href="{{ route('profils.index') }}" class="dropdown-item">

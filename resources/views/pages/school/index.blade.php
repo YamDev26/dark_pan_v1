@@ -6,11 +6,10 @@
     <div class="col-sm-12">
       <div class="h-100 bg-secondary rounded p-4">
         @if ($school->param)
-        <div class="d-flex align-items-center justify-content-between mb-2 px-md-2">
+        <div class="d-flex align-items-center justify-content-between mb-2 px-md-2 pb-2" style="border-bottom: 1px solid #6C7293">
           <h4 class="mb-0">Detail School</h4>
           <a href="{{ route('setting.edit', $school) }}" class="btn btn-outline-primary py-1">Edit</a>
         </div>
-        <hr>
         <div class="p-md-3">
           <div class="table-responsive">
             <table style="width: 100%">

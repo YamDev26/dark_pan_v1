@@ -5,12 +5,14 @@
   <div class="row g-4">
     <div class="col-12 px-4">
       <div class="bg-secondary rounded h-100 p-4">
-        <div class="mb-4 d-flex justify-content-between" style="border-bottom: 3px solid #6C7293">
+        <div class="mb-4 d-flex justify-content-between" style="border-bottom: 1px solid #6C7293">
           <h4 class="m-2">{{ $data ? 'Edit':'Nouvel' }} Elève</h4>
           <p style="text-align:left">Les champs avec astérisque (<span class="text-danger" style="font-size: 17px">*</span>) sont obligatoires.</p>
           <div class="d-flex">
-            <button type="button" class="btn btn-outline-danger m-2 py-1" data-bs-toggle="modal" data-bs-target="#AddModal">Export</button>
-            <a href="{{ route('student.index') }}" class="btn btn-outline-light m-2 py-1">Return</a>
+            @if (!$data)
+              <button type="button" class="btn btn-outline-danger m-2" data-bs-toggle="modal" data-bs-target="#AddModal" style='font-size: 12px'>Import</button>
+            @endif
+            <a href="{{ route('student.index') }}" class="btn btn-outline-light m-2" style='font-size: 12px'>Return</a>
           </div>
         </div>
         <form action="{{ route($data ? 'student.update':'student.store', $data ? $data->id:'') }}" method="POST" id="myForm">
@@ -19,7 +21,7 @@
           <div class="mb-3 py-2">
             <div class="d-flex justify-content-around">
               <h5>Informations Elève</h5>
-              <hr class="w-75" style="border: 2px solid">
+              <hr class="w-75" style="border: 1px solid">
             </div>
             <div class="row px-sm-3">
               <div class="col-12 col-sm-6 mb-2">
@@ -72,7 +74,7 @@
           <div class="mb-3 py-3">
             <div class="d-flex justify-content-around">
               <h5>Autres Informations</h5>
-              <hr class="w-75" style="border: 2px solid">
+              <hr class="w-75" style="border: 1px solid">
             </div>
             <div class="row px-sm-3">
               <div class="col-12 col-sm-6 mb-2">
@@ -115,9 +117,9 @@
               </div>
             </div>
           </div>
-          <hr style="border: 2px solid">
+          <hr style="border: 1px solid">
           <div class="text-center">
-            <button type="button" class="btn btn-primary w-25 py-2" data-bs-toggle="modal" data-bs-target="#myModal">Valider From</button>
+            <button type="button" class="btn btn-primary w-25 py-1" data-bs-toggle="modal" data-bs-target="#myModal">Valider</button>
           </div>
         </form>
       </div>

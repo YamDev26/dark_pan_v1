@@ -48,9 +48,8 @@ Route::group(['middleware' => 'auth'], function () {
         });
     });
     
-    /**
-     * Route Relative Aux Etablissements
-     */
+
+    // Route Relative Aux Etablissements
     Route::group(['middleware' => 'UserAutres'], function() {
         Route::group(['prefix' => 'setting'], function() {
             Route::get('/index', [App\Http\Controllers\SettingController::class, 'index'])->name('setting.index');
@@ -197,6 +196,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/index', [App\Http\Controllers\ScheduleController::class, 'index'])->name('horraire.index');
             Route::get('/data', [App\Http\Controllers\ScheduleController::class, 'dataTable'])->name('horraire.data');
             Route::get('/show/{id}', [App\Http\Controllers\ScheduleController::class, 'show'])->name('horraire.show');
+            Route::get('/pdf/{id}', [App\Http\Controllers\ScheduleController::class, 'generate'])->name('horraire.pdf');
         });
 
 
@@ -205,6 +205,51 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/data', [App\Http\Controllers\UserController::class, 'dataTable'])->name('user.data');
             Route::get('/create', [App\Http\Controllers\UserController::class, 'create'])->name('user.create');
             Route::post('/create', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
+        });
+    });
+
+
+    // Route Relative Aux Enseignants
+    Route::group(['middleware' => 'UserEnseigment'], function() {
+        Route::group(['prefix' => 'enseignant'], function() {
+            Route::group(['prefix' => 'evaluation'], function() {
+                Route::get('/index', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'index'])->name('evaluation.index');
+                Route::get('/data', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'dataTable'])->name('evaluation.dataTable');
+                Route::get('/detail/{str}', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'show'])->name('evaluation.show');
+                Route::post('/store', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'store'])->name('evaluation.store');
+                Route::get('/edit', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'edit'])->name('evaluation.edit');
+                Route::put('/edit/{id}', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'update'])->name('evaluation.update');
+                Route::get('/detele/{id}', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'destroy'])->name('evaluation.detele');
+                Route::get('/notes/{str}', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'create'])->name('evaluation.create');
+                Route::post('/notes/add/{str}', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'addNot'])->name('evaluation.addNot');
+                Route::get('/note/list/{str}', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'listNot'])->name('evaluation.list');
+                Route::get('/note/edit/{str}', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'editNot'])->name('evaluation.editNot');
+                Route::get('/{str}', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'dataTableNote'])->name('evaluation.dataTables');
+                Route::get('/export/{id}', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'export'])->name('evaluation.export');
+                Route::post('/import/{id}', [App\Http\Controllers\EnseigmntEvaluatedController::class, 'import'])->name('evaluation.import');
+            });
+
+            Route::group(['prefix' => 'moyenne'], function() {
+                Route::get('/index', [App\Http\Controllers\EnseigmntMoyenneController::class, 'index'])->name('moyennes.index');
+                Route::get('/data', [App\Http\Controllers\EnseigmntMoyenneController::class, 'dataTable'])->name('moyennes.dataTable');
+                Route::get('/detail/{str}', [App\Http\Controllers\EnseigmntMoyenneController::class, 'show'])->name('moyennes.show');
+                Route::get('/1/{id}', [App\Http\Controllers\EnseigmntMoyenneController::class, 'table1Moyens'])->name('moyennes.list1');
+                Route::get('/2/{id}', [App\Http\Controllers\EnseigmntMoyenneController::class, 'table2Moyens'])->name('moyennes.list2');
+                Route::get('/create/{id}', [App\Http\Controllers\EnseigmntMoyenneController::class, 'create'])->name('moyennes.create');
+                Route::post('/store/{id}', [App\Http\Controllers\EnseigmntMoyenneController::class, 'store'])->name('moyennes.store');
+                Route::get('/export/{id}', [App\Http\Controllers\EnseigmntMoyenneController::class, 'export'])->name('moyennes.export');
+                Route::post('/import/{id}', [App\Http\Controllers\EnseigmntMoyenneController::class, 'import'])->name('moyennes.import');
+            });
+
+            Route::group(['prefix' => 'devoirs'], function() {
+                Route::get('/index', [App\Http\Controllers\EnseigmntDevoirsController::class, 'index'])->name('devoirs.index');
+                Route::get('/{id}', [App\Http\Controllers\EnseigmntDevoirsController::class, 'create'])->name('devoirs.create');
+                Route::post('/store', [App\Http\Controllers\EnseigmntDevoirsController::class, 'store'])->name('devoirs.store');
+                Route::get('edit/{id}', [App\Http\Controllers\EnseigmntDevoirsController::class, 'edit'])->name('devoirs.edit');
+                Route::get('dtele/{id}', [App\Http\Controllers\EnseigmntDevoirsController::class, 'delete'])->name('devoirs.dtele');
+            });
+
+            Route::get('/emploi_temps', [App\Http\Controllers\EnseigmntDevoirsController::class, 'EmploiTemps'])->name('pdf');
         });
     });
 });
@@ -218,4 +263,4 @@ Route::group(['middleware' => 'auth'], function () {
 // paiements          ------------------------ Non
 // présences          ------------------------ Non
 // génération de PDF  ------------------------ En cours
-// espace enseignant  ------------------------ Non
+// espace enseignant  ------------------------ En cours

@@ -27,7 +27,7 @@
 @section('content')
 <div class="container-fluid pt-4 px-4">
   <div class="bg-secondary text-center rounded p-4">
-    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 3px solid #6C7293">
+    <div class="d-flex align-items-center justify-content-between mb-4 pb-2" style="border-bottom: 1px solid #6C7293">
       <h4 class="mb-0">Horaires</h4>
       <h3><i class="fa fa-user-edit text-primary"></i></h3>
     </div>
@@ -36,8 +36,11 @@
         <thead>
           <tr class="text-white">
             <th scope="col"></th>
-            <th scope="col">Enseignant</th>
-            <th scope="col">Horaires</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Prenoms</th>
+            <th scope="col" class="text-center">Sexe</th>
+            <th scope="col" class="text-center">Classe</th>
+            <th scope="col" class="text-center">Horaire</th>
             <th scope="col" class="text-center">Action</th>
           </tr>
         </thead>
@@ -60,8 +63,11 @@
       ajax: '{{ route('horraire.data') }}',
       columns: [
         {data: 'compte',  className: 'text-center fw-bold', orderable: false, searchable: false },
-        {data: 'name', className: 'text-left'},
-        {data: 'horaire', className: 'text-left'},
+        {data: 'first', className: 'text-left'},
+        {data: 'last', className: 'text-left'},
+        {data: 'sexe', className: 'text-center'},
+        {data: 'classe', className: 'text-center'},
+        {data: 'horaire', className: 'text-center'},
         {data: 'action', className: 'text-center', orderable: false, searchable: false},
       ],
       autoWidth: false,
