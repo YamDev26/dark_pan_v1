@@ -39,7 +39,7 @@
       })
       ->addColumn('action', function ($row) {
         return ('<span class="card-block remove-label m-0 pb-0 text-center">
-          <button type="button" class="btn btn-sm btn-light btnView py-0 me-2 px-2" data-id="'.$row->id.'">
+          <button type="button" class="btn btn-sm btn-outline-light btnView py-0 me-2 px-2" data-id="'.$row->id.'">
           <i class="fas fa-ellipsis-h"></i>
           </button>
         </span>');

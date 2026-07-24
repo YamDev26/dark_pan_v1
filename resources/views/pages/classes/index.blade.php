@@ -31,7 +31,7 @@
                       <td class="text-center">{{ ucwords($item['symbol']) }}</td>
                       <td class="text-center">{{ $item->get_classe() }}</td>
                       <td class="text-center">
-                        <a href="{{ route('classe.show', $item['id']) }}" class="btn btn-sm btn-light text-white py-0">
+                        <a href="{{ route('classe.show', $item['id']) }}" class="btn btn-sm btn-outline-light py-0">
                           <i class="fas fa-ellipsis-h"></i>
                         </a>
                       </td>

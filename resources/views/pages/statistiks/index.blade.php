@@ -5,7 +5,7 @@
   <div class="row g-4">
     <div class="col-sm-12">
       <div class="h-100 bg-secondary rounded p-4">
-        <div class="d-flex align-items-center justify-content-between mb-2">
+        <div class="d-flex align-items-center justify-content-between mb-2 pb-2" style="border-bottom: 1px solid #6C7293">
           <h4 class="mb-0">Statistique</h4>
           <h4 class="mb-0">{{ ucwords($cutting->cutting->libelle) }}</h4>
           <div class="d-flex">
@@ -22,7 +22,6 @@
             <a href="{{ route('resultat.index') }}" class="btn btn-outline-light py-1">Return</a>
           </div>
         </div>
-        <hr>
         <div class="my-2">
           <div class="bg-secondary text-center rounded p-sm-2">
             <div class="bg-secondary rounded h-100">

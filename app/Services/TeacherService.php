@@ -51,7 +51,7 @@
       ->addColumn('action', function ($row) {
         $url = route('teacher.edit', $row->id);
         return (
-          '<a href="'.$url.'" class="btn btn-sm btn-info text-white py-1">Detail</a>'
+          '<a href="'.$url.'" class="btn btn-sm btn-outline-light py-0"><i class="fas fa-ellipsis-h"></i></a>'
         );
       })
       ->rawColumns(['compte', 'first', 'last', 'sexe', 'email', 'phon', 'matter', 'action'])

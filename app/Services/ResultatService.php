@@ -44,10 +44,12 @@
       })
       ->addColumn('action', function ($row) {
         return (
-          '<select class="w-auto border-0 text-color-3" onchange="window.location.href=this.value;" style="background:none; color: #6C7293">
-            <option value="">...</option>
+          '<button class="btn btn-sm btn-outline-light dropdown-toggle py-0" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="min-width: 6rem;">
             '.$this->listCutting($row->id).'
-          </select>'
+          </ul>'
         );
       })
       ->rawColumns(['compte', 'libelle', 'effectif', 'action'])
@@ -392,7 +394,7 @@
       ->map(function ($item) use ($classe) {
         $url = route('resultat.show', $classe. '_' .$item->id);
         return '
-          <option value="'.$url.'">' . ucwords($item->cutting->libelle) . '</option>
+          <li><a href="'.$url.'" class="dropdown-item">' . ucwords($item->cutting->libelle) . '</a></li>
         ';
       })->implode('');
     }
