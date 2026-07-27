@@ -15,10 +15,11 @@ class File3Import implements ToCollection, WithHeadingRow, WithValidation, Skips
 {
     use SkipsFailures;
 
-    protected $str;
-    public function __construct($str)
+    protected $str, $user;
+    public function __construct($str, $user)
     {
         $this->str = $str;
+        $this->user = $user;
     }
     
     public function collection(Collection $data)
@@ -40,7 +41,7 @@ class File3Import implements ToCollection, WithHeadingRow, WithValidation, Skips
 
         $classe = $service->getClasse($classe);
         // Déclenchement de job pour le calcul de moyenne
-        MoyenneEditJob::dispatch($table, $matter, $cutting, $classe);
+        MoyenneEditJob::dispatch($table, $matter, $cutting, $classe, $this->user);
     }
 
     public function rules(): array

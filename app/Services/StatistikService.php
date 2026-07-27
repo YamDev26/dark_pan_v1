@@ -9,20 +9,13 @@
   use App\Models\CuttingSchoolYear;
   use App\Models\CuttingCloseSchool;
   use Illuminate\Support\Facades\DB;
-  use Illuminate\Support\Facades\Auth;
   
   class StatistikService
   {
     private const DIRECTEUR = 4;
     private const FONDATEUR = 3;
     private const ADMIN = 2;
-    private $schl, $role; 
     private const A_LEVEL = 5;
-
-    public function __construct() {
-      $this->schl = Auth::user()->school_id ?? 1;
-      $this->role = Auth::user()->role_id;
-    }
 
 
     public function getclasse($str) {
@@ -35,13 +28,14 @@
     }
 
     public function getCloseCutting($cutting) {
-      $verify = CuttingCloseSchool::where('school_id', $this->schl)
+      $user = $this->user();
+      $verify = CuttingCloseSchool::where('school_id', $user['school'])
       ->where('cutting_school_year_id', $cutting)->first();
       
       if($verify) {
         return false;
       }
-      return in_array($this->role, [self::ADMIN, self::FONDATEUR, self::DIRECTEUR]) 
+      return in_array($user['role'], [self::ADMIN, self::FONDATEUR, self::DIRECTEUR]) 
       ? true:false;
     }
 
@@ -49,11 +43,11 @@
 
       $school = $this->school();
       return DB::table('levels as l')
-      ->leftJoin('statistiks as s', function ($join) use ($cutting) {
+      ->leftJoin('statistiks as s', function ($join) use ($cutting, $school) {
         $join->on('s.level_id', '=', 'l.id')
         ->where([
           'cutting_school_year_id' => $cutting,
-          'school_id' => $this->schl,
+          'school_id' => $school->id,
         ]);
       })
       ->where(function ($query) use ($school) {
@@ -70,14 +64,13 @@
 
 
     public function getResultatCycle1($cutting) {
-
       $school = $this->school();
       return DB::table('levels as l')
-      ->leftJoin('statistiks as s', function ($join) use ($cutting) {
+      ->leftJoin('statistiks as s', function ($join) use ($cutting, $school) {
         $join->on('s.level_id', '=', 'l.id')
         ->where([
           'cutting_school_year_id' => $cutting,
-          'school_id' => $this->schl,
+          'school_id' => $school->id,
         ]);
       })
       ->where(function ($query) use ($school) {
@@ -93,7 +86,8 @@
 
 
     public function getResultat($cutting, $type) {
-      return ResultatScolaire::where('school_id', $this->schl)
+      $user = $this->user();
+      return ResultatScolaire::where('school_id', $user['school'])
       ->where('cutting_school_year_id', $cutting)
       ->where('type', $type)->first();
     }
@@ -128,7 +122,7 @@
     }
     
 
-    public function tauxReussite($cutting, $level) {
+    public function tauxReussite($cutting, $level, $school) {
       return DB::table('registers as r')
       ->join('get_classes as gc', 'gc.id', '=', 'r.get_classe_id')
       ->join('levels as l', 'l.id', '=', 'gc.level_id')
@@ -137,7 +131,7 @@
       ->join('moyenne_trimestres as mt', 'mt.register_id', '=', 'r.id')
       ->where([
         'mt.cutting_school_year_id' => $cutting,
-        'gc.school_id' => $this->schl,
+        'gc.school_id' => $school,
         'l.id' => $level
       ])
       ->select('l.id', 'l.symbol',
@@ -174,7 +168,7 @@
     }
 
 
-    public function tauxResultatSerie($cutting, $level, $serie) {
+    public function tauxResultatSerie($cutting, $level, $serie, $school) {
       return DB::table('registers as r')
       ->join('get_classes as gc', 'gc.id', '=', 'r.get_classe_id')
       ->join('levels as l', 'l.id', '=', 'gc.level_id')
@@ -183,7 +177,7 @@
       ->join('moyenne_trimestres as mt', 'mt.register_id', '=', 'r.id')
       ->where([
         'mt.cutting_school_year_id' => $cutting,
-        'gc.school_id' => $this->schl,
+        'gc.school_id' => $school,
         'gc.serie_id' => $serie,
         'l.id' => $level
       ])
@@ -221,7 +215,7 @@
     }
 
 
-    public function getResultatCycle($cutting, $signe) {
+    public function getResultatCycle($cutting, $signe, $school) {
       return DB::table('registers as r')
       ->join('get_classes as gc', 'gc.id', '=', 'r.get_classe_id')
       ->join('levels as l', 'l.id', '=', 'gc.level_id')
@@ -230,7 +224,7 @@
       ->join('moyenne_trimestres as mt', 'mt.register_id', '=', 'r.id')
       ->where('mt.cutting_school_year_id', $cutting)
       ->where('gc.level_id', $signe ,self::A_LEVEL)
-      ->where('gc.school_id', $this->schl)
+      ->where('gc.school_id', $school)
       ->select('l.id', 'l.symbol',
         DB::raw('COUNT(*) as effectif'),
         DB::raw("SUM(CASE WHEN s.genre = 'm' THEN 1 ELSE 0 END) as garcons"),
@@ -265,14 +259,14 @@
     }
 
 
-    public function getResultatScolaire($cutting) {
+    public function getResultatScolaire($cutting, $school) {
       return DB::table('registers as r')
       ->join('get_classes as gc', 'gc.id', '=', 'r.get_classe_id')
       ->join('school_students as ss', 'ss.id', '=', 'r.school_student_id')
       ->join('students as s', 's.id', '=', 'ss.student_id')
       ->join('moyenne_trimestres as mt', 'mt.register_id', '=', 'r.id')
       ->where('mt.cutting_school_year_id', $cutting)
-      ->where('gc.school_id', $this->schl)
+      ->where('gc.school_id', $school)
       ->selectRaw("
         COUNT(*) as effectif,
 
@@ -310,31 +304,31 @@
     }
 
 
-    public function statistikSave($level, $cutting, $table) {
+    public function statistikSave($level, $cutting, $school, $table) {
       Statistik::updateOrCreate([
         'level_id' => $level,
-        'school_id' => $this->schl,
+        'school_id' => $school,
         'cutting_school_year_id' => $cutting,
       ], 
       $this->colomnTable($table));
     }
 
 
-    public function SaveResultatGlobal($cutting, $type, $table) {
+    public function SaveResultatGlobal($cutting, $type, $school, $table) {
       ResultatScolaire::updateOrCreate([
         'type'  => $type,
-        'school_id' => $this->schl,
+        'school_id' => $school,
         'cutting_school_year_id' => $cutting,
       ], 
       $this->colomnTable($table));
     }
 
 
-    public function saveResultatSerie($level, $serie, $cutting, $table) {
+    public function saveResultatSerie($level, $serie, $cutting, $school, $table) {
       StatistikSerie::updateOrCreate([
         'level_id' => $level,
         'serie_id' => $serie,
-        'school_id' => $this->schl,
+        'school_id' => $school,
         'cutting_school_year_id' => $cutting,
       ],
       $this->colomnTable($table));
@@ -343,7 +337,9 @@
 
     public function storeCuttingClose($cutting) {
 
-      if(!in_array($this->role, [self::ADMIN, self::FONDATEUR, self::DIRECTEUR])) {
+      $user = $this->user();
+
+      if(!in_array($user['role'], [self::ADMIN, self::FONDATEUR, self::DIRECTEUR])) {
         return ([
           'str' => 'danger',
           'msg' =>'Vous n\êtes pas autorisé pour cette action !'
@@ -351,7 +347,7 @@
       }
 
       CuttingCloseSchool::updateOrCreate([
-        'school_id' => $this->schl,
+        'school_id' => $user['school'],
         'cutting_school_year_id' => $cutting,
       ]);
       return ([
@@ -364,12 +360,12 @@
     private function resultatQuery($cutting) {
       $school = $this->school();
       return DB::table('levels as l')
-      ->leftJoin('statistik_series as ss', function ($join) use ($cutting) {
+      ->leftJoin('statistik_series as ss', function ($join) use ($cutting, $school) {
         $join->on('ss.level_id', '=', 'l.id')
         ->join('series as s', 's.id' , '=', 'ss.serie_id')
         ->where([
           'ss.cutting_school_year_id' => $cutting,
-          'ss.school_id' => $this->schl,
+          'ss.school_id' => $school->id
         ]);
       })
       ->where(function ($query) use ($school) {
@@ -400,8 +396,16 @@
       ];
     }
 
+    private function user() {
+      $user = getUserGlobal();
+      return [
+        'school' => $user->school_id,
+        'role' => $user->role->libelle,
+      ];
+    }
 
     private function school() {
-      return School::find($this->schl) ?? null;
+      $user = getUserGlobal();
+      return School::find($user->school_id) ?? null;
     }
   }

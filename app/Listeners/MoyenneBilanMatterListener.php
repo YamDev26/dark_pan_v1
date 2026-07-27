@@ -30,6 +30,6 @@ class MoyenneBilanMatterListener implements ShouldQueue
         }
 
         // Déclenchement de job 
-        MoyenneTrimestreJob::dispatch($event->data, $event->cutting, $event->classe);
+        MoyenneTrimestreJob::dispatch($event->data, $event->cutting, $event->classe, $event->user);
     }
 }

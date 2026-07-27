@@ -1,11 +1,11 @@
 <?php
   namespace App\Services;
 
-  use App\Models\MoyenneAnnulSub;
+  use App\Models\MoyenneAnnuelSub;
   use App\Models\MoyenneAnnuelle;
   use App\Models\CuttingSchoolYear;
-  use App\Models\MoyenneAnnulBilan;
-  use App\Models\MoyenneAnnulMatter;
+  use App\Models\MoyenneAnnuelBilan;
+  use App\Models\MoyenneAnnuelMatter;
   use Illuminate\Support\Facades\DB;
 
   class MoyenneAnnuelService
@@ -16,7 +16,7 @@
         $this->getMoyenneAnnuelleMatters($classe, $matter, $cutting)
       );
       foreach($data as $item) {
-        MoyenneAnnulMatter::updateOrCreate([
+        MoyenneAnnuelMatter::updateOrCreate([
             'register_id' => $item['id'],
             'level_matter_id' => $matter,
           ], [
@@ -33,7 +33,7 @@
         $this->getMoyenneAnnuelleSub($classe, $matter, $cutting)
       );
       foreach($data as $item) {
-        MoyenneAnnulSub::updateOrCreate([
+        MoyenneAnnuelSub::updateOrCreate([
             'register_id' => $item['id'],
             'sub_matter_id' => $matter,
           ], [
@@ -50,7 +50,7 @@
         $this->getMoyenneAnnuelleBilan($classe, $bilan, $cutting)
       );
       foreach($data as $item) {
-        MoyenneAnnulBilan::updateOrCreate([
+        MoyenneAnnuelBilan::updateOrCreate([
             'register_id' => $item['id'],
             'bilan_matter_id' => $bilan,
           ], [
@@ -94,10 +94,10 @@
       ->where('mm.level_matter_id', $matter)
       ->where('mm.moyenne', '<>', 'nc')
       ->select(
-        'ss.id', 's.genre',
+        'r.id', 's.genre',
         DB::raw('ROUND(SUM(mm.moyenne * c.value) / SUM(c.value), 2) as moyen')
       )
-      ->groupBy('ss.id', 's.genre')
+      ->groupBy('r.id', 's.genre')
       ->get()
       ->map(fn ($item) => (array) $item)
       ->toArray();
@@ -118,10 +118,10 @@
       ->where('mm.sub_matter_id', $matter)
       ->where('mm.moyenne', '<>', 'nc')
       ->select(
-        'ss.id', 's.genre',
+        'r.id', 's.genre',
         DB::raw('ROUND(SUM(mm.moyenne * c.value) / SUM(c.value), 2) as moyen')
       )
-      ->groupBy('ss.id', 's.genre')
+      ->groupBy('r.id', 's.genre')
       ->get()
       ->map(fn ($item) => (array) $item)
       ->toArray();
@@ -142,10 +142,10 @@
       ->where('mb.bilan_matter_id', $bilan)
       ->where('mb.moyenne', '<>', 'nc')
       ->select(
-        'ss.id', 's.genre',
+        'r.id', 's.genre',
         DB::raw('ROUND(SUM(mb.moyenne * c.value) / SUM(c.value), 2) as moyen')
       )
-      ->groupBy('ss.id', 's.genre')
+      ->groupBy('r.id', 's.genre')
       ->get()
       ->map(fn ($item) => (array) $item)
       ->toArray();
@@ -164,10 +164,10 @@
       ->where('gc.school_year_id', $yearId)
       ->where('mt.moyenne', '<>', 'nc')
       ->select(
-        'ss.id', 's.genre',
+        'r.id', 's.genre',
         DB::raw('ROUND(SUM(mt.moyenne * c.value) / SUM(c.value), 2) as moyen')
       )
-      ->groupBy('ss.id', 's.genre')
+      ->groupBy('r.id', 's.genre')
       ->get()
       ->map(fn ($item) => (array) $item)
       ->toArray();

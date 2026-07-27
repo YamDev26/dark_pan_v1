@@ -37,7 +37,7 @@ class ResultatClasseListener implements ShouldQueue
 
         // Declessement de Job
         CalculStatistikJob::dispatch(
-            $event->classe, $event->cutting
+            $event->classe, $event->cutting, $event->user
         );
     }
 

@@ -9,16 +9,15 @@
   use App\Models\TrancheMoyenne;
   use App\Models\CuttingSchoolYear;
   use Illuminate\Support\Facades\DB;
-  use Illuminate\Support\Facades\Auth;
   use Yajra\DataTables\Facades\DataTables;
 
   class ResultatService
   {
     private $schl; private const A_ACTIF  = 1;
 
-
     public function __construct() {
-      $this->schl = Auth::user()->school_id ?? 1;
+      $user = getUserGlobal();
+      $this->schl = $user ? $user->school_id:null;
     }
 
 
@@ -91,7 +90,7 @@
         'm.libelle', 'm.symbol',
         'lm.value as values', 'mm.moyenne',
         'mm.rang', 'm.bilan_matter_id as bilan',
-        'u.civility', 'u.first_name', 'u.last_name'
+        'u.civility', 'u.first_name', 'u.last_name',
       )
       ->selectRaw('COALESCE(mm.moyenne, 0) * COALESCE(lm.value, 0) as total')
       ->where('lm.level_id', $classe['level_id'])

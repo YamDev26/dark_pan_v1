@@ -8,12 +8,13 @@ class MoyenneBilanMatterEvent
 {
     use Dispatchable;
 
-    public $data, $bilan, $cutting, $classe;
-    public function __construct($data, $bilan, $cutting, $classe)
+    public $data, $bilan, $cutting, $classe, $user;
+    public function __construct($data, $bilan, $cutting, $classe, $user)
     {
         $this->data = $data;
         $this->bilan = $bilan;
         $this->cutting = $cutting;
         $this->classe = $classe;
+        $this->user = $user;
     }
 }

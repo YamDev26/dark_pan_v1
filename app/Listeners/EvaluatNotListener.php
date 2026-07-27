@@ -27,7 +27,8 @@ class EvaluatNotListener implements ShouldQueue
             CalculMoyenneJob::dispatch(
                 $evaluat['get_classe_id'], 
                 $evaluat['level_matter_id'], 
-                $evaluat['cutting_school_year_id']
+                $evaluat['cutting_school_year_id'],
+                $event->user
             );
         }
         else {
@@ -35,7 +36,8 @@ class EvaluatNotListener implements ShouldQueue
                 $evaluat['get_classe_id'], 
                 $evaluat['level_matter_id'], 
                 $evaluat['cutting_school_year_id'],
-                $evaluat['sub_matter_id']
+                $evaluat['sub_matter_id'],
+                $event->user
             );
         }
     }

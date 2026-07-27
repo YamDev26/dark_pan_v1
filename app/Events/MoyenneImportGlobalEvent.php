@@ -9,11 +9,12 @@ class MoyenneImportGlobalEvent
 {
     use Dispatchable;
 
-    public $data, $classe, $cutting;
-    public function __construct($data, $classe, $cutting)
+    public $data, $classe, $cutting, $user;
+    public function __construct($data, $classe, $cutting, $user)
     {
         $this->data = $data;
         $this->classe = $classe;
         $this->cutting = $cutting;
+        $this->user = $user;
     }
 }

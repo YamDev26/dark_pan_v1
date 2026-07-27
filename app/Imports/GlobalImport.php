@@ -15,10 +15,11 @@ class GlobalImport implements ToCollection, WithHeadingRow, WithValidation, Skip
 {
     use SkipsFailures;
 
-    protected $str;
-    public function __construct($str)
+    protected $str, $user;
+    public function __construct($str, $user)
     {
         $this->str = $str;
+        $this->user = $user;
     }
 
 
@@ -45,7 +46,9 @@ class GlobalImport implements ToCollection, WithHeadingRow, WithValidation, Skip
             }
         }
 
-        MoyenneImportGlobalEvent::dispatch($resultat, $classe, $cutting);
+        MoyenneImportGlobalEvent::dispatch(
+            $resultat, $classe, $cutting, $this->user
+        );
     }
 
 

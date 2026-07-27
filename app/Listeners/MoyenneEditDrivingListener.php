@@ -32,7 +32,7 @@ class MoyenneEditDrivingListener implements ShouldQueue
 
         // Déclenchement de job
         MoyenneEditJob::dispatch(
-            $table, $matter, $cutting, $service->classe($classe)
+            $table, $matter, $cutting, $service->classe($classe), $event->user
         );
     }
 

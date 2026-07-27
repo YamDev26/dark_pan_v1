@@ -7,14 +7,14 @@
   use App\Models\DaysWeek;
   use App\Models\SchoolYear;
   use Illuminate\Support\Facades\DB;
-  use Illuminate\Support\Facades\Auth;
   use Yajra\DataTables\Facades\DataTables;
 
   class ScheduleService
   {
     private $schl; private const TEACHER = 8;
     public function __construct() {
-      $this->schl = Auth::user()->school_id;
+      $user = getUserGlobal();
+      $this->schl = $user ? $user->school_id:null;
     }
 
     public function school() {
@@ -92,7 +92,7 @@
       })
       ->addColumn('action', function ($row) {
         $url = route('horraire.show', $row->id);
-        return ('<a href="'.$url.'" class="btn btn-sm btn-light text-white py-0">
+        return ('<a href="'.$url.'" class="btn btn-sm btn-outline-light py-0">
           <i class="fas fa-ellipsis-h"></i>
         </a>');
       })

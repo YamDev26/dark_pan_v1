@@ -9,7 +9,6 @@
   use App\Models\EvaluatedType;
   use App\Models\CuttingSchoolYear;
   use Illuminate\Support\Facades\DB;
-  use Illuminate\Support\Facades\Auth;
   use Yajra\DataTables\Facades\DataTables;
 
   class EvaluatedService
@@ -17,7 +16,8 @@
     private const NOTE  = 20;
     private $schl;
     public function __construct() {
-      $this->schl = Auth::user()->school_id ?? 1;
+      $user = getUserGlobal();
+      $this->schl = $user ? $user->school_id:null;
     }
 
 

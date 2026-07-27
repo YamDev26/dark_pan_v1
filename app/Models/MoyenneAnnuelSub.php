@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MoyenneAnnulSub extends Model
+class MoyenneAnnuelSub extends Model
 {
     protected $guarded = [];
 }

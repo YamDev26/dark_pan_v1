@@ -14,12 +14,13 @@ class CalculMoyenneJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $classe, $matter, $cutting;
-    public function __construct($classe, $matter, $cutting)
+    protected $classe, $matter, $cutting, $user;
+    public function __construct($classe, $matter, $cutting, $user)
     {
         $this->classe = $classe;
         $this->matter = $matter;
         $this->cutting = $cutting;
+        $this->user = $user;
     }
 
     
@@ -44,7 +45,8 @@ class CalculMoyenneJob implements ShouldQueue
             $table, 
             $this->matter, 
             $this->cutting, 
-            $classe
+            $classe,
+            $this->user
         );
     }
 

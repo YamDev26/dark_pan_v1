@@ -13,13 +13,14 @@ class SubMatterImportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $data, $subMatter, $cutting, $classe;
-    public function __construct($data, $subMatter, $cutting, $classe)
+    protected $data, $subMatter, $cutting, $classe, $user;
+    public function __construct($data, $subMatter, $cutting, $classe, $user)
     {
         $this->data = $data;
         $this->subMatter = $subMatter;
         $this->cutting = $cutting;
         $this->classe = $classe;
+        $this->user = $user;
     }
 
     
@@ -35,7 +36,8 @@ class SubMatterImportJob implements ShouldQueue
             $matter, 
             $this->cutting, 
             $this->subMatter, 
-            $this->classe
+            $this->classe,
+            $this->user
         );
     }
 }

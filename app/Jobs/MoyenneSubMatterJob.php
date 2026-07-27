@@ -14,14 +14,15 @@ class MoyenneSubMatterJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $data, $matter, $cutting, $subMatter, $classe;
-    public function __construct($data, $matter, $cutting, $subMatter, $classe)
+    protected $data, $matter, $cutting, $subMatter, $classe, $user;
+    public function __construct($data, $matter, $cutting, $subMatter, $classe, $user)
     {
         $this->data = $data;
         $this->matter = $matter;
         $this->cutting = $cutting;
         $this->subMatter = $subMatter;
         $this->classe = $classe;
+        $this->user = $user;
     }
 
     
@@ -38,10 +39,13 @@ class MoyenneSubMatterJob implements ShouldQueue
 
         // Déclenchement d'Evenement
         FrenshMoyenneEvent::dispatch(
-            $this->classe->id,
-            $this->matter,
-            $this->cutting
+            $this->classe->id, $this->matter, $this->cutting, $this->user
         );
+
+        $cuts = $service->getCutting($this->cutting);
+        $cuts->cutting->end == '1' ? 
+        MoyenneAnnuelleSubJob::dispatch($this->subMatter, $this->cutting, $this->classe)
+        :null;
     }
 
     

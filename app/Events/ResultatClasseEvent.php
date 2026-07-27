@@ -8,11 +8,12 @@ class ResultatClasseEvent
 {
     use Dispatchable;
 
-    public $classe, $cutting;
+    public $classe, $cutting, $user;
 
-    public function __construct($classe, $cutting)
+    public function __construct($classe, $cutting, $user)
     {
         $this->classe = $classe;
         $this->cutting = $cutting;
+        $this->user = $user;
     }
 }

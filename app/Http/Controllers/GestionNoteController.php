@@ -78,7 +78,7 @@ class GestionNoteController extends Controller
                 ]);
             }
             
-            EvaluatNotEvant::dispatch($valid['str'], $valid['note'], $str);
+            EvaluatNotEvant::dispatch($valid['str'], $valid['note'], $str, getUserGlobal());
             return to_route('note.show', $str)->with([
                 'str' => 'success',
                 'msg' => 'Validation réussie. En attente de traitement !'

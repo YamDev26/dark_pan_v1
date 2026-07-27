@@ -105,7 +105,7 @@ class MoyenneController extends Controller
             $this->getEvent($valide, $str);
             return to_route('moyenne.list', $str)->with([
                 'str' => 'success',
-                'msg' => 'Validation réussie. En attente des traitement !'
+                'msg' => 'Validation réussite. Les traitements seront effectués prochainement'
             ]);
         }
         catch (\Exception $e) {
@@ -254,8 +254,8 @@ class MoyenneController extends Controller
             }
             $matter = $this->service->getMatter($explod[8]);
             ($matter['matter']['id'] === 2 && $matter['level_id'] < 5) ? 
-            Excel::import(new FileFrenshImport($str), $file):
-            Excel::import(new File3Import($str), $file);
+            Excel::import(new FileFrenshImport($str, getUserGlobal()), $file):
+            Excel::import(new File3Import($str, getUserGlobal()), $file);
             return to_route('moyenne.list', $str)->with([
                 'str' => 'success',
                 'msg' => 'Importation réussie. En attente des traitement !'
@@ -452,7 +452,7 @@ class MoyenneController extends Controller
                     'msg' => 'Une erreur, fichier incompactible !'
                 ]);
             }
-            Excel::import(new GlobalImport($str), $file);
+            Excel::import(new GlobalImport($str, getUserGlobal()), $file);
             return to_route('moyenne.show', $str)->with([
                 'str' => 'success',
                 'msg' => 'Importation réussie. En attente des traitement !'
@@ -501,15 +501,18 @@ class MoyenneController extends Controller
             $event::dispatch(
                 $validate['students'],
                 $validate['moyen1'],
-                $str
+                $str,
+                getUserGlobal()
             );
-        } else {
+        } 
+        else {
             $event::dispatch(
                 $validate['students'],
                 $validate['moyen1'],
                 $validate['moyen2'],
                 $validate['moyen3'],
-                $str
+                $str,
+                getUserGlobal()
             );
         }
     }

@@ -8,14 +8,15 @@ class MoyenneEditDrivingEvent
 {
     use Dispatchable;
 
-    public $students, $moyens, $absJust, $absNons, $str;
+    public $students, $moyens, $absJust, $absNons, $str, $user;
     
-    public function __construct($students, $moyens, $absJust, $absNons, $str)
+    public function __construct($students, $moyens, $absJust, $absNons, $str, $user)
     {
         $this->students = $students;
         $this->moyens = $moyens;
         $this->absJust = $absJust;
         $this->absNons = $absNons;
         $this->str = $str;
+        $this->user = $user;
     }
 }

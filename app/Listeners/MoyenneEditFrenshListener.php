@@ -45,7 +45,8 @@ class MoyenneEditFrenshListener implements ShouldQueue
             [$table1, $table2, $table3],
             $matter, 
             $cutting,
-            $service->classe($classe)
+            $service->classe($classe),
+            $event->user
         );
     }
 

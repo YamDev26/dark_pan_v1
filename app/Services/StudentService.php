@@ -7,13 +7,14 @@
   use App\Models\Notionality;
   use App\Models\SchoolStudent;  
   use Illuminate\Support\Facades\DB;
-  use Illuminate\Support\Facades\Auth;
   use Yajra\DataTables\Facades\DataTables;
   class StudentService
   {
     private $schl;
+
     public function __construct() {
-      $this->schl = Auth::user()->school_id ?? 1;
+      $user = getUserGlobal();
+      $this->schl = $user ? $user->school_id:null;
     }
 
     public function getYajra() {

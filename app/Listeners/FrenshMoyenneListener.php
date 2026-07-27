@@ -29,7 +29,7 @@ class FrenshMoyenneListener implements ShouldQueue
 
         // Déclenchement de job
         MoyenneEditJob::dispatch(
-            $table, $event->matter, $event->cutting, $classe
+            $table, $event->matter, $event->cutting, $classe, $event->user
         );
         
     }

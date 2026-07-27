@@ -20,8 +20,12 @@ class MoyenneImportGlobalListener implements ShouldQueue
             list($id, $libelle) = explode('_', $matiere, 2);
 
             $job = in_array($libelle, self::SUB_MATTERS, true)
-            ? new SubMatterImportJob($valeur, $id, $event->cutting, $event->classe)
-            : new MoyenneEditJob($valeur, $id, $event->cutting, $event->classe);
+            ? new SubMatterImportJob(
+                $valeur, $id, $event->cutting, $event->classe, $event->user
+            )
+            : new MoyenneEditJob(
+                $valeur, $id, $event->cutting, $event->classe, $event->user
+            );
 
             dispatch($job);
         }

@@ -15,10 +15,11 @@ class FileFrenshImport implements ToCollection, WithHeadingRow, WithValidation, 
 {
     use SkipsFailures;
 
-    protected $str;
-    public function __construct($str)
+    protected $str, $user;
+    public function __construct($str, $user)
     {
         $this->str = $str;
+        $this->user = $user;
     }
     
     public function collection(Collection $data)
@@ -48,7 +49,8 @@ class FileFrenshImport implements ToCollection, WithHeadingRow, WithValidation, 
             [$table['cf'], $table['og'], $table['eo']],
             $matter, 
             $cutting,
-            $service->getClasse($classe)
+            $service->getClasse($classe),
+            $this->user
         );
     }
 

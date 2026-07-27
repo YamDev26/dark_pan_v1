@@ -13,12 +13,11 @@ class MoyenneAnnuelleSubJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $subMatter, $matter, $cutting, $classe;
+    private $subMatter, $cutting, $classe;
 
-    public function __construct($subMatter, $matter, $cutting, $classe)
+    public function __construct($subMatter, $cutting, $classe)
     {
         $this->subMatter = $subMatter;
-        $this->matter = $matter;
         $this->cutting = $cutting;
         $this->classe = $classe;
     }
@@ -29,11 +28,6 @@ class MoyenneAnnuelleSubJob implements ShouldQueue
         $service = app(MoyenneAnnuelService::class);
         $service->storeMoyenneSub(
             $this->classe, $this->subMatter, $this->cutting
-        );
-
-        // Moyenne Annuelle En Français Pour Cette Classe ..............
-        $service->storeMoyenneMatter(
-            $this->classe, $this->matter, $this->cutting
         );
 
     }

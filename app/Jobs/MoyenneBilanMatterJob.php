@@ -14,13 +14,14 @@ class MoyenneBilanMatterJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $data, $matter, $cutting, $classe;
-    public function __construct($data, $matter, $cutting, $classe)
+    private $data, $matter, $cutting, $classe, $user;
+    public function __construct($data, $matter, $cutting, $classe, $user)
     {
         $this->data = $data;
         $this->matter = $matter;
         $this->cutting = $cutting;
         $this->classe = $classe;
+        $this->user = $user;
     }
 
     
@@ -43,10 +44,12 @@ class MoyenneBilanMatterJob implements ShouldQueue
 
         // Déclenchement d'Evenement
         MoyenneBilanMatterEvent::dispatch(
-            $table, 
-            $bilan, 
-            $this->cutting,
-            $this->classe
+            $table, $bilan, $this->cutting, $this->classe, $this->user
         );
+
+        $cuts = $service->getCutting($this->cutting);
+        $cuts->cutting->end == '1' ? 
+        MoyenneAnnuelleBilanJob::dispatch($this->classe, $bilan, $this->cutting)
+        :null;
     }
 }

@@ -27,7 +27,7 @@ class MoyenneEditListener implements ShouldQueue
         list($classe, $matter, $cutting) = explode('_', $event->str);
 
         // Déclenchement de job
-        MoyenneEditJob::dispatch($table, $matter, $cutting, $service->classe($classe));
+        MoyenneEditJob::dispatch($table, $matter, $cutting, $service->classe($classe), $event->user);
     }
 
 

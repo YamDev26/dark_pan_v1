@@ -14,12 +14,13 @@ class MoyenneTrimestreJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $data, $cutting, $classe;
-    public function __construct($data, $cutting, $classe)
+    private $data, $cutting, $classe, $user;
+    public function __construct($data, $cutting, $classe, $user)
     {
         $this->data = $data;
         $this->cutting = $cutting;
         $this->classe = $classe;
+        $this->user = $user;
     }
 
     
@@ -41,9 +42,13 @@ class MoyenneTrimestreJob implements ShouldQueue
 
         // Déclenchement d'Evenement
         MoyenneTrimestreEvent::dispatch(
-            $table, 
-            $this->cutting,
-            $this->classe
+            $table, $this->cutting,$this->classe, $this->user
         );
+
+
+        $cuts = $service->getCutting($this->cutting);
+        $cuts->cutting->end == '1' ? 
+        MoyenneAnnuelleJob::dispatch($this->cutting, $this->classe)
+        :null;
     }
 }

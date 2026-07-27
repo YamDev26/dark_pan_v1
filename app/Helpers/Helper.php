@@ -1,5 +1,12 @@
 <?php
 
+  if(!function_exists('getUserGlobal')) {
+    function getUserGlobal() {
+      return auth()->user();
+    }
+  }
+
+
   if(!function_exists('formatNameUser')) {
     function formatNameUser() {
       $user = auth()->user();
@@ -14,6 +21,7 @@
       return auth()->user()->role->libelle;
     }
   }
+
 
   if(!function_exists('getUserDashboard')) {
     function getUserDashboard() {

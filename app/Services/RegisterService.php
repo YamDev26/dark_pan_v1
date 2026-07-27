@@ -8,14 +8,15 @@
   use App\Models\GetClasse;
   use App\Models\SchoolYear;
   use Illuminate\Support\Facades\DB;
-  use Illuminate\Support\Facades\Auth;
   use Yajra\DataTables\Facades\DataTables;
   class RegisterService
   {
     private const ACTIF  = 1;
     private $schl;
+
     public function __construct() {
-      $this->schl = Auth::user()->school_id ?? 1;
+      $user = getUserGlobal();
+      $this->schl = $user ? $user->school_id:null;
     }
 
     public function school() {

@@ -12,7 +12,6 @@
   use App\Models\CuttingSchoolYear;
   use App\Models\CuttingCloseSchool;
   use Illuminate\Support\Facades\DB;
-  use Illuminate\Support\Facades\Auth;
   use Yajra\DataTables\Facades\DataTables;
   class MoyenneService
   {
@@ -20,7 +19,8 @@
     private $schl; private const A_ACTIF  = 1;
     
     public function __construct() {
-      $this->schl = Auth::user()->school_id ?? 1;
+      $user = getUserGlobal();
+      $this->schl = $user ? $user->school_id:null;
     }
 
     public function school() {

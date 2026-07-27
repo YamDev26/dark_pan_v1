@@ -27,7 +27,7 @@ class MoyenneTrimestreListener implements ShouldQueue
 
         // Déclenchement d'Evenement
         ResultatClasseEvent::dispatch(
-            $event->classe, $event->cutting
+            $event->classe, $event->cutting, $event->user
         );
     }
 }

@@ -12,12 +12,6 @@
   use Yajra\DataTables\Facades\DataTables;
   class GestionNoteService
   {
-    private $schl;
-    
-    public function __construct() {
-      $this->schl = Auth::user()->school_id ?? 1;
-    }
-
     
     public function getNote($classe, $evaluat) {
       $query = $this->studentGet($classe, $evaluat);

@@ -82,7 +82,7 @@
               <hr class="w-75" style="border: 1px solid">
             </div>
             <div class="row">
-              <div class="col-2 col-sm-2 mb-2">
+              <div class="col-2 col-sm-4 mb-3">
                 <label class="col-form-label">Statut Etablissement<span class="text-danger">*</span> :</label>
                 <div class="pt-1">
                   <div class="form-check form-check-inline">
@@ -95,7 +95,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-2 col-sm-2 mb-3">
+              <div class="col-2 col-sm-4 mb-3">
                 <label class="col-form-label">Cycle Etablissement<span class="text-danger">*</span> :</label>
                 <div class="pt-1">
                   <div class="form-check form-check-inline">
@@ -108,7 +108,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-2 col-sm-2 mb-3">
+              <div class="col-2 col-sm-4 mb-3">
                 <label class="col-form-label">Gestion de la Caisse<span class="text-danger">*</span> :</label>
                 <div class="pt-1">
                   <div class="form-check form-check-inline">
@@ -121,7 +121,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-2 col-sm-2 mb-3">
+              <div class="col-2 col-sm-4 mb-3">
                 <label class="col-form-label">Gestion des Notes<span class="text-danger">*</span> :</label>
                 <div class="pt-1">
                   <div class="form-check form-check-inline">
@@ -134,7 +134,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-2 col-sm-2 mb-3">
+              <div class="col-2 col-sm-4 mb-3">
                 <label class="form-label">Informatique<span class="text-danger">*</span> :</label><br>
                 <div class="pt-1">
                   <div class="form-check form-check-inline">
@@ -147,7 +147,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-2 col-sm-2 mb-3">
+              <div class="col-2 col-sm-4 mb-3">
                 <label class="col-form-label">Musique / Arts - Plastique<span class="text-danger">*</span> :</label><br>
                 <div class="pt-1">
                   <div class="form-check form-check-inline">

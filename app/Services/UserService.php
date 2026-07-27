@@ -7,7 +7,6 @@
   use App\Models\School;
   use App\Models\SchoolYear;
   use Yajra\DataTables\Facades\DataTables;
-  use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\Hash;
   use Illuminate\Support\Str;
 
@@ -20,7 +19,8 @@
     private $schl;
 
     public function __construct() {
-      $this->schl = Auth::user()->school_id ?? 1;
+      $user = getUserGlobal();
+      $this->schl = $user ? $user->school_id:null;
     }
 
     public function datatable($status) {

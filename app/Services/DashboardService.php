@@ -7,7 +7,6 @@
   use App\Models\SchoolYear;
   use App\Models\CuttingSchoolYear;
   use Illuminate\Support\Facades\DB;
-  use Illuminate\Support\Facades\Auth;
   
   class DashboardService
   {
@@ -16,8 +15,9 @@
     private $schl, $user;
 
     public function __construct() {
-      $this->user = Auth::user()->id;
-      $this->schl = Auth::user()->school_id ?? 1;
+      $user = getUserGlobal();
+      $this->user = $user ? $user->id:null;
+      $this->schl = $user ? $user->school_id:null;
     }
     
     

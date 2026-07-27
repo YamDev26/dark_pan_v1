@@ -7,13 +7,13 @@
   use App\Models\School;
   use App\Models\LevelMatter;
   use Illuminate\Support\Facades\DB;
-  use Illuminate\Support\Facades\Auth;
   
   class LevelService
   {
     private $schl;
     public function __construct() {
-      $this->schl = Auth::user()->school_id ?? 1;
+      $user = getUserGlobal();
+      $this->schl = $user ? $user->school_id:null;
     }
     
     public function getLevels() {
